@@ -16,6 +16,7 @@ import Bullet.BasicBullet;
 import Bullet.Bullet;
 import Enemy.BasicEnemy;
 import Enemy.Enemy;
+import GameState.ShooterGameState;
 import Player.Player;
 
 
@@ -23,6 +24,8 @@ public class ShooterEngine {
 
 	/* position of quad */
 	float x = 400, y = 300;
+	
+	// TODO just used to give some animation to the player object to make it feel more than just squares moving around, remove
 	/* angle of quad roation */
 	float rotation = 0;
 	
@@ -44,20 +47,22 @@ public class ShooterEngine {
 	// temp for testing purposes
 	int enemyTimer;
 	
+	// GameState Object
+	ShooterGameState gameState;
+	
 	//Player Object
 	Player player;
-	
+
 	//Temporary background object for testing
 	BackgroundObject background;
 	// List that stores all active bullet objects
 	List<Bullet> bulletList;
 	// List that stores all active enemy objects
 	List<Enemy> enemyList;
-	// Score Object
-	int score;
 	
 	public void start(){
 		try{
+			// TODO figure out a better way to do this, save settings to file, change in game etc etc etc
 			resolutionWidth = 800;
 			resolutionHeight = 600;
 			Display.setDisplayMode(new DisplayMode(resolutionWidth, resolutionHeight));
@@ -71,6 +76,7 @@ public class ShooterEngine {
 		getDelta(); // call once before loop to initilise lastFrame
 		lastFPS = getTime(); // call before loop to initialise fps timer
 		
+		gameState = new ShooterGameState();
 		//Initialize player
 		player = new Player();
 		
@@ -83,8 +89,6 @@ public class ShooterEngine {
 		bulletList = new ArrayList<Bullet>();
 		// Temp for testing purposes
 		enemyList = new ArrayList<Enemy>();
-		// Temp score for testing purposes
-		score = 0;
 		
 		enemyTimer = 60;
 		
@@ -119,6 +123,8 @@ public class ShooterEngine {
 		// TODO remove this code, rotation should be done, being left for now becuase it makes the basic tests more fun to see movement
 		rotation += 0.15f * delta;
 		
+		
+		// TODO verify/make sure the speed is normalized for all directional movement
 		//TODO make this more elegant somehow
 		if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
 			player.setPlayerX(player.getPlayerX() - 0.35f * delta);
@@ -139,9 +145,12 @@ public class ShooterEngine {
 			player.setPlayerY(player.getPlayerY() + 0.35f * delta);
 		}
 		
+		// Press "Space" to shoot if the player can
 		if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
 			if(player.isCanShoot()){
+				// Add the bullet to the bullet list at the players position
 				bulletList.add((new BasicBullet(player.getPlayerX(), player.getPlayerY())));
+				// Stop the player from shooting again and reset the bullet timer
 				player.setCanShoot(false);
 				player.resetShooterTimer();
 			}
@@ -149,9 +158,13 @@ public class ShooterEngine {
 		
 		while(Keyboard.next()){
 			if(Keyboard.getEventKeyState()){
+				// Pres "F" to set the game to full screen mode
+				// TODO probably remove from button command and put in an options menu
 				if(Keyboard.getEventKey() == Keyboard.KEY_F){
 					setDisplayMode(800,600, !Display.isFullscreen());
 				}
+				// Press V to toggle vsync
+				// TODO remove from keyboard command and set in options
 				else if (Keyboard.getEventKey() == Keyboard.KEY_V) {
 					vsync = !vsync;
 					Display.setVSyncEnabled(vsync);
@@ -169,7 +182,7 @@ public class ShooterEngine {
 	 * @param heigth The height of the display required
 	 * @param fullscreen True if we want fullscreen mode
 	 */
-	//TODO comment and turn from copied code to project specific
+	//TODO comment and make it better
 	//TODO make it work for multiple resolution
 	//TODO make fullscreen be able to go wide or have the bars if possible
 	public void setDisplayMode(int width, int height, boolean fullscreen){
@@ -273,23 +286,22 @@ public class ShooterEngine {
 	// TODO figure out the nice way to render everything
 	public void renderGL(){
 		// Clear the screen adn the deph buffer
-		// TODO should every render method run this, or should it be used here only
-		// TODO can sepereate objects actually be rendered in their own classes? I hope so
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		// Initial color so pixels can be colored in individual classes, probably wont be needed once textures are being used
 		GL11.glColor3f(0.0f, 0.0f, 0.0f);
 
 		// Temp code for testing
 		// TODO figure out the best order to render to keep things that should be on top on top
-		// TODO color doesn't seem to work inside the actual classes, probably need to figure out somewhere else to do it (although textures should take care of that)
 		////////////////////////////////
-		//GL11.glColor3f(0.5f, 0.5f, 0.5f);
 		background.render();
 		////////////////////////////////
 		
-		//GL11.glColor3f(0.0f, 0.0f, 1.0f);
 
+		// Loop through the list of active bullets 
 		for(Iterator<Bullet> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
 			Bullet bullet = bulletIt.next();
+			// If the bullet has left the screen, remove it to preserve memory
+			// TODO possibly need to change the logic if things change
 			if(bullet.offScreen()){
 				bulletIt.remove();
 			}
@@ -304,22 +316,28 @@ public class ShooterEngine {
 		//TODO make collision detection general for any enemy/bullet size
 		for(Iterator<Enemy> enemyIt = enemyList.iterator(); enemyIt.hasNext();){
 			Enemy enemy = enemyIt.next();
+			// Loop through each bullet (at least for now less bullets than enemies, if that changes possible reverse this logic)
+			// and check to see if a collision has happened
 			for(Iterator<Bullet> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
 				Bullet bullet = bulletIt.next();
+				// TODO remove 30's to be dependent on both the enemy and add a number for the bullet width/height
 				if(
 						( bullet.getX() < ( enemy.getX() + 30 ) ) && 
 						( bullet.getX() > ( enemy.getX() - 30 ) ) && 
 						( bullet.getY() > ( enemy.getY() - 30 ) ) && 
 						( bullet.getY() < ( enemy.getY() + 30 ) ) ){
+					
 					enemyIt.remove();
-					score = score++;
+					//TODO display score
+					gameState.addToScore(1);
+					
+					// If the bullet can not penetrate the object, remove it 
 					if(!bullet.penetrate()){
 						bulletIt.remove();
-						player.resetShooterTimer();
-						player.setCanShoot(true);
 					}
 				}
 			}
+			// TODO probably make this lower, possibly extract it to the enemy class and make it more general for garbage collection or situation dependent or something
 			if(enemy.getY() < 0){
 				enemyIt.remove();
 			}
