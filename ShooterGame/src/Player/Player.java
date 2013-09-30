@@ -1,3 +1,4 @@
+package Player;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
 
@@ -27,8 +28,13 @@ public class Player {
 	// Determines whether the player can shoot
 	boolean canShoot;
 	// Determines when the player can shoot again
-	int shooterTimer;
-	
+	int shooterTimer;	
+	// Player Health
+	int health;
+	// Ammo for current weapon
+	int ammo;
+	// Type of current weapon
+	int weaponType;
 
 
 	// Default constuctor that sets player to thge default constant. 
@@ -64,9 +70,6 @@ public class Player {
 	public void setPlayerRotation(float playerRotation) {
 		this.playerRotation = playerRotation;
 	}
-	int health;
-	int ammo;
-	int weaponType;
 	
 	// Code taken from texture example
 	// TODO make the textures actually work

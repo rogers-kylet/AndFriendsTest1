@@ -1,3 +1,4 @@
+package Enemy;
 import org.lwjgl.opengl.GL11;
 
 
@@ -12,12 +13,12 @@ public class BasicEnemy implements Enemy {
 	// Enemy Health (if needed)
 	int health;
 	
-	BasicEnemy(){
+	public BasicEnemy(){
 		this.x = 400;
 		this.y = 650;
 	}
 	
-	BasicEnemy(float x, float y){
+	public BasicEnemy(float x, float y){
 		this.x = x;
 		this.y = y;
 	}

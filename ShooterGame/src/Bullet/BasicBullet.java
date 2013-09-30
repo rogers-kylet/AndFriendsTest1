@@ -1,3 +1,4 @@
+package Bullet;
 import org.lwjgl.opengl.GL11;
 
 
@@ -8,12 +9,12 @@ public class BasicBullet implements Bullet {
 	float rot;
 	boolean penetrate;
 	
-	BasicBullet(){
+	public BasicBullet(){
 		this.x = 300;
 		this.y = 300;
 	}
 	
-	BasicBullet(float x, float y){
+	public BasicBullet(float x, float y){
 		this.x = x;
 		this.y = y;
 	}

@@ -1,3 +1,4 @@
+package Background;
 
 public interface BackgroundObject {
 	// Draw the object

@@ -1,3 +1,4 @@
+package Engine;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -8,6 +9,14 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
+
+import Background.Background;
+import Background.BackgroundObject;
+import Bullet.BasicBullet;
+import Bullet.Bullet;
+import Enemy.BasicEnemy;
+import Enemy.Enemy;
+import Player.Player;
 
 
 public class ShooterEngine {
@@ -44,6 +53,8 @@ public class ShooterEngine {
 	List<Bullet> bulletList;
 	// List that stores all active enemy objects
 	List<Enemy> enemyList;
+	// Score Object
+	int score;
 	
 	public void start(){
 		try{
@@ -72,6 +83,8 @@ public class ShooterEngine {
 		bulletList = new ArrayList<Bullet>();
 		// Temp for testing purposes
 		enemyList = new ArrayList<Enemy>();
+		// Temp score for testing purposes
+		score = 0;
 		
 		enemyTimer = 60;
 		
@@ -288,6 +301,7 @@ public class ShooterEngine {
 		
 		//GL11.glColor3f(1.0f, 0.0f, 0.0f);
 
+		//TODO make collision detection general for any enemy/bullet size
 		for(Iterator<Enemy> enemyIt = enemyList.iterator(); enemyIt.hasNext();){
 			Enemy enemy = enemyIt.next();
 			for(Iterator<Bullet> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
@@ -298,6 +312,7 @@ public class ShooterEngine {
 						( bullet.getY() > ( enemy.getY() - 30 ) ) && 
 						( bullet.getY() < ( enemy.getY() + 30 ) ) ){
 					enemyIt.remove();
+					score = score++;
 					if(!bullet.penetrate()){
 						bulletIt.remove();
 						player.resetShooterTimer();
@@ -324,7 +339,6 @@ public class ShooterEngine {
 		// Should probably be last to make sure that it appears on top of everything in game, but have things for the overlay after this to be on top
 		player.render();
 		
-
 	}
 	
 	// It's a main method, you know?
