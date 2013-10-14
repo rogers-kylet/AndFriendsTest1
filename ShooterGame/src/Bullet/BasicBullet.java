@@ -46,7 +46,7 @@ public class BasicBullet implements Bullet {
 
 	@Override
 	public void move() {
-		this.y = y+10;
+		this.y = y-10;
 	}
 
 	@Override

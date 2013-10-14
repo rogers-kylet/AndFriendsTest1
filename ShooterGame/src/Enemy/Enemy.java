@@ -24,5 +24,7 @@ public interface Enemy {
 	void move(float playerX, float playerY);
 	// Updates the X and Y coordinates of the enemy without any additional information
 	void move();
+	// Checks if the enemy has collided with the player
+	boolean collidWithPlayer(float playerX, float playerY);
 	
 }

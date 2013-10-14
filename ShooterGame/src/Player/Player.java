@@ -41,6 +41,7 @@ public class Player {
 	public Player(){
 		playerX = PLAYER_START_X;
 		playerY = PLAYER_START_Y;
+		health = 5;
 		canShoot = true;
 	}
 	
@@ -48,6 +49,8 @@ public class Player {
 	public Player(float x, float y){
 		playerX = x;
 		playerY = y;
+		health = 5;
+		canShoot = true;
 	}
 	
 	// Checks if the player can shoot
@@ -154,6 +157,11 @@ public class Player {
 	// Sets the player health
 	public void setHealth(int health) {
 		this.health = health;
+	}
+	
+	// Hurts the player by the given amount of damage
+	public void hurtPlayer(int damage) {
+		this.health = health - damage;
 	}
 	
 	// Returns the player ammo

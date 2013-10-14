@@ -1,4 +1,5 @@
 package Engine;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -10,13 +11,24 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 
+import org.newdawn.slick.Color;
+import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.util.ResourceLoader;
+
 import Background.Background;
 import Background.BackgroundObject;
 import Bullet.BasicBullet;
 import Bullet.Bullet;
 import Enemy.BasicEnemy;
 import Enemy.Enemy;
+import GameState.GameState;
+//TODO gamestate shootergame state cant be resolved, fix
 import GameState.ShooterGameState;
+import Level.BasicLevel;
+import Level.BasicMenu;
+import Level.GameOverScreen;
+import Level.Level;
+import MenuItem.MenuItem;
 import Player.Player;
 
 
@@ -48,7 +60,7 @@ public class ShooterEngine {
 	int enemyTimer;
 	
 	// GameState Object
-	ShooterGameState gameState;
+	GameState gameState;
 	
 	//Player Object
 	Player player;
@@ -59,6 +71,16 @@ public class ShooterEngine {
 	List<Bullet> bulletList;
 	// List that stores all active enemy objects
 	List<Enemy> enemyList;
+	// List that storse all active menu items
+	List<MenuItem> menuItemList;
+	
+	// The current level
+	Level level;
+	
+	private TrueTypeFont font;
+	
+	//TODO set this in a config, currently used for font rendering
+	boolean antiAlias = false;
 	
 	public void start(){
 		try{
@@ -76,7 +98,9 @@ public class ShooterEngine {
 		getDelta(); // call once before loop to initilise lastFrame
 		lastFPS = getTime(); // call before loop to initialise fps timer
 		
+		//TODO weird config problem not getting recognized
 		gameState = new ShooterGameState();
+		
 		//Initialize player
 		player = new Player();
 		
@@ -91,6 +115,12 @@ public class ShooterEngine {
 		enemyList = new ArrayList<Enemy>();
 		
 		enemyTimer = 60;
+		
+		level = new BasicMenu();
+		
+		// TODO temp code for displaying the ugly unusable fonts
+		Font theFont = new Font("Times New Roman", Font.PLAIN, 24);
+		font = new TrueTypeFont(theFont, antiAlias);
 		
 		while (!Display.isCloseRequested()) {
 			int delta = getDelta();
@@ -107,67 +137,80 @@ public class ShooterEngine {
 	
 	public void update(int delta){
 		
-		if(!player.isCanShoot()){
-			player.countDownShooterTimer();
-		}
-		
-		if(enemyTimer == 0){
-			enemyList.add(new BasicEnemy((float) (Math.random()*800), 610));
-			enemyTimer = 60;
-		}
-		else{
-			enemyTimer -= 1;
-		}
-		
-		//rotate quad
-		// TODO remove this code, rotation should be done, being left for now becuase it makes the basic tests more fun to see movement
-		rotation += 0.15f * delta;
-		
-		
-		// TODO verify/make sure the speed is normalized for all directional movement
-		//TODO make this more elegant somehow
-		if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
-			player.setPlayerX(player.getPlayerX() - 0.35f * delta);
-		}
+		//TODO change to a switch
+		if(level.getType().equals("Gameplay")){
 
-		//TODO make this more elegant somehow
-		if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)){
-			player.setPlayerX(player.getPlayerX() + 0.35f * delta);
-		}
-
-		//TODO make this more elegant somehow
-		if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
-			player.setPlayerY(player.getPlayerY() - 0.35f * delta);
-		}
-
-		//TODO make this more elegant somehow
-		if(Keyboard.isKeyDown(Keyboard.KEY_UP)){
-			player.setPlayerY(player.getPlayerY() + 0.35f * delta);
-		}
+			if(!player.isCanShoot()){
+				player.countDownShooterTimer();
+			}
+			
+			if(enemyTimer == 0){
+				enemyList.add(new BasicEnemy((float) (Math.random()*800), -10));
+				enemyTimer = 60;
+			}
+			else{
+				enemyTimer -= 1;
+			}
+			
+			//rotate quad
+			// TODO remove this code, rotation should be done, being left for now becuase it makes the basic tests more fun to see movement
+			rotation += 0.15f * delta;
 		
-		// Press "Space" to shoot if the player can
-		if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
-			if(player.isCanShoot()){
-				// Add the bullet to the bullet list at the players position
-				bulletList.add((new BasicBullet(player.getPlayerX(), player.getPlayerY())));
-				// Stop the player from shooting again and reset the bullet timer
-				player.setCanShoot(false);
-				player.resetShooterTimer();
+		
+			
+			// TODO verify/make sure the speed is normalized for all directional movement
+			//TODO make this more elegant somehow
+			if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+				player.setPlayerX(player.getPlayerX() - 0.35f * delta);
+			}
+	
+			//TODO make this more elegant somehow
+			if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)){
+				player.setPlayerX(player.getPlayerX() + 0.35f * delta);
+			}
+	
+			//TODO make this more elegant somehow
+			if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+				player.setPlayerY(player.getPlayerY() + 0.35f * delta);
+			}
+	
+			//TODO make this more elegant somehow
+			if(Keyboard.isKeyDown(Keyboard.KEY_UP)){
+				player.setPlayerY(player.getPlayerY() - 0.35f * delta);
+			}
+			
+			// Press "Space" to shoot if the player can
+			if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
+				if(player.isCanShoot()){
+					// Add the bullet to the bullet list at the players position
+					bulletList.add((new BasicBullet(player.getPlayerX(), player.getPlayerY())));
+					// Stop the player from shooting again and reset the bullet timer
+					player.setCanShoot(false);
+					player.resetShooterTimer();
+				}
+			}
+			
+			while(Keyboard.next()){
+				if(Keyboard.getEventKeyState()){
+					// Pres "F" to set the game to full screen mode
+					// TODO probably remove from button command and put in an options menu
+					if(Keyboard.getEventKey() == Keyboard.KEY_F){
+						setDisplayMode(800,600, !Display.isFullscreen());
+					}
+					// Press V to toggle vsync
+					// TODO remove from keyboard command and set in options
+					else if (Keyboard.getEventKey() == Keyboard.KEY_V) {
+						vsync = !vsync;
+						Display.setVSyncEnabled(vsync);
+					}
+				}
 			}
 		}
 		
-		while(Keyboard.next()){
-			if(Keyboard.getEventKeyState()){
-				// Pres "F" to set the game to full screen mode
-				// TODO probably remove from button command and put in an options menu
-				if(Keyboard.getEventKey() == Keyboard.KEY_F){
-					setDisplayMode(800,600, !Display.isFullscreen());
-				}
-				// Press V to toggle vsync
-				// TODO remove from keyboard command and set in options
-				else if (Keyboard.getEventKey() == Keyboard.KEY_V) {
-					vsync = !vsync;
-					Display.setVSyncEnabled(vsync);
+		else if(level.getType().equals("Menu")){
+			while(Keyboard.next()){
+				if(Keyboard.getEventKey() == Keyboard.KEY_RETURN){
+					changeLevel("Gameplay");
 				}
 			}
 		}
@@ -276,10 +319,26 @@ public class ShooterEngine {
 	// Used to initialize opengl to work for 2d graphics
 	// TODO specific comments as to what each does
 	public void initGL(){
+		
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glShadeModel(GL11.GL_SMOOTH);        
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glDisable(GL11.GL_LIGHTING);                    
+ 
+		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);                
+        GL11.glClearDepth(1);                                       
+ 
+        //GL11.glEnable(GL11.GL_BLEND);
+        //GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+ 
+        //GL11.glViewport(0,0,800,600);
+        
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glLoadIdentity();
-		GL11.glOrtho(0, 800, 0, 600, 1, -1);
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		GL11.glPushMatrix();
+			GL11.glLoadIdentity();
+			GL11.glOrtho(0, 800, 600, 0, -1, 1);
+			GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		GL11.glPushMatrix();
 	}
 	
 	// Main render method
@@ -290,75 +349,147 @@ public class ShooterEngine {
 		// Initial color so pixels can be colored in individual classes, probably wont be needed once textures are being used
 		GL11.glColor3f(0.0f, 0.0f, 0.0f);
 
-		// Temp code for testing
-		// TODO figure out the best order to render to keep things that should be on top on top
-		////////////////////////////////
-		background.render();
-		////////////////////////////////
+		//TODO change to a switch
+		if(level.getType().equals("Gameplay")){
 		
-
-		// Loop through the list of active bullets 
-		for(Iterator<Bullet> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
-			Bullet bullet = bulletIt.next();
-			// If the bullet has left the screen, remove it to preserve memory
-			// TODO possibly need to change the logic if things change
-			if(bullet.offScreen()){
-				bulletIt.remove();
-			}
-			else{
-				bullet.move();
-				bullet.render();
-			}
-		}
-		
-		//GL11.glColor3f(1.0f, 0.0f, 0.0f);
-
-		//TODO make collision detection general for any enemy/bullet size
-		for(Iterator<Enemy> enemyIt = enemyList.iterator(); enemyIt.hasNext();){
-			Enemy enemy = enemyIt.next();
-			// Loop through each bullet (at least for now less bullets than enemies, if that changes possible reverse this logic)
-			// and check to see if a collision has happened
+			// Temp code for testing
+			// TODO figure out the best order to render to keep things that should be on top on top
+			////////////////////////////////
+			background.render();
+			////////////////////////////////
+			
+	
+			// Loop through the list of active bullets 
 			for(Iterator<Bullet> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
 				Bullet bullet = bulletIt.next();
-				// TODO remove 30's to be dependent on both the enemy and add a number for the bullet width/height
-				if(
-						( bullet.getX() < ( enemy.getX() + 30 ) ) && 
-						( bullet.getX() > ( enemy.getX() - 30 ) ) && 
-						( bullet.getY() > ( enemy.getY() - 30 ) ) && 
-						( bullet.getY() < ( enemy.getY() + 30 ) ) ){
-					
-					enemyIt.remove();
-					//TODO display score
-					gameState.addToScore(1);
-					
-					// If the bullet can not penetrate the object, remove it 
-					if(!bullet.penetrate()){
-						bulletIt.remove();
-					}
+				// If the bullet has left the screen, remove it to preserve memory
+				// TODO possibly need to change the logic if things change
+				if(bullet.offScreen()){
+					bulletIt.remove();
+				}
+				else{
+					bullet.move();
+					bullet.render();
 				}
 			}
-			// TODO probably make this lower, possibly extract it to the enemy class and make it more general for garbage collection or situation dependent or something
-			if(enemy.getY() < 0){
-				enemyIt.remove();
+			
+			//GL11.glColor3f(1.0f, 0.0f, 0.0f);
+	
+			//TODO make collision detection general for any enemy/bullet size
+			for(Iterator<Enemy> enemyIt = enemyList.iterator(); enemyIt.hasNext();){
+				Enemy enemy = enemyIt.next();
+				// Loop through each bullet (at least for now less bullets than enemies, if that changes possible reverse this logic)
+				// and check to see if a collision has happened
+				for(Iterator<Bullet> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
+					Bullet bullet = bulletIt.next();
+					// TODO remove 30's to be dependent on both the enemy and add a number for the bullet width/height
+					if(
+							( bullet.getX() < ( enemy.getX() + 30 ) ) && 
+							( bullet.getX() > ( enemy.getX() - 30 ) ) && 
+							( bullet.getY() > ( enemy.getY() - 30 ) ) && 
+							( bullet.getY() < ( enemy.getY() + 30 ) ) ){
+						
+						enemyIt.remove();
+						//TODO display score
+						//TODO weird problem with importing gamestate
+						gameState.addToScore(1);
+						
+						// If the bullet can not penetrate the object, remove it 
+						if(!bullet.penetrate()){
+							bulletIt.remove();
+						}
+					}
+					
+	
+				}
+				
+				// Player collision with enemy
+				// TODO figure out a better way to do this, maybe pass the player object?
+				if(enemy.collidWithPlayer(player.getPlayerX(), player.getPlayerY())){
+					player.hurtPlayer(1);
+					enemyIt.remove();
+					
+					if(player.getHealth() == 0){
+						changeLevel("Gameover");
+					}
+				}
+				
+				// TODO probably make this lower, possibly extract it to the enemy class and make it more general for garbage collection or situation dependent or something
+				if(enemy.getY() > 610){
+					enemyIt.remove();
+				}
+				else{
+					enemy.move();
+					enemy.render();
+				}
 			}
-			else{
-				enemy.move();
-				enemy.render();
+			
+			// R, G, B, A Set the color to blue one time only
+			// TODO move this code to object specific things, setting the proper colors and all that fun stuff, probably clear for the textures
+			//GL11.glColor3f(0.0f, 1.0f, 0.0f);
+			
+			//temp extrapolate to player class
+			// TODO remove once things get real and not just rotate the object based on delta
+			player.setPlayerRotation(rotation);
+			// Should probably be last to make sure that it appears on top of everything in game, but have things for the overlay after this to be on top
+			player.render();
+			
+			// TODO replace this crappy text code with bitmapped fonts
+			GL11.glPushMatrix();
+					GL11.glEnable(GL11.GL_BLEND);
+						GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+						// Yeah... that to string is pretty awesome isn't it? 
+						font.drawString(100, 10,"Health: " + ((Integer)player.getHealth()).toString(),Color.yellow);
+						font.drawString(700, 10,"Score: " + ((Integer)gameState.getScore()).toString(),Color.yellow);
+					GL11.glDisable(GL11.GL_BLEND);
+			GL11.glPopMatrix();
+		}
+		// TODO make this work for all menu types, not just a general one
+		else if(level.getType().equals("Menu")){
+			
+			if(level.getName().equals("BasicMenu")){
+			// TODO replace this crappy text code with bitmapped fonts
+			GL11.glPushMatrix();
+					GL11.glEnable(GL11.GL_BLEND);
+						GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+						// Yeah... that to string is pretty awesome isn't it? 
+						font.drawString(300, 100, "Test Shooter Game", Color.green);
+						font.drawString(300, 200,"To Start Press Enter",Color.yellow);
+					GL11.glDisable(GL11.GL_BLEND);
+			GL11.glPopMatrix();
+			}
+			else if(level.getName().equals("GameOverScreen")){
+				// TODO replace this crappy text code with bitmapped fonts
+				GL11.glPushMatrix();
+						GL11.glEnable(GL11.GL_BLEND);
+							GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+							// Yeah... that to string is pretty awesome isn't it? 
+							font.drawString(300, 100, "Game Over", Color.green);
+							font.drawString(300, 200, "Your final score was: " + gameState.getScore(), Color.cyan);
+							font.drawString(300, 300,"To Start Press Enter",Color.yellow);
+						GL11.glDisable(GL11.GL_BLEND);
+				GL11.glPopMatrix();
 			}
 		}
-		
-		// R, G, B, A Set the color to blue one time only
-		// TODO move this code to object specific things, setting the proper colors and all that fun stuff, probably clear for the textures
-		//GL11.glColor3f(0.0f, 1.0f, 0.0f);
-		
-		//temp extrapolate to player class
-		// TODO remove once things get real and not just rotate the object based on delta
-		player.setPlayerRotation(rotation);
-		// Should probably be last to make sure that it appears on top of everything in game, but have things for the overlay after this to be on top
-		player.render();
-		
 	}
 	
+	public void changeLevel(String levelName){
+		//TODO make this work for any kind of level
+		if(levelName.equals("Gameplay")){
+			// Switch the level
+			this.level = new BasicLevel();
+			// Reset the gamestate.
+			this.gameState = new ShooterGameState();
+			// Reset the player object
+			this.player = new Player();
+		} else if(levelName.equals("Menu")){
+			// Swith the level to the main screen
+			this.level = new BasicMenu();
+		} else if(levelName.equals("Gameover")){
+			// Swith the level to the game over screen
+			this.level = new GameOverScreen();
+		}
+	}
 	// It's a main method, you know?
 	public static void main(String[] argv) {
 		ShooterEngine shooterEngine = new ShooterEngine();

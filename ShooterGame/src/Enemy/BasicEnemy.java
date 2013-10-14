@@ -104,7 +104,22 @@ public class BasicEnemy implements Enemy {
 	public void move() {
 		//TODO should move call render?
 		//this.render();
-		this.y -= 1;
+		this.y += 1;
+	}
+
+	// TODO replace hardcoded values with variables
+	@Override
+	public boolean collidWithPlayer(float playerX, float playerY) {
+		if(
+				( playerX < ( x + 30 ) ) && 
+				( playerX > ( x - 30 ) ) && 
+				( playerY > ( y - 30 ) ) && 
+				( playerY < ( y + 30 ) ) ){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 
 }
