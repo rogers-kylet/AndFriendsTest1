@@ -1,6 +1,9 @@
 package Enemy;
 import org.lwjgl.opengl.GL11;
 
+import Bullet.Bullet;
+import Player.Player;
+
 
 public class BasicEnemy implements Enemy {
 	
@@ -12,15 +15,23 @@ public class BasicEnemy implements Enemy {
 	float rot;
 	// Enemy Health (if needed)
 	int health;
+	// The width of the enemy
+	int width;
+	// The height of the enemy
+	int height;
 	
 	public BasicEnemy(){
 		this.x = 400;
 		this.y = 650;
+		this.width = 60;
+		this.height = 60;
 	}
 	
 	public BasicEnemy(float x, float y){
 		this.x = x;
 		this.y = y;
+		this.width = 60;
+		this.height = 60;
 	}
 	@Override
 	// Draws the enemy on the screen
@@ -35,10 +46,10 @@ public class BasicEnemy implements Enemy {
 			GL11.glTranslatef(-this.x, -this.y, 0);
 			
 			GL11.glBegin(GL11.GL_QUADS);
-				GL11.glVertex2f(this.x - 30, this.y - 30);
-				GL11.glVertex2f(this.x + 30, this.y - 30);
-				GL11.glVertex2f(this.x + 30, this.y + 30);
-				GL11.glVertex2f(this.x - 30, this.y + 30);
+				GL11.glVertex2f(this.x - this.width/2, this.y - this.height/2);
+				GL11.glVertex2f(this.x + this.width/2, this.y - this.height/2);
+				GL11.glVertex2f(this.x + this.width/2, this.y + this.height/2);
+				GL11.glVertex2f(this.x - this.width/2, this.y + this.height/2);
 			GL11.glEnd();
 		GL11.glPopMatrix();
 	}
@@ -107,17 +118,52 @@ public class BasicEnemy implements Enemy {
 		this.y += 1;
 	}
 
-	// TODO replace hardcoded values with variables
+	// TODO add player width/height to the detection
 	@Override
-	public boolean collidWithPlayer(float playerX, float playerY) {
+	public boolean collidWithPlayer(Player player) {
 		if(
-				( playerX < ( x + 30 ) ) && 
-				( playerX > ( x - 30 ) ) && 
-				( playerY > ( y - 30 ) ) && 
-				( playerY < ( y + 30 ) ) ){
+				( player.getPlayerX() + player.getCollisionFudgeFactor() - player.getWidth() / 2 < ( this.x + this.width / 2 ) ) && 
+				( player.getPlayerX() - player.getCollisionFudgeFactor() + player.getWidth() / 2 > ( this.x - this.width / 2 ) ) && 
+				( player.getPlayerY() - player.getCollisionFudgeFactor() + player.getHeight() / 2 > ( this.y - this.height / 2 ) ) && 
+				( player.getPlayerY() + player.getCollisionFudgeFactor() - player.getHeight() / 2 < ( this.y + this.height / 2 ) ) ){
 			return true;
 		}
 		else{
+			return false;
+		}
+	}
+
+	@Override
+	public int getWidth() {
+		return this.width;
+	}
+
+	@Override
+	public int getHeight() {
+		// TODO Auto-generated method stub
+		return this.height;
+	}
+
+	@Override
+	public void setWidth(int newWidth) {
+		this.width = newWidth;
+	}
+
+	@Override
+	public void setHeight(int newHeight) {
+		this.height = newHeight;
+	}
+
+	@Override
+	public boolean collidWithBullet(Bullet bullet) {
+		if(
+				( bullet.getX() - bullet.getWidth() / 2 < ( this.getX() + this.width / 2 ) ) && 
+				( bullet.getX() + bullet.getWidth() / 2 > ( this.getX() - this.width / 2 ) ) && 
+				( bullet.getY() + bullet.getHeight() / 2 > ( this.getY() - this.height / 2 ) ) && 
+				( bullet.getY() - bullet.getHeight() / 2 < ( this.getY() + this.height / 2 ) ) ) {
+			return true;
+		}
+		else {
 			return false;
 		}
 	}

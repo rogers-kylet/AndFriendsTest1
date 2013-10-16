@@ -139,11 +139,8 @@ public class ShooterEngine {
 		
 		//TODO change to a switch
 		if(level.getType().equals("Gameplay")){
-
-			if(!player.isCanShoot()){
-				player.countDownShooterTimer();
-			}
 			
+			// TODO temp logic for making enemies randomly appear above
 			if(enemyTimer == 0){
 				enemyList.add(new BasicEnemy((float) (Math.random()*800), -10));
 				enemyTimer = 60;
@@ -159,7 +156,7 @@ public class ShooterEngine {
 		
 			
 			// TODO verify/make sure the speed is normalized for all directional movement
-			//TODO make this more elegant somehow
+			// TODO make this more elegant somehow
 			if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
 				player.setPlayerX(player.getPlayerX() - 0.35f * delta);
 			}
@@ -383,11 +380,7 @@ public class ShooterEngine {
 				for(Iterator<Bullet> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
 					Bullet bullet = bulletIt.next();
 					// TODO remove 30's to be dependent on both the enemy and add a number for the bullet width/height
-					if(
-							( bullet.getX() < ( enemy.getX() + 30 ) ) && 
-							( bullet.getX() > ( enemy.getX() - 30 ) ) && 
-							( bullet.getY() > ( enemy.getY() - 30 ) ) && 
-							( bullet.getY() < ( enemy.getY() + 30 ) ) ){
+					if (enemy.collidWithBullet(bullet)) {
 						
 						enemyIt.remove();
 						//TODO display score
@@ -404,9 +397,9 @@ public class ShooterEngine {
 				}
 				
 				// Player collision with enemy
-				// TODO figure out a better way to do this, maybe pass the player object?
-				if(enemy.collidWithPlayer(player.getPlayerX(), player.getPlayerY())){
+				if(enemy.collidWithPlayer(player)){
 					player.hurtPlayer(1);
+					// TODO figure out what should happen for enemy collision, probably shoudln't kill it, but should start invincibility timer for player
 					enemyIt.remove();
 					
 					if(player.getHealth() == 0){
@@ -478,10 +471,16 @@ public class ShooterEngine {
 		if(levelName.equals("Gameplay")){
 			// Switch the level
 			this.level = new BasicLevel();
+			
+			//TODO most of this stuff will probably need to be changed to update to the current level stuff, or more specific for each level, gamestate souldn't be cleared from level to level
 			// Reset the gamestate.
 			this.gameState = new ShooterGameState();
 			// Reset the player object
 			this.player = new Player();
+			// Reset the enemy list
+			this.enemyList = new ArrayList<Enemy>();
+			// Reset the bullet list
+			this.bulletList = new ArrayList<Bullet>();
 		} else if(levelName.equals("Menu")){
 			// Swith the level to the main screen
 			this.level = new BasicMenu();

@@ -1,5 +1,8 @@
 package Enemy;
 
+import Bullet.Bullet;
+import Player.Player;
+
 public interface Enemy {
 
 	// Draw the enemy
@@ -25,6 +28,16 @@ public interface Enemy {
 	// Updates the X and Y coordinates of the enemy without any additional information
 	void move();
 	// Checks if the enemy has collided with the player
-	boolean collidWithPlayer(float playerX, float playerY);
+	boolean collidWithPlayer(Player player);
+	// Checks if the enemy has collid with a bullet
+	boolean collidWithBullet(Bullet bullet);
+	// Gets the Width of the Enemy
+	int getWidth();
+	// Sets the Width of the Enemy
+	void setWidth(int newWidth);
+	// Gets the Height of the Enemy
+	int getHeight();
+	// Sets the Height of the Enemy
+	void setHeight(int newHeight);
 	
 }

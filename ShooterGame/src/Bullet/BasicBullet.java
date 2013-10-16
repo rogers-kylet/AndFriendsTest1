@@ -7,16 +7,22 @@ public class BasicBullet implements Bullet {
 	float x;
 	float y;
 	float rot;
+	int width;
+	int height;
 	boolean penetrate;
 	
 	public BasicBullet(){
 		this.x = 300;
 		this.y = 300;
+		this.width = 20;
+		this.height = 20;
 	}
 	
 	public BasicBullet(float x, float y){
 		this.x = x;
 		this.y = y;
+		this.width = 20;
+		this.height = 20;
 	}
 	
 	@Override
@@ -68,10 +74,10 @@ public class BasicBullet implements Bullet {
 		GL11.glTranslatef(-x, -y, 0);
 		
 		GL11.glBegin(GL11.GL_QUADS);
-			GL11.glVertex2f(x - 10, y - 10);
-			GL11.glVertex2f(x + 10, y - 10);
-			GL11.glVertex2f(x + 10, y + 10);
-			GL11.glVertex2f(x - 10, y + 10);
+			GL11.glVertex2f(x - this.width/2, y - this.height/2);
+			GL11.glVertex2f(x + this.width/2, y - this.height/2);
+			GL11.glVertex2f(x + this.width/2, y + this.height/2);
+			GL11.glVertex2f(x - this.width/2, y + this.height/2);
 		GL11.glEnd();
 	GL11.glPopMatrix();
 	}
@@ -84,6 +90,26 @@ public class BasicBullet implements Bullet {
 		else{
 			return false;
 		}
+	}
+
+	@Override
+	public int getWidth() {
+		return this.width;
+	}
+
+	@Override
+	public void setWidth(int newWidth) {
+		this.width = newWidth;
+	}
+
+	@Override
+	public int getHeight() {
+		return this.height;
+	}
+
+	@Override
+	public void setHeight(int newHeight) {
+		this.height = newHeight;
 	}
 
 }
