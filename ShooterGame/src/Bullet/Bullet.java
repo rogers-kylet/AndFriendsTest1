@@ -6,6 +6,8 @@ public interface Bullet {
 	void setX(float x);
 	float getY();
 	void setY(float y);
+	float getSpeed();
+	void setSpeed(float angle);
 	int getWidth();
 	void setWidth(int newWidth);
 	int getHeight();

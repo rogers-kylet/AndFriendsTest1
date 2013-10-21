@@ -5,7 +5,7 @@ import org.newdawn.slick.opengl.Texture;
 
 public class Player {
 
-	/* Constants */
+	/** Constants */
 	
 		// Default player x start position
 		private static final int PLAYER_START_Y = 300;
@@ -30,9 +30,9 @@ public class Player {
 		// Default value for flash timer
 		private static final int FLASH_TIMER_START_VALUE = 6;
 	
-	/* Constants End */
+	/** Constants End */
 	
-	/* Numbers Start */
+	/** Numbers Start */
 	
 		// Player X coordinate
 		float playerX;
@@ -40,6 +40,8 @@ public class Player {
 		float playerY;
 		// Player rotation
 		float playerRotation;
+		// Player speed
+		float speed;
 		// Player Width
 		int width;
 		// Player Height
@@ -53,9 +55,9 @@ public class Player {
 		// Type of current weapon
 		int weaponType;
 		
-	/* Numbers end */
+	/** Numbers end */
 
-	/* Switches */
+	/** Switches */
 		
 		// Determines whether the player can shoot
 		boolean canShoot;
@@ -66,18 +68,18 @@ public class Player {
 		// Determines if display should flip
 		boolean flashSwitch;
 		
-	/* Switches End */
+	/** Switches End */
 	
-	/* Timers */
+	/** Timers */
 		// Invincibility timer
 		int invincibilityTimer;
 		// Determines when the player can shoot again
 		int shooterTimer;
 		// Flash Timer
 		int flashTimer;
-	/* Timers End */
+	/** Timers End */
 	
-	/* Constructors */
+	/** Constructors */
 		// Default constuctor that sets player to thge default constant. 
 		public Player(){
 			this.playerX = PLAYER_START_X;
@@ -90,6 +92,7 @@ public class Player {
 			this.width = 50;
 			this.height = 50;
 			this.collisionFudgeFactor = 2;
+			this.speed = 5;
 		}
 		
 		// Constructor to specify player start position
@@ -104,11 +107,12 @@ public class Player {
 			this.width = 50;
 			this.height = 50;
 			this.collisionFudgeFactor = 2;
+			this.speed = 5;
 		}
 	
-	/* Constructors End */
+	/** Constructors End */
 		
-	/* Render Start */
+	/** Render Start */
 		// Code taken from texture example
 		// TODO make the textures actually work
 		public void render(Texture texture){
@@ -161,9 +165,9 @@ public class Player {
 			}
 		}
 	
-	/* Render End */
+	/** Render End */
 	
-	/* Timers Start */
+	/** Timers Start */
 	
 		// Sets the shooter timer back to it's default start value
 		public void resetShooterTimer(){
@@ -212,9 +216,9 @@ public class Player {
 			}
 		}
 		
-	/* Timers End */
+	/** Timers End */
 	
-	/* Misc Methods Start */	
+	/** Misc Methods Start */	
 		
 		// Hurts the player by the given amount of damage
 		public void hurtPlayer(int damage) {
@@ -225,11 +229,20 @@ public class Player {
 				resetFlashTimer();
 			}
 		}
-	/* Misc Methods End */
+		
+		// Moves the player based on an angle
+		public void movePlayer(float angle) {
+			// Calculates the new player X
+			playerX += this.speed * Math.cos(Math.toRadians(angle));
+			// Calclates the new player Y
+			playerY += this.speed * Math.sin(Math.toRadians(angle));
+		}
+		
+	/** Misc Methods End */
 		
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	/* Getters and Setters Start */
+	/** Getters and Setters Start */
 	
 		// Gets the fudge factor used to alter collision detection
 		public int getCollisionFudgeFactor() {
@@ -347,6 +360,18 @@ public class Player {
 		public void setPlayerRotation(float playerRotation) {
 			this.playerRotation = playerRotation;
 		}
+
+		// Gets the player speed
+		public float getSpeed() {
+			return speed;
+		}
+
+		// Sets the player speed
+		public void setSpeed(float speed) {
+			this.speed = speed;
+		}
+		
+		
 	
-	/* Getters and Setters End */
+	/** Getters and Setters End */
 }

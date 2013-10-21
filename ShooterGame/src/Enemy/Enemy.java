@@ -39,5 +39,13 @@ public interface Enemy {
 	int getHeight();
 	// Sets the Height of the Enemy
 	void setHeight(int newHeight);
+	// Gets the speed of the Enemy
+	float getSpeed();
+	// Sets the speed of the Enemy
+	void setSpeed(float speed);
+	// Gets the angle of the Enemy
+	float getAngle();
+	// Sets the angle of the Enemy
+	void setAngle(float angle);
 	
 }

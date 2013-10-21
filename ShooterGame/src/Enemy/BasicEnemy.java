@@ -19,12 +19,18 @@ public class BasicEnemy implements Enemy {
 	int width;
 	// The height of the enemy
 	int height;
+	// The speed of the enemy
+	float speed;
+	// The angle of the enemy
+	float angle;
 	
 	public BasicEnemy(){
 		this.x = 400;
 		this.y = 650;
 		this.width = 60;
 		this.height = 60;
+		this.speed = 1;
+		this.angle = 90;
 	}
 	
 	public BasicEnemy(float x, float y){
@@ -32,6 +38,8 @@ public class BasicEnemy implements Enemy {
 		this.y = y;
 		this.width = 60;
 		this.height = 60;
+		this.speed = 1;
+		this.angle = 90;
 	}
 	@Override
 	// Draws the enemy on the screen
@@ -109,13 +117,16 @@ public class BasicEnemy implements Enemy {
 		//this.render();
 		
 	}
+	
+	public void move(float angle) {
+		this.x += this.speed * Math.cos(Math.toRadians(angle));
+		this.y += this.speed * Math.sin(Math.toRadians(angle));
+	}
 
 	@Override
 	//Move when relation to other objects isn't important
 	public void move() {
-		//TODO should move call render?
-		//this.render();
-		this.y += 1;
+		this.move(this.angle);
 	}
 
 	// TODO add player width/height to the detection
@@ -140,7 +151,6 @@ public class BasicEnemy implements Enemy {
 
 	@Override
 	public int getHeight() {
-		// TODO Auto-generated method stub
 		return this.height;
 	}
 
@@ -166,6 +176,22 @@ public class BasicEnemy implements Enemy {
 		else {
 			return false;
 		}
+	}
+
+	public float getSpeed() {
+		return speed;
+	}
+
+	public void setSpeed(float speed) {
+		this.speed = speed;
+	}
+
+	public float getAngle() {
+		return angle;
+	}
+
+	public void setAngle(float angle) {
+		this.angle = angle;
 	}
 
 }

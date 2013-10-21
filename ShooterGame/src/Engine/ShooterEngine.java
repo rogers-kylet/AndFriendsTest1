@@ -156,23 +156,44 @@ public class ShooterEngine {
 			
 			// TODO verify/make sure the speed is normalized for all directional movement
 			// TODO make this more elegant somehow
-			if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
-				player.setPlayerX(player.getPlayerX() - 0.35f * delta);
+			if(Keyboard.isKeyDown(Keyboard.KEY_LEFT) && Keyboard.isKeyDown(Keyboard.KEY_UP)){
+				player.movePlayer(225);
+			}
+			
+			else if(Keyboard.isKeyDown(Keyboard.KEY_LEFT) && Keyboard.isKeyDown(Keyboard.KEY_DOWN)){
+				player.movePlayer(135);
+			}
+			
+			else if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT) && Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+				player.movePlayer(315);
+			}
+			
+			else if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT) && Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+				player.movePlayer(45);
+			}
+			
+			//TODO check the order of the the singles to make sure it is optimal
+			else if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+				//player.setPlayerX(player.getPlayerX() - 0.35f * delta);
+				player.movePlayer(180);
 			}
 	
 			//TODO make this more elegant somehow
-			if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)){
-				player.setPlayerX(player.getPlayerX() + 0.35f * delta);
+			else if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)){
+				//player.setPlayerX(player.getPlayerX() + 0.35f * delta);
+				player.movePlayer(0);
 			}
 	
 			//TODO make this more elegant somehow
-			if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
-				player.setPlayerY(player.getPlayerY() + 0.35f * delta);
+			else if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+				//player.setPlayerY(player.getPlayerY() + 0.35f * delta);
+				player.movePlayer(90);
 			}
 	
 			//TODO make this more elegant somehow
-			if(Keyboard.isKeyDown(Keyboard.KEY_UP)){
-				player.setPlayerY(player.getPlayerY() - 0.35f * delta);
+			else if(Keyboard.isKeyDown(Keyboard.KEY_UP)){
+				//player.setPlayerY(player.getPlayerY() - 0.35f * delta);
+				player.movePlayer(270);
 			}
 			
 			// Press "Space" to shoot if the player can

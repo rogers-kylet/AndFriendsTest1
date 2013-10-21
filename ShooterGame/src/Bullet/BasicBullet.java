@@ -9,6 +9,8 @@ public class BasicBullet implements Bullet {
 	float rot;
 	int width;
 	int height;
+	float speed;
+	float angle;
 	boolean penetrate;
 	
 	public BasicBullet(){
@@ -16,6 +18,8 @@ public class BasicBullet implements Bullet {
 		this.y = 300;
 		this.width = 20;
 		this.height = 20;
+		this.speed = 10;
+		this.angle = 270;
 	}
 	
 	public BasicBullet(float x, float y){
@@ -23,6 +27,8 @@ public class BasicBullet implements Bullet {
 		this.y = y;
 		this.width = 20;
 		this.height = 20;
+		this.speed = 10;
+		this.angle = 270;
 	}
 	
 	@Override
@@ -50,9 +56,15 @@ public class BasicBullet implements Bullet {
 		return penetrate;
 	}
 
+	@Deprecated 
 	@Override
 	public void move() {
-		this.y = y-10;
+		this.move(this.angle);
+	}
+	
+	public void move(float angle){
+		this.x += speed * Math.cos(Math.toRadians(angle));
+		this.y += speed * Math.sin(Math.toRadians(angle));
 	}
 
 	@Override
@@ -111,5 +123,25 @@ public class BasicBullet implements Bullet {
 	public void setHeight(int newHeight) {
 		this.height = newHeight;
 	}
+
+	@Override
+	public float getSpeed() {
+		return speed;
+	}
+
+	@Override
+	public void setSpeed(float speed) {
+		this.speed = speed;
+	}
+
+	public float getAngle() {
+		return angle;
+	}
+
+	public void setAngle(float angle) {
+		this.angle = angle;
+	}
+	
+	
 
 }
