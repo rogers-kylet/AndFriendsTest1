@@ -156,42 +156,42 @@ public class ShooterEngine {
 			
 			// TODO verify/make sure the speed is normalized for all directional movement
 			// TODO make this more elegant somehow
-			if(Keyboard.isKeyDown(Keyboard.KEY_LEFT) && Keyboard.isKeyDown(Keyboard.KEY_UP)){
+			if(Keyboard.isKeyDown(Keyboard.KEY_A) && Keyboard.isKeyDown(Keyboard.KEY_W)){
 				player.movePlayer(225);
 			}
 			
-			else if(Keyboard.isKeyDown(Keyboard.KEY_LEFT) && Keyboard.isKeyDown(Keyboard.KEY_DOWN)){
+			else if(Keyboard.isKeyDown(Keyboard.KEY_A) && Keyboard.isKeyDown(Keyboard.KEY_S)){
 				player.movePlayer(135);
 			}
 			
-			else if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT) && Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+			else if(Keyboard.isKeyDown(Keyboard.KEY_D) && Keyboard.isKeyDown(Keyboard.KEY_W)) {
 				player.movePlayer(315);
 			}
 			
-			else if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT) && Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+			else if(Keyboard.isKeyDown(Keyboard.KEY_D) && Keyboard.isKeyDown(Keyboard.KEY_S)) {
 				player.movePlayer(45);
 			}
 			
 			//TODO check the order of the the singles to make sure it is optimal
-			else if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+			else if(Keyboard.isKeyDown(Keyboard.KEY_A)) {
 				//player.setPlayerX(player.getPlayerX() - 0.35f * delta);
 				player.movePlayer(180);
 			}
 	
 			//TODO make this more elegant somehow
-			else if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)){
+			else if(Keyboard.isKeyDown(Keyboard.KEY_D)){
 				//player.setPlayerX(player.getPlayerX() + 0.35f * delta);
 				player.movePlayer(0);
 			}
 	
 			//TODO make this more elegant somehow
-			else if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+			else if(Keyboard.isKeyDown(Keyboard.KEY_S)) {
 				//player.setPlayerY(player.getPlayerY() + 0.35f * delta);
 				player.movePlayer(90);
 			}
 	
 			//TODO make this more elegant somehow
-			else if(Keyboard.isKeyDown(Keyboard.KEY_UP)){
+			else if(Keyboard.isKeyDown(Keyboard.KEY_W)){
 				//player.setPlayerY(player.getPlayerY() - 0.35f * delta);
 				player.movePlayer(270);
 			}
@@ -209,7 +209,7 @@ public class ShooterEngine {
 			
 			// TODO verify/make sure the speed is normalized for all directional movement
 			// TODO make this more elegant somehow
-			if(Keyboard.isKeyDown(Keyboard.KEY_A) && Keyboard.isKeyDown(Keyboard.KEY_W)){
+			if(Keyboard.isKeyDown(Keyboard.KEY_LEFT) && Keyboard.isKeyDown(Keyboard.KEY_UP)){
 				if(player.isCanShoot()){
 					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
 					bullet.setAngle(225);
@@ -220,7 +220,7 @@ public class ShooterEngine {
 				}
 			}
 			
-			else if(Keyboard.isKeyDown(Keyboard.KEY_A) && Keyboard.isKeyDown(Keyboard.KEY_S)){
+			else if(Keyboard.isKeyDown(Keyboard.KEY_LEFT) && Keyboard.isKeyDown(Keyboard.KEY_DOWN)){
 				if(player.isCanShoot()){
 					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
 					bullet.setAngle(135);
@@ -231,7 +231,7 @@ public class ShooterEngine {
 				}
 			}
 			
-			else if(Keyboard.isKeyDown(Keyboard.KEY_D) && Keyboard.isKeyDown(Keyboard.KEY_W)) {
+			else if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT) && Keyboard.isKeyDown(Keyboard.KEY_UP)) {
 				if(player.isCanShoot()){
 					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
 					bullet.setAngle(315);
@@ -242,7 +242,7 @@ public class ShooterEngine {
 				}
 			}
 			
-			else if(Keyboard.isKeyDown(Keyboard.KEY_D) && Keyboard.isKeyDown(Keyboard.KEY_S)) {
+			else if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT) && Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
 				if(player.isCanShoot()){
 					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
 					bullet.setAngle(45);
@@ -254,7 +254,7 @@ public class ShooterEngine {
 			}
 			
 			//TODO check the order of the the singles to make sure it is optimal
-			else if(Keyboard.isKeyDown(Keyboard.KEY_A)) {
+			else if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
 				if(player.isCanShoot()){
 					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
 					bullet.setAngle(180);
@@ -266,7 +266,7 @@ public class ShooterEngine {
 			}
 	
 			//TODO make this more elegant somehow
-			else if(Keyboard.isKeyDown(Keyboard.KEY_D)){
+			else if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)){
 				if(player.isCanShoot()){
 					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
 					bullet.setAngle(0);
@@ -278,7 +278,7 @@ public class ShooterEngine {
 			}
 	
 			//TODO make this more elegant somehow
-			else if(Keyboard.isKeyDown(Keyboard.KEY_S)) {
+			else if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
 				if(player.isCanShoot()){
 					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
 					bullet.setAngle(90);
@@ -290,7 +290,7 @@ public class ShooterEngine {
 			}
 	
 			//TODO make this more elegant somehow
-			else if(Keyboard.isKeyDown(Keyboard.KEY_W)){
+			else if(Keyboard.isKeyDown(Keyboard.KEY_UP)){
 				if(player.isCanShoot()) {
 					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
 					bullet.setAngle(270);
