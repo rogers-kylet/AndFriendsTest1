@@ -207,6 +207,99 @@ public class ShooterEngine {
 				}
 			}
 			
+			// TODO verify/make sure the speed is normalized for all directional movement
+			// TODO make this more elegant somehow
+			if(Keyboard.isKeyDown(Keyboard.KEY_A) && Keyboard.isKeyDown(Keyboard.KEY_W)){
+				if(player.isCanShoot()){
+					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
+					bullet.setAngle(225);
+					bulletList.add(bullet);
+					// Stop the player from shooting again and reset the bullet timer
+					player.setCanShoot(false);
+					player.resetShooterTimer();
+				}
+			}
+			
+			else if(Keyboard.isKeyDown(Keyboard.KEY_A) && Keyboard.isKeyDown(Keyboard.KEY_S)){
+				if(player.isCanShoot()){
+					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
+					bullet.setAngle(135);
+					bulletList.add(bullet);
+					// Stop the player from shooting again and reset the bullet timer
+					player.setCanShoot(false);
+					player.resetShooterTimer();
+				}
+			}
+			
+			else if(Keyboard.isKeyDown(Keyboard.KEY_D) && Keyboard.isKeyDown(Keyboard.KEY_W)) {
+				if(player.isCanShoot()){
+					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
+					bullet.setAngle(315);
+					bulletList.add(bullet);
+					// Stop the player from shooting again and reset the bullet timer
+					player.setCanShoot(false);
+					player.resetShooterTimer();
+				}
+			}
+			
+			else if(Keyboard.isKeyDown(Keyboard.KEY_D) && Keyboard.isKeyDown(Keyboard.KEY_S)) {
+				if(player.isCanShoot()){
+					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
+					bullet.setAngle(45);
+					bulletList.add(bullet);
+					// Stop the player from shooting again and reset the bullet timer
+					player.setCanShoot(false);
+					player.resetShooterTimer();
+				}
+			}
+			
+			//TODO check the order of the the singles to make sure it is optimal
+			else if(Keyboard.isKeyDown(Keyboard.KEY_A)) {
+				if(player.isCanShoot()){
+					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
+					bullet.setAngle(180);
+					bulletList.add(bullet);
+					// Stop the player from shooting again and reset the bullet timer
+					player.setCanShoot(false);
+					player.resetShooterTimer();
+				}
+			}
+	
+			//TODO make this more elegant somehow
+			else if(Keyboard.isKeyDown(Keyboard.KEY_D)){
+				if(player.isCanShoot()){
+					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
+					bullet.setAngle(0);
+					bulletList.add(bullet);
+					// Stop the player from shooting again and reset the bullet timer
+					player.setCanShoot(false);
+					player.resetShooterTimer();
+				}
+			}
+	
+			//TODO make this more elegant somehow
+			else if(Keyboard.isKeyDown(Keyboard.KEY_S)) {
+				if(player.isCanShoot()){
+					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
+					bullet.setAngle(90);
+					bulletList.add(bullet);
+					// Stop the player from shooting again and reset the bullet timer
+					player.setCanShoot(false);
+					player.resetShooterTimer();
+				}
+			}
+	
+			//TODO make this more elegant somehow
+			else if(Keyboard.isKeyDown(Keyboard.KEY_W)){
+				if(player.isCanShoot()) {
+					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
+					bullet.setAngle(270);
+					bulletList.add(bullet);
+					// Stop the player from shooting again and reset the bullet timer
+					player.setCanShoot(false);
+					player.resetShooterTimer();
+				}
+			}
 			while(Keyboard.next()){
 				if(Keyboard.getEventKeyState()){
 					// Pres "F" to set the game to full screen mode
