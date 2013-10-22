@@ -194,5 +194,12 @@ public interface Entity {
 	 * Simplified call to move(this) to disable targeting
 	 */
 	public void move();
+	
+	/**
+	 * collisionDetection(Entity) - Calculates Entity collision with this Entity
+	 * @param target - Target Entity AI should test collisions on.
+	 *
+	 */
+	public boolean collisionDetection(Entity target);
 
 }

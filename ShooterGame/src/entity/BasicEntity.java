@@ -12,7 +12,7 @@ public abstract class BasicEntity implements Entity {
 
 	//Classes of Entity - Controls AI reaction
 	public static enum entityClass {
-		PLAYER, HOSTILE, PASSIVE, STATIONARY
+		PLAYER, HOSTILE, PASSIVE, STATIONARY, PROJECTILE
 	};
 
 	//Current Entity class
@@ -108,6 +108,21 @@ public abstract class BasicEntity implements Entity {
 		//Call move with self as target - Forces wander mode
 		move(this);
 	}
+	
+	public boolean collisionDetection(Entity target) {
+		//TODO: Add collision processing
+		
+		//Call Entity specific collision function (If required)
+		processCollisionTick(target);
+		
+		return false;
+	}
+	
+	/**
+	 * processCollisionTick(Entity) - Processes entity specific collision detection
+	 * @param target - Target Entity AI should react to. Send self reference for no target
+	 */
+	protected abstract void processCollisionTick(Entity target);
 
 	/**
 	 * processMovementTick(Entity) - Processes entity specific targeting
