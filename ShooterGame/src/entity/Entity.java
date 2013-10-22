@@ -1,6 +1,6 @@
 package entity;
 
-import java.util.Vector;
+import org.lwjgl.util.vector.Vector3f;
 
 /** 
  *  Base interface for any mobile or living object on screen.
@@ -171,13 +171,13 @@ public interface Entity {
 	 * getAcceleration() - Get acceleration amount and direction Entity is under)
 	 * @return acceleration - Current acceleration of Entity
 	 */
-	public Vector<Float> getAcceleration();
+	public Vector3f getAcceleration();
 
 	/**
 	 * setAcceleration(Vector<Float>) - Set acceleration amount and direction Entity is under)
 	 * @param acceleration - Current acceleration of Entity
 	 */
-	public void setAcceleration(Vector<Float> acceleration);
+	public void setAcceleration(Vector3f acceleration);
 
 
 

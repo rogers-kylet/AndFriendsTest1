@@ -1,6 +1,6 @@
 package entity;
 
-import java.util.Vector;
+import org.lwjgl.util.vector.Vector3f;
 
 /** 
  *  Base class for any mobile or living object on screen.
@@ -39,7 +39,7 @@ public abstract class BasicEntity implements Entity {
 	// The speed constraints and angular direction of the Entity
 	protected float minimumSpeed, speed, maxSpeed, angle;
 
-	protected Vector<Float> acceleration;
+	protected Vector3f acceleration;
 
 	// Begin Entity base methods
 	// -------------------------
@@ -93,9 +93,9 @@ public abstract class BasicEntity implements Entity {
 
 	public void setAngle(float angle) { this.angle = angle; }
 
-	public Vector<Float> getAcceleration() { return acceleration; }
+	public Vector3f getAcceleration() { return acceleration; }
 
-	public void setAcceleration(Vector<Float> acceleration) { this.acceleration = acceleration; }
+	public void setAcceleration(Vector3f acceleration) { this.acceleration = acceleration; }
 
 	public void move(Entity target) {
 		//TODO: Add movement processing
