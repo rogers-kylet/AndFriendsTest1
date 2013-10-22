@@ -1,5 +1,7 @@
 package entity;
 
+import java.util.Vector;
+
 /** 
  *  Base interface for any mobile or living object on screen.
  */
@@ -7,18 +9,18 @@ public interface Entity {
 
 	// Begin Entity base methods
 	// -------------------------
-	
+
 	// Draw the Entity
 	/**
 	 * render()
 	 * Renders the Entity on screen if visible
 	 */
 	public void render();
-	 
+
 	/**
-	  * getName() - Get name of Entity
-	  * @return name - Name of Entity
-	  */
+	 * getName() - Get name of Entity
+	 * @return name - Name of Entity
+	 */
 	public String getName();
 
 	/**
@@ -26,13 +28,13 @@ public interface Entity {
 	 * @param name - New name of Entity
 	 */
 	public void setName(String name);
-	
+
 	/**
-	  * getEid() - Get unique ID of Entity
-	  * @return eid - Unique ID of Entity
-	  */
+	 * getEid() - Get unique ID of Entity
+	 * @return eid - Unique ID of Entity
+	 */
 	public int getEid();
-	
+
 	/**
 	 * getX() - Get world X coordinate of Entity
 	 * @return x - X coordinate of Entity
@@ -56,7 +58,7 @@ public interface Entity {
 	 * @param y - World Y coordinate of Entity
 	 */
 	public void setY(float y);
-	
+
 	/**
 	 * getZ() - Get world Z coordinate of Entity
 	 * @return z - Z coordinate of Entity
@@ -68,7 +70,7 @@ public interface Entity {
 	 * @param z - World Z coordinate of Entity
 	 */
 	public void setZ(float z);
-	
+
 	/**
 	 * getRotation() - Get rotation degree of Entity
 	 * @return rotation - Current rotation degree of Entity
@@ -80,7 +82,7 @@ public interface Entity {
 	 * @param rotation - New rotation degree of Entity
 	 */
 	public void setRotation(float rotation);
-	
+
 	/**
 	 * getRotationSpeed() - Get rotation speed (in degrees/frame) of Entity
 	 * @return rotationSpeed - Current rotation speed of Entity
@@ -92,7 +94,7 @@ public interface Entity {
 	 * @param rotationSpeed - New rotation speed of Entity
 	 */
 	public void setRotationSpeed(float rotationSpeed);
-	
+
 	/**
 	 * getScale() - Get scale of Entity
 	 * @return Current scaling of the Entity
@@ -104,7 +106,7 @@ public interface Entity {
 	 * @param scale - Current scaling of Entity
 	 */
 	public void setScale(float scale);
-	
+
 	/**
 	 * getHealth() - Get current health of Entity
 	 * @return Current health of the Entity
@@ -116,7 +118,7 @@ public interface Entity {
 	 * @param scale - Current health of Entity
 	 */
 	public void setHealth(float health);
-	
+
 	/**
 	 * getSpeed() - Get current speed of Entity
 	 * @return Current speed of the Entity
@@ -128,7 +130,7 @@ public interface Entity {
 	 * @param speed - Current speed of Entity
 	 */
 	public void setSpeed(float speed);
-	
+
 	/**
 	 * getWidth() - Get width of Entity
 	 * @return Current width of the Entity
@@ -140,7 +142,7 @@ public interface Entity {
 	 * @param width - Current width of Entity
 	 */
 	public void setWidth(float width);
-	
+
 	/**
 	 * getHeight() - Get height of Entity
 	 * @return Current height of the Entity
@@ -152,7 +154,7 @@ public interface Entity {
 	 * @param height - Current height of Entity
 	 */
 	public void setHeight(float height);
-	
+
 	/**
 	 * getAngle() - Get angle of Entity (Direction, in degrees, the Entity is facing)
 	 * @return Current angle of the Entity
@@ -164,16 +166,28 @@ public interface Entity {
 	 * @param angle - Current angle of Entity
 	 */
 	public void setAngle(float angle);
-	
-	
-	
+
+	/**
+	 * getAcceleration() - Get acceleration amount and direction Entity is under)
+	 * @return acceleration - Current acceleration of Entity
+	 */
+	public Vector<Float> getAcceleration();
+
+	/**
+	 * setAcceleration(Vector<Float>) - Set acceleration amount and direction Entity is under)
+	 * @param acceleration - Current acceleration of Entity
+	 */
+	public void setAcceleration(Vector<Float> acceleration);
+
+
+
 	/**
 	 * move(Entity) - Calculates Entity movement for this frame 
 	 * @param target - Target Entity AI should react to. Send self reference for no target
 	 *
 	 */
 	public void move(Entity target);
-	
+
 	/**
 	 * move() - Calculates Entity movement for this frame with no visible target.
 	 * 
