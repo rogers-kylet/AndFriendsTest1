@@ -122,7 +122,7 @@ public abstract class BasicEntity implements Entity {
 	 * processCollisionTick(Entity) - Processes entity specific collision detection
 	 * @param target - Target Entity AI should react to. Send self reference for no target
 	 */
-	protected abstract void processCollisionTick(Entity target);
+	protected abstract boolean processCollisionTick(Entity target);
 
 	/**
 	 * processMovementTick(Entity) - Processes entity specific targeting
