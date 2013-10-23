@@ -90,7 +90,7 @@ public class ShooterEngine {
 			Display.create();
 		} catch (LWJGLException e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 		}
 		
 		initGL(); // init OpenGL
@@ -152,154 +152,63 @@ public class ShooterEngine {
 			// TODO remove this code, rotation should be done, being left for now becuase it makes the basic tests more fun to see movement
 			rotation += 0.15f * delta;
 		
-		
+			//BEGIN COMPLETED REFACTOR
+			//------------------------
 			
-			// TODO verify/make sure the speed is normalized for all directional movement
-			// TODO make this more elegant somehow
-			if(Keyboard.isKeyDown(Keyboard.KEY_A) && Keyboard.isKeyDown(Keyboard.KEY_W)){
-				player.movePlayer(225);
-			}
+			//movementDelta is direction, in degrees, the player is currently moving.
+			//TODO: Add movement amortization
+			int movementDelta = -1;
 			
-			else if(Keyboard.isKeyDown(Keyboard.KEY_A) && Keyboard.isKeyDown(Keyboard.KEY_S)){
-				player.movePlayer(135);
-			}
+			//Handle movement angle calculations
+			//Angle of movement is read right to left as description above
 			
-			else if(Keyboard.isKeyDown(Keyboard.KEY_D) && Keyboard.isKeyDown(Keyboard.KEY_W)) {
-				player.movePlayer(315);
-			}
+			//Checks if player is moving up, up-left, or up-right respectively.
+			if(Keyboard.isKeyDown(Keyboard.KEY_W)) movementDelta = (Keyboard.isKeyDown(Keyboard.KEY_D)?315:(Keyboard.isKeyDown(Keyboard.KEY_A)?215:270));
+			//Checks if player is moving left or down-left.
+			else if(Keyboard.isKeyDown(Keyboard.KEY_A)) movementDelta = (Keyboard.isKeyDown(Keyboard.KEY_S)?135:180);
+			//Checks if player is down or down-right.
+			else if(Keyboard.isKeyDown(Keyboard.KEY_S)) movementDelta = (Keyboard.isKeyDown(Keyboard.KEY_D)?45:90);
+			//Checks if player is moving right
+			else if(Keyboard.isKeyDown(Keyboard.KEY_D)) movementDelta = 0;
 			
-			else if(Keyboard.isKeyDown(Keyboard.KEY_D) && Keyboard.isKeyDown(Keyboard.KEY_S)) {
-				player.movePlayer(45);
-			}
+			//Attempt movement if any keys were pressed
+			if(movementDelta>-1) player.movePlayer(movementDelta);
 			
-			//TODO check the order of the the singles to make sure it is optimal
-			else if(Keyboard.isKeyDown(Keyboard.KEY_A)) {
-				//player.setPlayerX(player.getPlayerX() - 0.35f * delta);
-				player.movePlayer(180);
-			}
-	
-			//TODO make this more elegant somehow
-			else if(Keyboard.isKeyDown(Keyboard.KEY_D)){
-				//player.setPlayerX(player.getPlayerX() + 0.35f * delta);
-				player.movePlayer(0);
-			}
-	
-			//TODO make this more elegant somehow
-			else if(Keyboard.isKeyDown(Keyboard.KEY_S)) {
-				//player.setPlayerY(player.getPlayerY() + 0.35f * delta);
-				player.movePlayer(90);
-			}
-	
-			//TODO make this more elegant somehow
-			else if(Keyboard.isKeyDown(Keyboard.KEY_W)){
-				//player.setPlayerY(player.getPlayerY() - 0.35f * delta);
-				player.movePlayer(270);
-			}
+			//shotFireDelta - Direction shot should fire, if allowed.
+			int shotFireDelta = -1;
 			
-			// Press "Space" to shoot if the player can
-			if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
+			//Handle firing angle calculations
+			//Angle of firing is read right to left as description above
+			
+			//Checks if shot should move up, up-left, or up-right respectively.
+			if(Keyboard.isKeyDown(Keyboard.KEY_UP)) shotFireDelta = (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)?315:(Keyboard.isKeyDown(Keyboard.KEY_LEFT)?215:270));
+			//Checks if shot should move left or down-left.
+			else if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) shotFireDelta = (Keyboard.isKeyDown(Keyboard.KEY_DOWN)?135:180);
+			//Checks if shot should move down or down-right.
+			else if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)) shotFireDelta = (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)?45:90);
+			//Checks if shot should move right
+			else if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) shotFireDelta = 0;
+			
+			//Attempt to fire shot if direction is chosen
+			if(shotFireDelta>-1){
+				
+				//Check player shot cooldown
 				if(player.isCanShoot()){
-					// Add the bullet to the bullet list at the players position
-					bulletList.add((new BasicBullet(player.getPlayerX(), player.getPlayerY())));
+					
+					//Add bullet to scene
+					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
+					bullet.setAngle(shotFireDelta);
+					bulletList.add(bullet);
+					
 					// Stop the player from shooting again and reset the bullet timer
 					player.setCanShoot(false);
 					player.resetShooterTimer();
 				}
 			}
 			
-			// TODO verify/make sure the speed is normalized for all directional movement
-			// TODO make this more elegant somehow
-			if(Keyboard.isKeyDown(Keyboard.KEY_LEFT) && Keyboard.isKeyDown(Keyboard.KEY_UP)){
-				if(player.isCanShoot()){
-					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
-					bullet.setAngle(225);
-					bulletList.add(bullet);
-					// Stop the player from shooting again and reset the bullet timer
-					player.setCanShoot(false);
-					player.resetShooterTimer();
-				}
-			}
+			//----------------------
+			//END COMPLETED REFACTOR
 			
-			else if(Keyboard.isKeyDown(Keyboard.KEY_LEFT) && Keyboard.isKeyDown(Keyboard.KEY_DOWN)){
-				if(player.isCanShoot()){
-					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
-					bullet.setAngle(135);
-					bulletList.add(bullet);
-					// Stop the player from shooting again and reset the bullet timer
-					player.setCanShoot(false);
-					player.resetShooterTimer();
-				}
-			}
-			
-			else if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT) && Keyboard.isKeyDown(Keyboard.KEY_UP)) {
-				if(player.isCanShoot()){
-					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
-					bullet.setAngle(315);
-					bulletList.add(bullet);
-					// Stop the player from shooting again and reset the bullet timer
-					player.setCanShoot(false);
-					player.resetShooterTimer();
-				}
-			}
-			
-			else if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT) && Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
-				if(player.isCanShoot()){
-					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
-					bullet.setAngle(45);
-					bulletList.add(bullet);
-					// Stop the player from shooting again and reset the bullet timer
-					player.setCanShoot(false);
-					player.resetShooterTimer();
-				}
-			}
-			
-			//TODO check the order of the the singles to make sure it is optimal
-			else if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
-				if(player.isCanShoot()){
-					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
-					bullet.setAngle(180);
-					bulletList.add(bullet);
-					// Stop the player from shooting again and reset the bullet timer
-					player.setCanShoot(false);
-					player.resetShooterTimer();
-				}
-			}
-	
-			//TODO make this more elegant somehow
-			else if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)){
-				if(player.isCanShoot()){
-					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
-					bullet.setAngle(0);
-					bulletList.add(bullet);
-					// Stop the player from shooting again and reset the bullet timer
-					player.setCanShoot(false);
-					player.resetShooterTimer();
-				}
-			}
-	
-			//TODO make this more elegant somehow
-			else if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
-				if(player.isCanShoot()){
-					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
-					bullet.setAngle(90);
-					bulletList.add(bullet);
-					// Stop the player from shooting again and reset the bullet timer
-					player.setCanShoot(false);
-					player.resetShooterTimer();
-				}
-			}
-	
-			//TODO make this more elegant somehow
-			else if(Keyboard.isKeyDown(Keyboard.KEY_UP)){
-				if(player.isCanShoot()) {
-					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
-					bullet.setAngle(270);
-					bulletList.add(bullet);
-					// Stop the player from shooting again and reset the bullet timer
-					player.setCanShoot(false);
-					player.resetShooterTimer();
-				}
-			}
 			while(Keyboard.next()){
 				if(Keyboard.getEventKeyState()){
 					// Pres "F" to set the game to full screen mode
