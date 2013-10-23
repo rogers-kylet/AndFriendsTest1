@@ -1,15 +1,23 @@
 package entity;
 
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
  * Player
- * @author Benjamin
  * 
  * Base class for Player object.
  *
  */
 public class Player extends BasicEntity {
+	
+	//Player-specific number of incincible frames
+	private static final int INVINCIBILITY_TIMER_START_VALUE = 60;
+	
+	//Number of frames for flash alternation
+	private static final int FLASH_TIMER_START_VALUE = 6;
+	
+	private int flashTimer = 0;
 
 	public Player(float x, float y, float z, int eid) {
 		this.x = x;
@@ -36,7 +44,45 @@ public class Player extends BasicEntity {
 	
 	@Override
 	public void render() {
-		// TODO Auto-generated method stub
+		
+		//Push player model to world coordinates for display
+		if(displayed){
+			GL11.glColor3f(0.0f, 1.0f, 0.0f);
+	
+			GL11.glPushMatrix();
+				GL11.glTranslatef(x,y,0);
+				GL11.glRotatef(rotation, 0f, 0f, 1f);
+				GL11.glTranslatef(-x, -y, 0);
+				
+				GL11.glBegin(GL11.GL_QUADS);
+					GL11.glVertex2f(x - 25, y - 25);
+					GL11.glVertex2f(x + 25, y - 25);
+					GL11.glVertex2f(x + 25, y + 25);
+					GL11.glVertex2f(x - 25, y + 25);
+				GL11.glEnd();
+			GL11.glPopMatrix();
+		}
+		
+		//Check if player invincibility flash is toggled
+		if(invincible) {
+			
+			//Process invincibility tick
+			invincibleTime -= 1;
+			flashTimer -= 1;
+			
+			//Check if time to switch display modes for flash has elapsed
+			if(flashTimer<=0) {
+				this.displayed^=true;
+				this.flashTimer=Player.FLASH_TIMER_START_VALUE;
+			}
+			
+			//Check if invincibility has run out
+			//TODO: Bug: If not in frame invincibility countdown is not processed
+			if(invincibleTime<=0){
+				invincible = false;
+				displayed = true;
+			}
+		}
 		
 	}
 

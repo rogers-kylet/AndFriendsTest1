@@ -14,6 +14,8 @@ public abstract class BasicEntity implements Entity {
 	public static enum entityClass {
 		PLAYER, HOSTILE, PASSIVE, STATIONARY, PROJECTILE
 	};
+	
+	public boolean displayed, invincible;
 
 	//Current Entity class
 	protected entityClass entityType;
@@ -21,8 +23,8 @@ public abstract class BasicEntity implements Entity {
 	//Entity name
 	protected String name;
 
-	//Unique Entity ID
-	protected int eid;
+	//Unique Entity ID and current invincibility timer
+	protected int eid, invincibleTime = 0;
 
 	// Entity X, Y, Z, and current rotation degree coordinates 
 	protected float x, y, z;
