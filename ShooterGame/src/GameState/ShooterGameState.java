@@ -4,10 +4,12 @@ public class ShooterGameState implements GameState {
 
 	private int score; 
 	private String level;
+	boolean cameraFollow;
 	
 	public ShooterGameState(){
 		this.score = 0;
 		this.level = "Start";
+		this.cameraFollow = false;
 	}
 	
 	// Returns the current game score
@@ -46,4 +48,13 @@ public class ShooterGameState implements GameState {
 		this.score = 0;
 	}
 
+	@Override
+	public boolean isCameraFollow() {
+		return cameraFollow;
+	}
+
+	@Override
+	public void setCameraFollow(boolean cameraFollow) {
+		this.cameraFollow = cameraFollow;
+	}
 }

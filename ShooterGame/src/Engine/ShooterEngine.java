@@ -90,7 +90,7 @@ public class ShooterEngine {
 			Display.create();
 		} catch (LWJGLException e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 		}
 		
 		initGL(); // init OpenGL
@@ -105,8 +105,8 @@ public class ShooterEngine {
 		
 		//Temp for testing purposes
 		background = new Background();
-		background.setX(400);
-		background.setY(300);
+		background.setX(resolutionWidth/2);
+		background.setY(resolutionHeight/2);
 		
 		//Temp for testing purposes
 		bulletList = new ArrayList<Bullet>();
@@ -141,7 +141,7 @@ public class ShooterEngine {
 			
 			// TODO temp logic for making enemies randomly appear above
 			if(enemyTimer == 0){
-				enemyList.add(new BasicEnemy((float) (Math.random()*800), -10));
+				enemyList.add(new BasicEnemy((float) (Math.random()*resolutionWidth), -10));
 				enemyTimer = 60;
 			}
 			else{
@@ -152,160 +152,69 @@ public class ShooterEngine {
 			// TODO remove this code, rotation should be done, being left for now becuase it makes the basic tests more fun to see movement
 			rotation += 0.15f * delta;
 		
-		
+			//BEGIN COMPLETED REFACTOR
+			//------------------------
 			
-			// TODO verify/make sure the speed is normalized for all directional movement
-			// TODO make this more elegant somehow
-			if(Keyboard.isKeyDown(Keyboard.KEY_A) && Keyboard.isKeyDown(Keyboard.KEY_W)){
-				player.movePlayer(225);
-			}
+			//movementDelta is direction, in degrees, the player is currently moving.
+			//TODO: Add movement amortization
+			int movementDelta = -1;
 			
-			else if(Keyboard.isKeyDown(Keyboard.KEY_A) && Keyboard.isKeyDown(Keyboard.KEY_S)){
-				player.movePlayer(135);
-			}
+			//Handle movement angle calculations
+			//Angle of movement is read right to left as description above
 			
-			else if(Keyboard.isKeyDown(Keyboard.KEY_D) && Keyboard.isKeyDown(Keyboard.KEY_W)) {
-				player.movePlayer(315);
-			}
+			//Checks if player is moving up, up-left, or up-right respectively.
+			if(Keyboard.isKeyDown(Keyboard.KEY_W)) movementDelta = (Keyboard.isKeyDown(Keyboard.KEY_D)?315:(Keyboard.isKeyDown(Keyboard.KEY_A)?215:270));
+			//Checks if player is moving left or down-left.
+			else if(Keyboard.isKeyDown(Keyboard.KEY_A)) movementDelta = (Keyboard.isKeyDown(Keyboard.KEY_S)?135:180);
+			//Checks if player is down or down-right.
+			else if(Keyboard.isKeyDown(Keyboard.KEY_S)) movementDelta = (Keyboard.isKeyDown(Keyboard.KEY_D)?45:90);
+			//Checks if player is moving right
+			else if(Keyboard.isKeyDown(Keyboard.KEY_D)) movementDelta = 0;
 			
-			else if(Keyboard.isKeyDown(Keyboard.KEY_D) && Keyboard.isKeyDown(Keyboard.KEY_S)) {
-				player.movePlayer(45);
-			}
+			//Attempt movement if any keys were pressed
+			if(movementDelta>-1) player.movePlayer(movementDelta);
 			
-			//TODO check the order of the the singles to make sure it is optimal
-			else if(Keyboard.isKeyDown(Keyboard.KEY_A)) {
-				//player.setPlayerX(player.getPlayerX() - 0.35f * delta);
-				player.movePlayer(180);
-			}
-	
-			//TODO make this more elegant somehow
-			else if(Keyboard.isKeyDown(Keyboard.KEY_D)){
-				//player.setPlayerX(player.getPlayerX() + 0.35f * delta);
-				player.movePlayer(0);
-			}
-	
-			//TODO make this more elegant somehow
-			else if(Keyboard.isKeyDown(Keyboard.KEY_S)) {
-				//player.setPlayerY(player.getPlayerY() + 0.35f * delta);
-				player.movePlayer(90);
-			}
-	
-			//TODO make this more elegant somehow
-			else if(Keyboard.isKeyDown(Keyboard.KEY_W)){
-				//player.setPlayerY(player.getPlayerY() - 0.35f * delta);
-				player.movePlayer(270);
-			}
+			//shotFireDelta - Direction shot should fire, if allowed.
+			int shotFireDelta = -1;
 			
-			// Press "Space" to shoot if the player can
-			if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
+			//Handle firing angle calculations
+			//Angle of firing is read right to left as description above
+			
+			//Checks if shot should move up, up-left, or up-right respectively.
+			if(Keyboard.isKeyDown(Keyboard.KEY_UP)) shotFireDelta = (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)?315:(Keyboard.isKeyDown(Keyboard.KEY_LEFT)?215:270));
+			//Checks if shot should move left or down-left.
+			else if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) shotFireDelta = (Keyboard.isKeyDown(Keyboard.KEY_DOWN)?135:180);
+			//Checks if shot should move down or down-right.
+			else if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)) shotFireDelta = (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)?45:90);
+			//Checks if shot should move right
+			else if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) shotFireDelta = 0;
+			
+			//Attempt to fire shot if direction is chosen
+			if(shotFireDelta>-1){
+				
+				//Check player shot cooldown
 				if(player.isCanShoot()){
-					// Add the bullet to the bullet list at the players position
-					bulletList.add((new BasicBullet(player.getPlayerX(), player.getPlayerY())));
+					
+					//Add bullet to scene
+					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
+					bullet.setAngle(shotFireDelta);
+					bulletList.add(bullet);
+					
 					// Stop the player from shooting again and reset the bullet timer
 					player.setCanShoot(false);
 					player.resetShooterTimer();
 				}
 			}
 			
-			// TODO verify/make sure the speed is normalized for all directional movement
-			// TODO make this more elegant somehow
-			if(Keyboard.isKeyDown(Keyboard.KEY_LEFT) && Keyboard.isKeyDown(Keyboard.KEY_UP)){
-				if(player.isCanShoot()){
-					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
-					bullet.setAngle(225);
-					bulletList.add(bullet);
-					// Stop the player from shooting again and reset the bullet timer
-					player.setCanShoot(false);
-					player.resetShooterTimer();
-				}
-			}
+			//----------------------
+			//END COMPLETED REFACTOR
 			
-			else if(Keyboard.isKeyDown(Keyboard.KEY_LEFT) && Keyboard.isKeyDown(Keyboard.KEY_DOWN)){
-				if(player.isCanShoot()){
-					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
-					bullet.setAngle(135);
-					bulletList.add(bullet);
-					// Stop the player from shooting again and reset the bullet timer
-					player.setCanShoot(false);
-					player.resetShooterTimer();
-				}
-			}
-			
-			else if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT) && Keyboard.isKeyDown(Keyboard.KEY_UP)) {
-				if(player.isCanShoot()){
-					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
-					bullet.setAngle(315);
-					bulletList.add(bullet);
-					// Stop the player from shooting again and reset the bullet timer
-					player.setCanShoot(false);
-					player.resetShooterTimer();
-				}
-			}
-			
-			else if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT) && Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
-				if(player.isCanShoot()){
-					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
-					bullet.setAngle(45);
-					bulletList.add(bullet);
-					// Stop the player from shooting again and reset the bullet timer
-					player.setCanShoot(false);
-					player.resetShooterTimer();
-				}
-			}
-			
-			//TODO check the order of the the singles to make sure it is optimal
-			else if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
-				if(player.isCanShoot()){
-					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
-					bullet.setAngle(180);
-					bulletList.add(bullet);
-					// Stop the player from shooting again and reset the bullet timer
-					player.setCanShoot(false);
-					player.resetShooterTimer();
-				}
-			}
-	
-			//TODO make this more elegant somehow
-			else if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)){
-				if(player.isCanShoot()){
-					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
-					bullet.setAngle(0);
-					bulletList.add(bullet);
-					// Stop the player from shooting again and reset the bullet timer
-					player.setCanShoot(false);
-					player.resetShooterTimer();
-				}
-			}
-	
-			//TODO make this more elegant somehow
-			else if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
-				if(player.isCanShoot()){
-					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
-					bullet.setAngle(90);
-					bulletList.add(bullet);
-					// Stop the player from shooting again and reset the bullet timer
-					player.setCanShoot(false);
-					player.resetShooterTimer();
-				}
-			}
-	
-			//TODO make this more elegant somehow
-			else if(Keyboard.isKeyDown(Keyboard.KEY_UP)){
-				if(player.isCanShoot()) {
-					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
-					bullet.setAngle(270);
-					bulletList.add(bullet);
-					// Stop the player from shooting again and reset the bullet timer
-					player.setCanShoot(false);
-					player.resetShooterTimer();
-				}
-			}
 			while(Keyboard.next()){
 				if(Keyboard.getEventKeyState()){
 					// Pres "F" to set the game to full screen mode
 					// TODO probably remove from button command and put in an options menu
 					if(Keyboard.getEventKey() == Keyboard.KEY_F){
-						setDisplayMode(800,600, !Display.isFullscreen());
+						setDisplayMode(resolutionWidth,resolutionHeight, !Display.isFullscreen());
 					}
 					// Press V to toggle vsync
 					// TODO remove from keyboard command and set in options
@@ -446,7 +355,7 @@ public class ShooterEngine {
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glPushMatrix();
 			GL11.glLoadIdentity();
-			GL11.glOrtho(0, 800, 600, 0, -1, 1);
+			GL11.glOrtho(0, resolutionWidth, resolutionHeight, 0, -1, 1);
 			GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glPushMatrix();
 	}
@@ -454,6 +363,12 @@ public class ShooterEngine {
 	// Main render method
 	// TODO figure out the nice way to render everything
 	public void renderGL(){
+		if(gameState.isCameraFollow()){
+			GL11.glLoadIdentity();
+			GL11.glTranslatef(0f, 0f, 0f);
+			GL11.glTranslatef(-player.getPlayerX()+(resolutionWidth / 2), -player.getPlayerY()+(resolutionHeight / 2), 0);
+				GL11.glPushMatrix();
+		}
 		// Clear the screen adn the deph buffer
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		// Initial color so pixels can be colored in individual classes, probably wont be needed once textures are being used
@@ -545,8 +460,8 @@ public class ShooterEngine {
 					GL11.glEnable(GL11.GL_BLEND);
 						GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 						// Yeah... that to string is pretty awesome isn't it? 
-						font.drawString(100, 10,"Health: " + ((Integer)player.getHealth()).toString(),Color.yellow);
-						font.drawString(700, 10,"Score: " + ((Integer)gameState.getScore()).toString(),Color.yellow);
+						font.drawString(player.getPlayerX() - (resolutionHeight / 2) - 90, player.getPlayerY() - (resolutionHeight / 2) + 10,"Health: " + ((Integer)player.getHealth()).toString(),Color.yellow);
+						font.drawString(player.getPlayerX() + (resolutionHeight / 2) - 10, player.getPlayerY() - (resolutionHeight / 2) + 10,"Score: " + ((Integer)gameState.getScore()).toString(),Color.yellow);
 					GL11.glDisable(GL11.GL_BLEND);
 			GL11.glPopMatrix();
 		}
@@ -558,8 +473,7 @@ public class ShooterEngine {
 			GL11.glPushMatrix();
 					GL11.glEnable(GL11.GL_BLEND);
 						GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-						// Yeah... that to string is pretty awesome isn't it? 
-						font.drawString(300, 100, "Test Shooter Game", Color.green);
+						font.drawString(resolutionWidth + 300, resolutionHeight + 100, "Test Shooter Game", Color.green);
 						font.drawString(300, 200,"To Start Press Enter",Color.yellow);
 					GL11.glDisable(GL11.GL_BLEND);
 			GL11.glPopMatrix();
@@ -569,13 +483,17 @@ public class ShooterEngine {
 				GL11.glPushMatrix();
 						GL11.glEnable(GL11.GL_BLEND);
 							GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-							// Yeah... that to string is pretty awesome isn't it? 
-							font.drawString(300, 100, "Game Over", Color.green);
+							font.drawString(player.getPlayerX() - 100, 100, "Game Over", Color.green);
 							font.drawString(300, 200, "Your final score was: " + gameState.getScore(), Color.cyan);
 							font.drawString(300, 300,"To Start Press Enter",Color.yellow);
 						GL11.glDisable(GL11.GL_BLEND);
 				GL11.glPopMatrix();
 			}
+		}
+		
+		// Pop the matrix if camera following is enabled
+		if(gameState.isCameraFollow()){
+			GL11.glPopMatrix();
 		}
 	}
 	
@@ -594,12 +512,16 @@ public class ShooterEngine {
 			this.enemyList = new ArrayList<Enemy>();
 			// Reset the bullet list
 			this.bulletList = new ArrayList<Bullet>();
+			// Set the camera to follow the player
+			gameState.setCameraFollow(true);
 		} else if(levelName.equals("Menu")){
 			// Swith the level to the main screen
 			this.level = new BasicMenu();
+			gameState.setCameraFollow(false);
 		} else if(levelName.equals("Gameover")){
 			// Swith the level to the game over screen
 			this.level = new GameOverScreen();
+			gameState.setCameraFollow(false);
 		}
 	}
 	// It's a main method, you know?

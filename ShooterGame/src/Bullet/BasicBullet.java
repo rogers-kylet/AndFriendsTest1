@@ -81,17 +81,17 @@ public class BasicBullet implements Bullet {
 
 		
 		GL11.glPushMatrix();
-		GL11.glTranslatef(x,y,0);
-		GL11.glRotatef(rot, 0f, 0f, 1f);
-		GL11.glTranslatef(-x, -y, 0);
+			GL11.glTranslatef(x,y,0);
+			GL11.glRotatef(rot, 0f, 0f, 1f);
+			GL11.glTranslatef(-x, -y, 0);
 		
-		GL11.glBegin(GL11.GL_QUADS);
-			GL11.glVertex2f(x - this.width/2, y - this.height/2);
-			GL11.glVertex2f(x + this.width/2, y - this.height/2);
-			GL11.glVertex2f(x + this.width/2, y + this.height/2);
-			GL11.glVertex2f(x - this.width/2, y + this.height/2);
-		GL11.glEnd();
-	GL11.glPopMatrix();
+			GL11.glBegin(GL11.GL_QUADS);
+				GL11.glVertex2f(x - this.width/2, y - this.height/2);
+				GL11.glVertex2f(x + this.width/2, y - this.height/2);
+				GL11.glVertex2f(x + this.width/2, y + this.height/2);
+				GL11.glVertex2f(x - this.width/2, y + this.height/2);
+				GL11.glEnd();
+			GL11.glPopMatrix();
 	}
 	
 	@Override
