@@ -14,10 +14,12 @@ public class BasicMenu implements Level {
 	String type;
 	List<MenuItem> menuItems;
 	List<Room> roomList;
+	String backgroundMusic;
 	
 	public BasicMenu(){
 		name = "BasicMenu";
 		type = "Menu";
+		backgroundMusic = "intro";
 		menuItems = new ArrayList<MenuItem>();
 		menuItems.add(new BasicMenuItem("Start"));
 	}
@@ -54,5 +56,14 @@ public class BasicMenu implements Level {
 	public List<Room> getRoomList() {
 		return this.roomList;
 	}
+	@Override
+	public String getBackgroundMusic() {
+		return backgroundMusic;
+	}
+	@Override
+	public void setBackgroundMusic(String backgroundMusic) {
+		this.backgroundMusic = backgroundMusic;
+	}
+	
 
 }

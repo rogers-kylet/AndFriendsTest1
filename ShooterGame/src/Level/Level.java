@@ -35,4 +35,8 @@ public interface Level {
 	void setRoomList(List<Room> roomList);
 
 	List<Room> getRoomList();
+
+	String getBackgroundMusic();
+
+	void setBackgroundMusic(String backgroundMusic);
 }

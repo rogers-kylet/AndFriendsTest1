@@ -10,6 +10,7 @@ public class BasicLevel implements Level {
 
 	String name = "Test Level 1";
 	String type = "Gameplay";
+	String backgroundMusic = "level";
 	List<MenuItem> menuItems;
 	List<Room> roomList;
 	
@@ -45,6 +46,14 @@ public class BasicLevel implements Level {
 	@Override
 	public void setMenuItems(List<MenuItem> menuItems) {
 		this.menuItems = menuItems;
+	}
+	@Override
+	public String getBackgroundMusic() {
+		return this.backgroundMusic;
+	}
+	@Override
+	public void setBackgroundMusic(String backgroundMusic) {
+		this.backgroundMusic = backgroundMusic;
 	}
 	
 }

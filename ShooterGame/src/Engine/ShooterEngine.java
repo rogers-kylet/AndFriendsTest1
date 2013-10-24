@@ -1,5 +1,6 @@
 package Engine;
 import java.awt.Font;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -7,12 +8,17 @@ import java.util.List;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.openal.Audio;
+import org.newdawn.slick.openal.AudioLoader;
+import org.newdawn.slick.openal.SoundStore;
+import org.newdawn.slick.util.ResourceLoader;
 
 import Background.Background;
 import Background.BackgroundObject;
@@ -78,6 +84,8 @@ public class ShooterEngine {
 	
 	private TrueTypeFont font;
 	
+	private Audio currentMusic;
+	
 	//TODO set this in a config, currently used for font rendering
 	boolean antiAlias = false;
 	
@@ -117,6 +125,15 @@ public class ShooterEngine {
 		
 		level = new BasicMenu();
 		
+		try{
+			currentMusic = AudioLoader.getAudio("WAV", ResourceLoader.getResourceAsStream("assets/music/" + level.getBackgroundMusic() + ".wav"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		currentMusic.playAsMusic(1.0f, 1.0f, true);
+		
+		//TODO when should polling occur elsewhere?
+		SoundStore.get().poll(0);
 		// TODO temp code for displaying the ugly unusable fonts
 		Font theFont = new Font("Times New Roman", Font.PLAIN, 24);
 		font = new TrueTypeFont(theFont, antiAlias);
@@ -132,6 +149,8 @@ public class ShooterEngine {
 		}
 		
 		Display.destroy();
+		AL.destroy();
+		System.exit(0);
 	}
 	
 	public void update(int delta){
@@ -514,14 +533,42 @@ public class ShooterEngine {
 			this.bulletList = new ArrayList<Bullet>();
 			// Set the camera to follow the player
 			gameState.setCameraFollow(true);
+			
+			try{
+				currentMusic = AudioLoader.getAudio("WAV", ResourceLoader.getResourceAsStream("assets/music/" + this.level.getBackgroundMusic() + ".wav"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			currentMusic.playAsMusic(1.0f, 1.0f, true);
+			
+			//TODO when should polling occur elsewhere?
+			SoundStore.get().poll(0);
 		} else if(levelName.equals("Menu")){
 			// Swith the level to the main screen
 			this.level = new BasicMenu();
 			gameState.setCameraFollow(false);
+			try{
+				currentMusic = AudioLoader.getAudio("WAV", ResourceLoader.getResourceAsStream("assets/music/" + level.getBackgroundMusic() + ".wav"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			currentMusic.playAsMusic(1.0f, 1.0f, true);
+			
+			//TODO when should polling occur elsewhere?
+			SoundStore.get().poll(0);
 		} else if(levelName.equals("Gameover")){
 			// Swith the level to the game over screen
 			this.level = new GameOverScreen();
 			gameState.setCameraFollow(false);
+			try{
+				currentMusic = AudioLoader.getAudio("WAV", ResourceLoader.getResourceAsStream("assets/music/" + level.getBackgroundMusic() + ".wav"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			currentMusic.playAsMusic(1.0f, 1.0f, true);
+			
+			//TODO when should polling occur elsewhere?
+			SoundStore.get().poll(0);
 		}
 	}
 	// It's a main method, you know?
