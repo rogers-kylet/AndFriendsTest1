@@ -363,138 +363,138 @@ public class ShooterEngine {
 	// Main render method
 	// TODO figure out the nice way to render everything
 	public void renderGL(){
-		if(gameState.isCameraFollow()){
-			GL11.glLoadIdentity();
-			GL11.glTranslatef(0f, 0f, 0f);
-			GL11.glTranslatef(-player.getPlayerX()+(resolutionWidth / 2), -player.getPlayerY()+(resolutionHeight / 2), 0);
-				GL11.glPushMatrix();
-		}
-		// Clear the screen adn the deph buffer
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		// Initial color so pixels can be colored in individual classes, probably wont be needed once textures are being used
-		GL11.glColor3f(0.0f, 0.0f, 0.0f);
-
-		//TODO change to a switch
-		if(level.getType().equals("Gameplay")){
 		
-			// Temp code for testing
-			// TODO figure out the best order to render to keep things that should be on top on top
-			////////////////////////////////
-			background.render();
-			////////////////////////////////
-			
+		GL11.glLoadIdentity();
+		GL11.glTranslatef(0f, 0f, 0f);
+		
+		if(gameState.isCameraFollow()){
+			GL11.glTranslatef(-player.getPlayerX()+(resolutionWidth / 2), -player.getPlayerY()+(resolutionHeight / 2), 0);
+		}
+		
+		GL11.glPushMatrix();
+			// Clear the screen adn the deph buffer
+			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+			// Initial color so pixels can be colored in individual classes, probably wont be needed once textures are being used
+			GL11.glColor3f(0.0f, 0.0f, 0.0f);
 	
-			// Loop through the list of active bullets 
-			for(Iterator<Bullet> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
-				Bullet bullet = bulletIt.next();
-				// If the bullet has left the screen, remove it to preserve memory
-				// TODO possibly need to change the logic if things change
-				if(bullet.offScreen()){
-					bulletIt.remove();
-				}
-				else{
-					bullet.move();
-					bullet.render();
-				}
-			}
+			//TODO change to a switch
+			if(level.getType().equals("Gameplay")){
 			
-			//GL11.glColor3f(1.0f, 0.0f, 0.0f);
-	
-			//TODO make collision detection general for any enemy/bullet size
-			for(Iterator<Enemy> enemyIt = enemyList.iterator(); enemyIt.hasNext();){
-				Enemy enemy = enemyIt.next();
-				// Loop through each bullet (at least for now less bullets than enemies, if that changes possible reverse this logic)
-				// and check to see if a collision has happened
+				// Temp code for testing
+				// TODO figure out the best order to render to keep things that should be on top on top
+				////////////////////////////////
+				background.render();
+				////////////////////////////////
+				
+		
+				// Loop through the list of active bullets 
 				for(Iterator<Bullet> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
 					Bullet bullet = bulletIt.next();
-					// TODO remove 30's to be dependent on both the enemy and add a number for the bullet width/height
-					if (enemy.collidWithBullet(bullet)) {
+					// If the bullet has left the screen, remove it to preserve memory
+					// TODO possibly need to change the logic if things change
+					if(bullet.offScreen()){
+						bulletIt.remove();
+					}
+					else{
+						bullet.move();
+						bullet.render();
+					}
+				}
+				
+				//GL11.glColor3f(1.0f, 0.0f, 0.0f);
+		
+				//TODO make collision detection general for any enemy/bullet size
+				for(Iterator<Enemy> enemyIt = enemyList.iterator(); enemyIt.hasNext();){
+					Enemy enemy = enemyIt.next();
+					// Loop through each bullet (at least for now less bullets than enemies, if that changes possible reverse this logic)
+					// and check to see if a collision has happened
+					for(Iterator<Bullet> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
+						Bullet bullet = bulletIt.next();
+						// TODO remove 30's to be dependent on both the enemy and add a number for the bullet width/height
+						if (enemy.collidWithBullet(bullet)) {
+							
+							enemyIt.remove();
+							//TODO display score
+							//TODO weird problem with importing gamestate
+							gameState.addToScore(1);
+							
+							// If the bullet can not penetrate the object, remove it 
+							if(!bullet.penetrate()){
+								bulletIt.remove();
+							}
+						}
 						
+		
+					}
+					
+					// Player collision with enemy
+					if(enemy.collidWithPlayer(player)){
+						player.hurtPlayer(1);
+						// TODO figure out what should happen for enemy collision, probably shoudln't kill it, but should start invincibility timer for player
 						enemyIt.remove();
-						//TODO display score
-						//TODO weird problem with importing gamestate
-						gameState.addToScore(1);
 						
-						// If the bullet can not penetrate the object, remove it 
-						if(!bullet.penetrate()){
-							bulletIt.remove();
+						if(player.getHealth() == 0){
+							changeLevel("Gameover");
 						}
 					}
 					
-	
-				}
-				
-				// Player collision with enemy
-				if(enemy.collidWithPlayer(player)){
-					player.hurtPlayer(1);
-					// TODO figure out what should happen for enemy collision, probably shoudln't kill it, but should start invincibility timer for player
-					enemyIt.remove();
-					
-					if(player.getHealth() == 0){
-						changeLevel("Gameover");
+					// TODO probably make this lower, possibly extract it to the enemy class and make it more general for garbage collection or situation dependent or something
+					if(enemy.getY() > 610){
+						enemyIt.remove();
+					}
+					else{
+						enemy.move();
+						enemy.render();
 					}
 				}
 				
-				// TODO probably make this lower, possibly extract it to the enemy class and make it more general for garbage collection or situation dependent or something
-				if(enemy.getY() > 610){
-					enemyIt.remove();
-				}
-				else{
-					enemy.move();
-					enemy.render();
-				}
-			}
-			
-			// R, G, B, A Set the color to blue one time only
-			// TODO move this code to object specific things, setting the proper colors and all that fun stuff, probably clear for the textures
-			//GL11.glColor3f(0.0f, 1.0f, 0.0f);
-			
-			//temp extrapolate to player class
-			// TODO remove once things get real and not just rotate the object based on delta
-			player.setPlayerRotation(rotation);
-			// Should probably be last to make sure that it appears on top of everything in game, but have things for the overlay after this to be on top
-			player.render();
-			
-			// TODO replace this crappy text code with bitmapped fonts
-			GL11.glPushMatrix();
-					GL11.glEnable(GL11.GL_BLEND);
-						GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-						// Yeah... that to string is pretty awesome isn't it? 
-						font.drawString(player.getPlayerX() - (resolutionHeight / 2) - 90, player.getPlayerY() - (resolutionHeight / 2) + 10,"Health: " + ((Integer)player.getHealth()).toString(),Color.yellow);
-						font.drawString(player.getPlayerX() + (resolutionHeight / 2) - 10, player.getPlayerY() - (resolutionHeight / 2) + 10,"Score: " + ((Integer)gameState.getScore()).toString(),Color.yellow);
-					GL11.glDisable(GL11.GL_BLEND);
-			GL11.glPopMatrix();
-		}
-		// TODO make this work for all menu types, not just a general one
-		else if(level.getType().equals("Menu")){
-			
-			if(level.getName().equals("BasicMenu")){
-			// TODO replace this crappy text code with bitmapped fonts
-			GL11.glPushMatrix();
-					GL11.glEnable(GL11.GL_BLEND);
-						GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-						font.drawString(resolutionWidth + 300, resolutionHeight + 100, "Test Shooter Game", Color.green);
-						font.drawString(300, 200,"To Start Press Enter",Color.yellow);
-					GL11.glDisable(GL11.GL_BLEND);
-			GL11.glPopMatrix();
-			}
-			else if(level.getName().equals("GameOverScreen")){
+				// R, G, B, A Set the color to blue one time only
+				// TODO move this code to object specific things, setting the proper colors and all that fun stuff, probably clear for the textures
+				//GL11.glColor3f(0.0f, 1.0f, 0.0f);
+				
+				//temp extrapolate to player class
+				// TODO remove once things get real and not just rotate the object based on delta
+				player.setPlayerRotation(rotation);
+				// Should probably be last to make sure that it appears on top of everything in game, but have things for the overlay after this to be on top
+				player.render();
+				
 				// TODO replace this crappy text code with bitmapped fonts
 				GL11.glPushMatrix();
 						GL11.glEnable(GL11.GL_BLEND);
 							GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-							font.drawString(player.getPlayerX() - 100, 100, "Game Over", Color.green);
-							font.drawString(300, 200, "Your final score was: " + gameState.getScore(), Color.cyan);
-							font.drawString(300, 300,"To Start Press Enter",Color.yellow);
+							// Yeah... that to string is pretty awesome isn't it? 
+							font.drawString(player.getPlayerX() - (resolutionHeight / 2) - 90, player.getPlayerY() - (resolutionHeight / 2) + 10,"Health: " + ((Integer)player.getHealth()).toString(),Color.yellow);
+							font.drawString(player.getPlayerX() + (resolutionHeight / 2) - 10, player.getPlayerY() - (resolutionHeight / 2) + 10,"Score: " + ((Integer)gameState.getScore()).toString(),Color.yellow);
 						GL11.glDisable(GL11.GL_BLEND);
 				GL11.glPopMatrix();
 			}
-		}
-		
-		// Pop the matrix if camera following is enabled
-		if(gameState.isCameraFollow()){
-			GL11.glPopMatrix();
-		}
+			// TODO make this work for all menu types, not just a general one
+			else if(level.getType().equals("Menu")){
+				
+				if(level.getName().equals("BasicMenu")){
+				// TODO replace this crappy text code with bitmapped fonts
+				GL11.glPushMatrix();
+						GL11.glEnable(GL11.GL_BLEND);
+							GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+							font.drawString(300, 100, "Test Shooter Game", Color.green);
+							font.drawString(300, 200,"To Start Press Enter",Color.yellow);
+						GL11.glDisable(GL11.GL_BLEND);
+				GL11.glPopMatrix();
+				}
+				else if(level.getName().equals("GameOverScreen")){
+					// TODO replace this crappy text code with bitmapped fonts
+					GL11.glPushMatrix();
+							GL11.glEnable(GL11.GL_BLEND);
+								GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+								font.drawString(300, 100, "Game Over", Color.green);
+								font.drawString(300, 200, "Your final score was: " + gameState.getScore(), Color.cyan);
+								font.drawString(300, 300,"To Start Press Enter",Color.yellow);
+							GL11.glDisable(GL11.GL_BLEND);
+					GL11.glPopMatrix();
+				}
+			}
+			
+		GL11.glPopMatrix();
 	}
 	
 	public void changeLevel(String levelName){
