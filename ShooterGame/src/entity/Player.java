@@ -50,37 +50,37 @@ public class Player extends BasicEntity {
 			GL11.glColor3f(0.0f, 1.0f, 0.0f);
 	
 			GL11.glPushMatrix();
-				GL11.glTranslatef(x,y,0);
-				GL11.glRotatef(rotation, 0f, 0f, 1f);
-				GL11.glTranslatef(-x, -y, 0);
+				GL11.glTranslatef(this.x,this.y,0);
+				GL11.glRotatef(this.rotation, 0f, 0f, 1f);
+				GL11.glTranslatef(-this.x, -this.y, 0);
 				
 				GL11.glBegin(GL11.GL_QUADS);
-					GL11.glVertex2f(x - 25, y - 25);
-					GL11.glVertex2f(x + 25, y - 25);
-					GL11.glVertex2f(x + 25, y + 25);
-					GL11.glVertex2f(x - 25, y + 25);
+					GL11.glVertex2f(this.x - 25, this.y - 25);
+					GL11.glVertex2f(this.x + 25, this.y - 25);
+					GL11.glVertex2f(this.x + 25, this.y + 25);
+					GL11.glVertex2f(this.x - 25, this.y + 25);
 				GL11.glEnd();
 			GL11.glPopMatrix();
 		}
 		
 		//Check if player invincibility flash is toggled
-		if(invincible) {
+		if(this.invincible) {
 			
 			//Process invincibility tick
-			invincibleTime -= 1;
-			flashTimer -= 1;
+			this.invincibleTime -= 1;
+			this.flashTimer -= 1;
 			
 			//Check if time to switch display modes for flash has elapsed
-			if(flashTimer<=0) {
+			if(this.flashTimer<=0) {
 				this.displayed^=true;
 				this.flashTimer=Player.FLASH_TIMER_START_VALUE;
 			}
 			
 			//Check if invincibility has run out
 			//TODO: Bug: If not in frame invincibility countdown is not processed
-			if(invincibleTime<=0){
-				invincible = false;
-				displayed = true;
+			if(this.invincibleTime<=0){
+				this.invincible = false;
+				this.displayed = true;
 			}
 		}
 		
