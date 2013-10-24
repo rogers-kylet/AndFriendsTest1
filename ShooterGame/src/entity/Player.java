@@ -88,14 +88,22 @@ public class Player extends BasicEntity {
 
 	@Override
 	protected boolean processCollisionTick(Entity target) {
-		// TODO Auto-generated method stub
-		return false;
+		if(
+				( target.getX() - target.getWidth() / 2 < ( this.getX() + this.width / 2 ) ) && 
+				( target.getX() + target.getWidth() / 2 > ( this.getX() - this.width / 2 ) ) && 
+				( target.getY() + target.getHeight() / 2 > ( this.getY() - this.height / 2 ) ) && 
+				( target.getY() - target.getHeight() / 2 < ( this.getY() + this.height / 2 ) ) ) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	@Override
 	protected void processMovementTick(Entity target) {
-		// TODO Auto-generated method stub
-		
+		this.x += this.speed * Math.cos(Math.toRadians(angle));
+		this.y += this.speed * Math.sin(Math.toRadians(angle));		
 	}
 
 }

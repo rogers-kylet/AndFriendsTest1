@@ -1,5 +1,6 @@
 package entity;
 
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
 import entity.BasicEntity.entityClass;
@@ -31,20 +32,40 @@ public class BasicProjectile extends BasicEntity {
 	
 	@Override
 	public void render() {
-		// TODO Auto-generated method stub
+		GL11.glColor3f(0.0f, 0.0f, 1.0f);
+
+		GL11.glPushMatrix();
+			GL11.glTranslatef(this.x,this.y,0);
+			GL11.glRotatef(this.rotation, 0f, 0f, 1f);
+			GL11.glTranslatef(-this.x, -this.y, 0);
 		
+			GL11.glBegin(GL11.GL_QUADS);
+				GL11.glVertex2f(this.x - this.width/2, this.y - this.height/2);
+				GL11.glVertex2f(this.x + this.width/2, this.y - this.height/2);
+				GL11.glVertex2f(this.x + this.width/2, this.y + this.height/2);
+				GL11.glVertex2f(this.x - this.width/2, this.y + this.height/2);
+				GL11.glEnd();
+			GL11.glPopMatrix();
 	}
 
 	@Override
 	protected boolean processCollisionTick(Entity target) {
-		// TODO Auto-generated method stub
-		return false;
+		if(
+				( target.getX() - target.getWidth() / 2 < ( this.getX() + this.width / 2 ) ) && 
+				( target.getX() + target.getWidth() / 2 > ( this.getX() - this.width / 2 ) ) && 
+				( target.getY() + target.getHeight() / 2 > ( this.getY() - this.height / 2 ) ) && 
+				( target.getY() - target.getHeight() / 2 < ( this.getY() + this.height / 2 ) ) ) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	@Override
 	protected void processMovementTick(Entity target) {
-		// TODO Auto-generated method stub
-		
+		this.x += speed * Math.cos(Math.toRadians(angle));
+		this.y += speed * Math.sin(Math.toRadians(angle));		
 	}
 
 }
