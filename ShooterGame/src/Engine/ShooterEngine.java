@@ -129,16 +129,7 @@ public class ShooterEngine {
 		
 		level = new BasicMenu();
 		
-		try{
-			currentMusic = AudioLoader.getAudio("WAV", ResourceLoader.getResourceAsStream("assets/music/" + level.getBackgroundMusic() + ".wav"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		currentMusic.playAsMusic(1.0f, 1.0f, true);
-		
-		//TODO when should polling occur elsewhere?
-		SoundStore.get().poll(0);
-		SoundStore.get().setMusicVolume(.5f);
+		playMusic(level.getBackgroundMusic());
 		
 		sfxMap = new HashMap<String, Audio>();
 		//TODO temp logic to load test sfxMap, names should be stored in entities 
@@ -552,47 +543,35 @@ public class ShooterEngine {
 			this.bulletList = new ArrayList<Bullet>();
 			// Set the camera to follow the player
 			gameState.setCameraFollow(true);
+			playMusic(level.getBackgroundMusic(), 0.2f);
 			
-			try{
-				currentMusic = AudioLoader.getAudio("WAV", ResourceLoader.getResourceAsStream("assets/music/" + this.level.getBackgroundMusic() + ".wav"));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			currentMusic.playAsMusic(1.0f, 1.0f, true);
-			SoundStore.get().setMusicVolume(.20f);
-			
-			//TODO when should polling occur elsewhere?
-			SoundStore.get().poll(0);
 		} else if(levelName.equals("Menu")){
 			// Swith the level to the main screen
 			this.level = new BasicMenu();
 			gameState.setCameraFollow(false);
-			try{
-				currentMusic = AudioLoader.getAudio("WAV", ResourceLoader.getResourceAsStream("assets/music/" + level.getBackgroundMusic() + ".wav"));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			currentMusic.playAsMusic(1.0f, 1.0f, true);
-			
-			
-			//TODO when should polling occur elsewhere?
-			SoundStore.get().poll(0);
-			SoundStore.get().setMusicVolume(.25f);
+			playMusic(level.getBackgroundMusic());
 
 		} else if(levelName.equals("Gameover")){
 			// Swith the level to the game over screen
 			this.level = new GameOverScreen();
 			gameState.setCameraFollow(false);
-			try{
-				currentMusic = AudioLoader.getAudio("WAV", ResourceLoader.getResourceAsStream("assets/music/" + level.getBackgroundMusic() + ".wav"));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			currentMusic.playAsMusic(1.0f, 1.0f, true);
-			//TODO when should polling occur elsewhere?
-			SoundStore.get().poll(0);
-			SoundStore.get().setMusicVolume(.50f);
+			playMusic(level.getBackgroundMusic());
 		}
+	}
+
+	public void playMusic(String musicName){
+		playMusic(musicName, 0.5f);
+	}
+	public void playMusic(String musicName, float volume) {
+		try{
+			currentMusic = AudioLoader.getAudio("WAV", ResourceLoader.getResourceAsStream("assets/music/" + musicName + ".wav"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		currentMusic.playAsMusic(1.0f, 1.0f, true);
+		//TODO when should polling occur elsewhere?
+		SoundStore.get().poll(0);
+		SoundStore.get().setMusicVolume(volume);
 	}
 	// It's a main method, you know?
 	public static void main(String[] argv) {
