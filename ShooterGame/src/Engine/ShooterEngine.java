@@ -105,8 +105,8 @@ public class ShooterEngine {
 		
 		//Temp for testing purposes
 		background = new Background();
-		background.setX(400);
-		background.setY(300);
+		background.setX(resolutionWidth/2);
+		background.setY(resolutionHeight/2);
 		
 		//Temp for testing purposes
 		bulletList = new ArrayList<Bullet>();
@@ -141,7 +141,7 @@ public class ShooterEngine {
 			
 			// TODO temp logic for making enemies randomly appear above
 			if(enemyTimer == 0){
-				enemyList.add(new BasicEnemy((float) (Math.random()*800), -10));
+				enemyList.add(new BasicEnemy((float) (Math.random()*resolutionWidth), -10));
 				enemyTimer = 60;
 			}
 			else{
@@ -214,7 +214,7 @@ public class ShooterEngine {
 					// Pres "F" to set the game to full screen mode
 					// TODO probably remove from button command and put in an options menu
 					if(Keyboard.getEventKey() == Keyboard.KEY_F){
-						setDisplayMode(800,600, !Display.isFullscreen());
+						setDisplayMode(resolutionWidth,resolutionHeight, !Display.isFullscreen());
 					}
 					// Press V to toggle vsync
 					// TODO remove from keyboard command and set in options
@@ -355,7 +355,7 @@ public class ShooterEngine {
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glPushMatrix();
 			GL11.glLoadIdentity();
-			GL11.glOrtho(0, 800, 600, 0, -1, 1);
+			GL11.glOrtho(0, resolutionWidth, resolutionHeight, 0, -1, 1);
 			GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glPushMatrix();
 	}
@@ -363,6 +363,12 @@ public class ShooterEngine {
 	// Main render method
 	// TODO figure out the nice way to render everything
 	public void renderGL(){
+		if(gameState.isCameraFollow()){
+			GL11.glLoadIdentity();
+			GL11.glTranslatef(0f, 0f, 0f);
+			GL11.glTranslatef(-player.getPlayerX()+(resolutionWidth / 2), -player.getPlayerY()+(resolutionHeight / 2), 0);
+				GL11.glPushMatrix();
+		}
 		// Clear the screen adn the deph buffer
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		// Initial color so pixels can be colored in individual classes, probably wont be needed once textures are being used
@@ -454,8 +460,8 @@ public class ShooterEngine {
 					GL11.glEnable(GL11.GL_BLEND);
 						GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 						// Yeah... that to string is pretty awesome isn't it? 
-						font.drawString(100, 10,"Health: " + ((Integer)player.getHealth()).toString(),Color.yellow);
-						font.drawString(700, 10,"Score: " + ((Integer)gameState.getScore()).toString(),Color.yellow);
+						font.drawString(player.getPlayerX() - (resolutionHeight / 2) - 90, player.getPlayerY() - (resolutionHeight / 2) + 10,"Health: " + ((Integer)player.getHealth()).toString(),Color.yellow);
+						font.drawString(player.getPlayerX() + (resolutionHeight / 2) - 10, player.getPlayerY() - (resolutionHeight / 2) + 10,"Score: " + ((Integer)gameState.getScore()).toString(),Color.yellow);
 					GL11.glDisable(GL11.GL_BLEND);
 			GL11.glPopMatrix();
 		}
@@ -467,8 +473,7 @@ public class ShooterEngine {
 			GL11.glPushMatrix();
 					GL11.glEnable(GL11.GL_BLEND);
 						GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-						// Yeah... that to string is pretty awesome isn't it? 
-						font.drawString(300, 100, "Test Shooter Game", Color.green);
+						font.drawString(resolutionWidth + 300, resolutionHeight + 100, "Test Shooter Game", Color.green);
 						font.drawString(300, 200,"To Start Press Enter",Color.yellow);
 					GL11.glDisable(GL11.GL_BLEND);
 			GL11.glPopMatrix();
@@ -478,13 +483,17 @@ public class ShooterEngine {
 				GL11.glPushMatrix();
 						GL11.glEnable(GL11.GL_BLEND);
 							GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-							// Yeah... that to string is pretty awesome isn't it? 
-							font.drawString(300, 100, "Game Over", Color.green);
+							font.drawString(player.getPlayerX() - 100, 100, "Game Over", Color.green);
 							font.drawString(300, 200, "Your final score was: " + gameState.getScore(), Color.cyan);
 							font.drawString(300, 300,"To Start Press Enter",Color.yellow);
 						GL11.glDisable(GL11.GL_BLEND);
 				GL11.glPopMatrix();
 			}
+		}
+		
+		// Pop the matrix if camera following is enabled
+		if(gameState.isCameraFollow()){
+			GL11.glPopMatrix();
 		}
 	}
 	
@@ -503,12 +512,16 @@ public class ShooterEngine {
 			this.enemyList = new ArrayList<Enemy>();
 			// Reset the bullet list
 			this.bulletList = new ArrayList<Bullet>();
+			// Set the camera to follow the player
+			gameState.setCameraFollow(true);
 		} else if(levelName.equals("Menu")){
 			// Swith the level to the main screen
 			this.level = new BasicMenu();
+			gameState.setCameraFollow(false);
 		} else if(levelName.equals("Gameover")){
 			// Swith the level to the game over screen
 			this.level = new GameOverScreen();
+			gameState.setCameraFollow(false);
 		}
 	}
 	// It's a main method, you know?

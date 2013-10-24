@@ -14,4 +14,6 @@ public interface GameState {
 	String getLevel();
 	// Sets the current level
 	void setLevel(String levelName);
+	boolean isCameraFollow();
+	void setCameraFollow(boolean cameraFollow);
 }
