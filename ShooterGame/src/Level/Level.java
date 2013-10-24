@@ -2,6 +2,8 @@ package Level;
 
 import java.util.List;
 
+import room.Room;
+
 import MenuItem.MenuItem;
 
 public interface Level {
@@ -23,4 +25,14 @@ public interface Level {
 	 * @return The list of menu items for the level
 	 */
 	List<MenuItem> getMenuItems();
+
+	void setMenuItems(List<MenuItem> menuItems);
+
+	void setType(String type);
+
+	void setName(String name);
+
+	void setRoomList(List<Room> roomList);
+
+	List<Room> getRoomList();
 }

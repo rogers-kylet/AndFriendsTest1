@@ -26,18 +26,23 @@ public class BasicLevel implements Level {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	@Override
 	public List<Room> getRoomList() {
 		return roomList;
 	}
+	@Override
 	public void setRoomList(List<Room> roomList) {
 		this.roomList = roomList;
 	}
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
+	@Override
 	public void setType(String type) {
 		this.type = type;
 	}
+	@Override
 	public void setMenuItems(List<MenuItem> menuItems) {
 		this.menuItems = menuItems;
 	}
