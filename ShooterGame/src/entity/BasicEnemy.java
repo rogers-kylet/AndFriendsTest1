@@ -28,6 +28,7 @@ public class BasicEnemy extends BasicEntity {
 		this.rotationSpeed=0f;
 		this.scale=1f;
 		this.eid = eid;
+		this.hitSfx = "enemyhit";
 	}
 	
 	@Override

@@ -42,6 +42,8 @@ public abstract class BasicEntity implements Entity {
 	protected float minimumSpeed, speed, maxSpeed, angle;
 
 	protected Vector3f acceleration;
+	
+	protected String hitSfx;
 
 	// Begin Entity base methods
 	// -------------------------
@@ -131,4 +133,12 @@ public abstract class BasicEntity implements Entity {
 	 * @param target - Target Entity AI should react to. Send self reference for no target
 	 */
 	protected abstract void processMovementTick(Entity target);
+
+	public String getHitSfx() {
+		return hitSfx;
+	}
+
+	public void setHitSfx(String hitSfx) {
+		this.hitSfx = hitSfx;
+	}
 }

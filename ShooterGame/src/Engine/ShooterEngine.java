@@ -2,8 +2,10 @@ package Engine;
 import java.awt.Font;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
@@ -82,9 +84,11 @@ public class ShooterEngine {
 	// The current level
 	Level level;
 	
-	private TrueTypeFont font;
+	TrueTypeFont font;
 	
-	private Audio currentMusic;
+	Audio currentMusic;
+	
+	Map<String, Audio> sfxMap;
 	
 	//TODO set this in a config, currently used for font rendering
 	boolean antiAlias = false;
@@ -134,6 +138,18 @@ public class ShooterEngine {
 		
 		//TODO when should polling occur elsewhere?
 		SoundStore.get().poll(0);
+		SoundStore.get().setMusicVolume(.5f);
+		
+		sfxMap = new HashMap<String, Audio>();
+		//TODO temp logic to load test sfxMap, names should be stored in entities 
+		try {
+			sfxMap.put("shot", AudioLoader.getAudio("WAV", ResourceLoader.getResourceAsStream("assets/sfx/" + "shot" + ".wav")));
+			sfxMap.put("enemyhit", AudioLoader.getAudio("WAV", ResourceLoader.getResourceAsStream("assets/sfx/" + "enemyhit" + ".wav")));
+			sfxMap.put("playerhit", AudioLoader.getAudio("WAV", ResourceLoader.getResourceAsStream("assets/sfx/" + "playerhit" + ".wav")));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		// TODO temp code for displaying the ugly unusable fonts
 		Font theFont = new Font("Times New Roman", Font.PLAIN, 24);
 		font = new TrueTypeFont(theFont, antiAlias);
@@ -218,7 +234,7 @@ public class ShooterEngine {
 					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
 					bullet.setAngle(shotFireDelta);
 					bulletList.add(bullet);
-					
+					sfxMap.get("shot").playAsSoundEffect(1.0f, 1.0f, false);
 					// Stop the player from shooting again and reset the bullet timer
 					player.setCanShoot(false);
 					player.resetShooterTimer();
@@ -431,7 +447,8 @@ public class ShooterEngine {
 						Bullet bullet = bulletIt.next();
 						// TODO remove 30's to be dependent on both the enemy and add a number for the bullet width/height
 						if (enemy.collidWithBullet(bullet)) {
-							
+							// TODO replace enemyhit with enemy.getHitSfx() once new entity enemy is being used
+							sfxMap.get("enemyhit").playAsSoundEffect(1.0f, 1.0f, false);
 							enemyIt.remove();
 							//TODO display score
 							//TODO weird problem with importing gamestate
@@ -449,6 +466,8 @@ public class ShooterEngine {
 					// Player collision with enemy
 					if(enemy.collidWithPlayer(player)){
 						player.hurtPlayer(1);
+						// TODO replace with player.getHitSfx() once using entity player
+						sfxMap.get("playerhit").playAsSoundEffect(1.0f, 1.0f, false);
 						// TODO figure out what should happen for enemy collision, probably shoudln't kill it, but should start invincibility timer for player
 						enemyIt.remove();
 						
@@ -540,6 +559,7 @@ public class ShooterEngine {
 				e.printStackTrace();
 			}
 			currentMusic.playAsMusic(1.0f, 1.0f, true);
+			SoundStore.get().setMusicVolume(.20f);
 			
 			//TODO when should polling occur elsewhere?
 			SoundStore.get().poll(0);
@@ -554,8 +574,11 @@ public class ShooterEngine {
 			}
 			currentMusic.playAsMusic(1.0f, 1.0f, true);
 			
+			
 			//TODO when should polling occur elsewhere?
 			SoundStore.get().poll(0);
+			SoundStore.get().setMusicVolume(.25f);
+
 		} else if(levelName.equals("Gameover")){
 			// Swith the level to the game over screen
 			this.level = new GameOverScreen();
@@ -566,9 +589,9 @@ public class ShooterEngine {
 				e.printStackTrace();
 			}
 			currentMusic.playAsMusic(1.0f, 1.0f, true);
-			
 			//TODO when should polling occur elsewhere?
 			SoundStore.get().poll(0);
+			SoundStore.get().setMusicVolume(.50f);
 		}
 	}
 	// It's a main method, you know?
