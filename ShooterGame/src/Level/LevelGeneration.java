@@ -6,6 +6,7 @@ import java.util.List;
 import entity.BasicEnemy;
 import entity.Entity;
 
+import room.AnchorPoint;
 import room.BasicRoom;
 import room.Room;
 
@@ -40,6 +41,24 @@ public class LevelGeneration {
 				enemyList.add(enemy3);
 				enemyList.add(enemy4);
 			tempRoom.setEnemyList(enemyList);
+			List<AnchorPoint> anchorPoints = new ArrayList<AnchorPoint>();
+			AnchorPoint point1 = new AnchorPoint();
+				point1.setX(0f);
+				point1.setY(300f);
+				anchorPoints.add(point1);
+			AnchorPoint point2 = new AnchorPoint();
+				point2.setX(800);
+				point2.setY(300f);
+				anchorPoints.add(point2);
+			AnchorPoint point3 = new AnchorPoint();
+				point3.setX(400f);
+				point3.setY(0f);
+				anchorPoints.add(point3);
+			AnchorPoint point4 = new AnchorPoint();
+				point4.setX(400f);
+				point4.setY(600f);
+				anchorPoints.add(point4);
+			tempRoom.setAnchorPoints(anchorPoints);
 		roomList.add(tempRoom);
 		return theLevel;
 	}
