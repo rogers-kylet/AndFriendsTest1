@@ -1,6 +1,6 @@
 package Level;
 
-public abstract class LevelGeneration {
+public class LevelGeneration {
 
 	public Level generateLevel(String levelName, int levelNumber) {
 		Level theLevel = new BasicLevel();
