@@ -4,11 +4,12 @@ import java.util.List;
 
 import entity.Entity;
 
-public class BasicRoom implements Room {
+public abstract class BasicRoom implements Room {
 
 	float x, y, z, rotation, width, height;
 	
 	List<Entity> enemyList;
+	List<AnchorPoint> anchorPoints;
 
 	@Override
 	public float getX() {
@@ -78,5 +79,15 @@ public class BasicRoom implements Room {
 	@Override
 	public void setEnemyList(List<Entity> enemyList) {
 		this.enemyList = enemyList;
+	}
+
+	@Override
+	public List<AnchorPoint> getAnchorPoints() {
+		return this.anchorPoints;
+	}
+
+	@Override
+	public void setAnchorPoints(List<AnchorPoint> anchorPoints) {
+		this.anchorPoints = anchorPoints;
 	}
 }

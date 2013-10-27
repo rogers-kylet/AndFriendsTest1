@@ -33,5 +33,9 @@ public interface Room {
 	void setRotation(float rotation);
 
 	float getWidth();
+	
+	List<AnchorPoint> getAnchorPoints();
+	
+	void setAnchorPoints(List<AnchorPoint> anchorPoints);
 
 }
