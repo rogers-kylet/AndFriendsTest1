@@ -4,7 +4,7 @@ import java.util.List;
 
 import entity.Entity;
 
-public abstract class BasicRoom implements Room {
+public class BasicRoom implements Room {
 
 	float x, y, z, rotation, width, height;
 	
