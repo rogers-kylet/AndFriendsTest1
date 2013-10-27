@@ -24,8 +24,7 @@ public class BasicLevel implements Level {
 	}
 	@Override
 	public List<MenuItem> getMenuItems() {
-		// TODO Auto-generated method stub
-		return null;
+		return menuItems;
 	}
 	@Override
 	public List<Room> getRoomList() {
