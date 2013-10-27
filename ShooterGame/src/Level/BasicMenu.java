@@ -8,7 +8,7 @@ import room.Room;
 import MenuItem.BasicMenuItem;
 import MenuItem.MenuItem;
 
-public abstract class BasicMenu implements Level {
+public class BasicMenu implements Level {
 
 	String name;
 	String type;
