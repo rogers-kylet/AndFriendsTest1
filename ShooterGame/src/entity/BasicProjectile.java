@@ -14,12 +14,11 @@ public class BasicProjectile extends BasicEntity {
 		this.acceleration = new Vector3f(0,0,0);
 		this.angle=0;
 		this.baseHealth=5f;
-		this.health=5f;
+		this.health=1f;
 		this.height=20f;
 		this.width=20f;
 		this.entityType=entityClass.PROJECTILE;
 		this.maxHealth=10f;
-		this.baseHealth=5f;
 		this.maxSpeed=5f;
 		this.speed=5f;
 		this.minimumSpeed=5f;

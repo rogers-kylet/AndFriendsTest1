@@ -14,12 +14,11 @@ public class BasicEnemy extends BasicEntity {
 		this.acceleration = new Vector3f(0,0,0);
 		this.angle=90;
 		this.baseHealth=5f;
-		this.health=5f;
+		this.health=1f;
 		this.height=40f;
 		this.width=40f;
 		this.entityType=entityClass.HOSTILE;
 		this.maxHealth=10f;
-		this.baseHealth=5f;
 		this.maxSpeed=3f;
 		this.speed=3f;
 		this.minimumSpeed=3f;

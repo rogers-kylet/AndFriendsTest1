@@ -207,8 +207,8 @@ public class ShooterEngine {
 						if(
 								( player.getX() - player.getWidth() / 2 < ( room.getX() + room.getWidth() / 2 ) ) && 
 								( player.getX() + player.getWidth() / 2 > ( room.getX() - room.getWidth() / 2 ) ) && 
-								( player.getY() + player.getHeight() / 2 > ( room.getY() - room.getWidth() / 2 ) ) && 
-								( player.getY() - player.getHeight() / 2 < ( room.getY() + room.getWidth() / 2 ) ) ) {
+								( player.getY() + player.getHeight() / 2 > ( room.getY() - room.getHeight() / 2 ) ) && 
+								( player.getY() - player.getHeight() / 2 < ( room.getY() + room.getHeight() / 2 ) ) ) {
 							for(Entity enemy : room.getEnemyList()) {
 								this.enemyList.add(enemy);
 							}
@@ -439,17 +439,10 @@ public class ShooterEngine {
 				// Loop through the list of active bullets 
 				for(Iterator<Entity> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
 					Entity bullet = bulletIt.next();
-					// If the bullet has left the screen, remove it to preserve memory
-					// TODO possibly need to change the logic if things change
-					
-					/*if(bullet.offScreen()){
-						bulletIt.remove();
-					}
-					else{*/
+						//TODO add logic to remove the bullet once it has traveled x amount of distance
 						bullet.move();
 						bullet.render();
-					/*w}
-					*/
+	
 				}
 				
 				//GL11.glColor3f(1.0f, 0.0f, 0.0f);
@@ -465,18 +458,15 @@ public class ShooterEngine {
 						if (enemy.collisionDetection(bullet)) {
 							// TODO replace enemyhit with enemy.getHitSfx() once new entity enemy is being used
 							sfxMap.get("enemyhit").playAsSoundEffect(1.0f, 1.0f, false);
-							enemyIt.remove();
-							//TODO display score
+							enemy.setHealth(enemy.getHealth() - 1);
+							bullet.setHealth(bullet.getHealth()-1);
+							
+							if(bullet.getHealth() < 1) {
+								bulletIt.remove();
+							}
 							//TODO weird problem with importing gamestate
 							gameState.addToScore(1);
-							
-							// If the bullet can not penetrate the object, remove it 
-							/*if(!bullet.penetrate()){
-								bulletIt.remove();
-							}*/
 						}
-						
-		
 					}
 					
 					// Player collision with enemy
@@ -486,21 +476,20 @@ public class ShooterEngine {
 						// TODO replace with player.getHitSfx() once using entity player
 						sfxMap.get("playerhit").playAsSoundEffect(1.0f, 1.0f, false);
 						// TODO figure out what should happen for enemy collision, probably shoudln't kill it, but should start invincibility timer for player
-						enemyIt.remove();
-						
+
+						enemy.setHealth(enemy.getHealth() -1);
 						if(player.getHealth() == 0){
 							changeLevel("Gameover");
 						}
 					}
 					
-					// TODO probably make this lower, possibly extract it to the enemy class and make it more general for garbage collection or situation dependent or something
-					//if(enemy.getY() > 610){
-					//	enemyIt.remove();
-					//}
-					//else{
+
+					if(enemy.getHealth() < 1) {
+						enemyIt.remove();
+					} else {
 						enemy.move(player);
 						enemy.render();
-					//}
+					}
 				}
 				
 				// R, G, B, A Set the color to blue one time only

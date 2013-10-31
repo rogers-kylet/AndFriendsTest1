@@ -39,6 +39,10 @@ public class LevelGeneration {
 			roomList.add(tempRoom);
 			tempRoom = buildRoom(1200,300);
 			roomList.add(tempRoom);
+			tempRoom = buildRoom(2000, 900);
+			roomList.add(tempRoom);
+			tempRoom = buildRoom(2000, 1500);
+			roomList.add(tempRoom);
 			levelGenerated = true;
 		}
 		theLevel.setRoomList(roomList);
