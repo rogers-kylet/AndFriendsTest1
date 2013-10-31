@@ -442,6 +442,10 @@ public class ShooterEngine {
 						//TODO add logic to remove the bullet once it has traveled x amount of distance
 						bullet.move();
 						bullet.render();
+						
+						if(bullet.getHealth() < 1) {
+							bulletIt.remove();
+						}
 	
 				}
 				

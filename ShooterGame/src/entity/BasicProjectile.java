@@ -7,6 +7,9 @@ import entity.BasicEntity.entityClass;
 
 public class BasicProjectile extends BasicEntity {
 
+	float maxDistance;
+	float distance;
+	
 	public BasicProjectile(float x, float y, float z, int eid) {
 		this.x = x;
 		this.y = y;
@@ -27,6 +30,8 @@ public class BasicProjectile extends BasicEntity {
 		this.rotationSpeed=0f;
 		this.scale=1f;
 		this.eid = eid;
+		this.distance = 0;
+		this.maxDistance = 50;
 	}
 	
 	@Override
@@ -64,7 +69,12 @@ public class BasicProjectile extends BasicEntity {
 	@Override
 	protected void processMovementTick(Entity target) {
 		this.x += speed * Math.cos(Math.toRadians(angle));
-		this.y += speed * Math.sin(Math.toRadians(angle));		
+		this.y += speed * Math.sin(Math.toRadians(angle));
+		this.distance += 1;
+		
+		if(this.distance == this.maxDistance) {
+			this.health = 0;
+		}
 	}
 
 }
