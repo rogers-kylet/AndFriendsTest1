@@ -468,17 +468,17 @@ public class ShooterEngine {
 							if(bullet.getHealth() < 1) {
 								bulletIt.remove();
 							}
-							//TODO weird problem with importing gamestate
+
 							gameState.addToScore(1);
 						}
 					}
 					
 					// Player collision with enemy
 					if(enemy.collisionDetection(player)){
-						//player.hurtPlayer(1);
-						player.setHealth(player.getHealth()-1);
+						player.hurtPlayer(1);
+						
 						// TODO replace with player.getHitSfx() once using entity player
-						sfxMap.get("playerhit").playAsSoundEffect(1.0f, 1.0f, false);
+						sfxMap.get(player.getHitSfx()).playAsSoundEffect(1.0f, 1.0f, false);
 						// TODO figure out what should happen for enemy collision, probably shoudln't kill it, but should start invincibility timer for player
 
 						enemy.setHealth(enemy.getHealth() -1);

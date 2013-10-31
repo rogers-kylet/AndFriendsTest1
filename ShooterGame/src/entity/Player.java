@@ -136,4 +136,22 @@ public class Player extends BasicEntity {
 		this.shooterTimer = SHOOTER_TIMER_START_VALUE;
 	}
 
+	// Hurts the player by the given amount of damage
+	public void hurtPlayer(int damage) {
+		if(!invincible){
+			this.health = health - damage;
+			this.invincible = true;
+			resetInvincibilityTimer();
+			resetFlashTimer();
+		}
+	}
+	
+	// Sets the invincibility timer back to it's default start value
+	public void resetInvincibilityTimer(){
+		this.invincibleTime = INVINCIBILITY_TIMER_START_VALUE;
+	}
+	
+	public void resetFlashTimer(){
+		flashTimer = FLASH_TIMER_START_VALUE;
+	}
 }
