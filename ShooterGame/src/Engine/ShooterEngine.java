@@ -431,7 +431,7 @@ public class ShooterEngine {
 				////////////////////////////////
 				for(Room room : this.level.getRoomList()) {
 					for(Entity background : room.getBackground()) {
-						background.render();
+						renderEntity(background);
 					}
 				}
 				
@@ -441,7 +441,7 @@ public class ShooterEngine {
 					Entity bullet = bulletIt.next();
 						//TODO add logic to remove the bullet once it has traveled x amount of distance
 						bullet.move();
-						bullet.render();
+						renderEntity(bullet);
 						
 						if(bullet.getHealth() < 1) {
 							bulletIt.remove();
@@ -492,7 +492,7 @@ public class ShooterEngine {
 						enemyIt.remove();
 					} else {
 						enemy.move(player);
-						enemy.render();
+						renderEntity(enemy);
 					}
 				}
 				
@@ -504,7 +504,7 @@ public class ShooterEngine {
 				// TODO remove once things get real and not just rotate the object based on delta
 				player.setRotation(rotation);
 				// Should probably be last to make sure that it appears on top of everything in game, but have things for the overlay after this to be on top
-				player.render();
+				renderEntity(player);
 				
 				// TODO replace this crappy text code with bitmapped fonts
 				GL11.glPushMatrix();
@@ -596,6 +596,16 @@ public class ShooterEngine {
 	public static void main(String[] argv) {
 		ShooterEngine shooterEngine = new ShooterEngine();
 		shooterEngine.start();
+	}
+	
+	public void renderEntity(Entity entity) {
+		if(
+				( entity.getX() - entity.getWidth() / 2 < ( player.getX() + resolutionWidth / 2 ) ) && 
+				( entity.getX() + entity.getWidth() / 2 > ( player.getX() - resolutionWidth / 2 ) ) && 
+				( entity.getY() + entity.getHeight() / 2 > ( player.getY() - resolutionHeight / 2 ) ) && 
+				( entity.getY() - entity.getHeight() / 2 < ( player.getY() + resolutionHeight / 2 ) ) ) {
+			entity.render();
+		} 
 	}
 }
 
