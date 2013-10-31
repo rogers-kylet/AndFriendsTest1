@@ -3,8 +3,6 @@ package Level;
 import java.util.ArrayList;
 import java.util.List;
 
-import Background.Background;
-
 import entity.BasicBackground;
 import entity.BasicEnemy;
 import entity.BasicEntity;

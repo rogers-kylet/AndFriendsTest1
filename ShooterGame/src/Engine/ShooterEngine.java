@@ -28,8 +28,6 @@ import entity.Player;
 
 import room.Room;
 
-import Background.Background;
-import Background.BackgroundObject;
 import GameState.GameState;
 import GameState.ShooterGameState;
 import Level.BasicMenu;
@@ -72,8 +70,6 @@ public class ShooterEngine {
 	//Player Object
 	Player player;
 
-	//Temporary background object for testing
-	BackgroundObject background;
 	// List that stores all active bullet objects
 	List<Entity> bulletList;
 	// List that stores all active enemy objects
@@ -114,11 +110,6 @@ public class ShooterEngine {
 		
 		//Initialize player
 		player = new Player(400, 300, 0, 0);
-		
-		//Temp for testing purposes
-		background = new Background();
-		background.setX(resolutionWidth/2);
-		background.setY(resolutionHeight/2);
 		
 		//Temp for testing purposes
 		bulletList = new ArrayList<Entity>();
@@ -511,7 +502,7 @@ public class ShooterEngine {
 						GL11.glEnable(GL11.GL_BLEND);
 							GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 							// Yeah... that to string is pretty awesome isn't it? 
-							font.drawString(player.getX() - (resolutionHeight / 2) - 90, player.getY() - (resolutionHeight / 2) + 10,"Health: " + ((Float)player.getHealth()).toString(),Color.yellow);
+							font.drawString(player.getX() - (resolutionHeight / 2) - 90, player.getY() - (resolutionHeight / 2) + 10,"Health: " + ((Integer)Math.round(player.getHealth())).toString(),Color.yellow);
 							font.drawString(player.getX() + (resolutionHeight / 2) - 10, player.getY() - (resolutionHeight / 2) + 10,"Score: " + ((Integer)gameState.getScore()).toString(),Color.yellow);
 						GL11.glDisable(GL11.GL_BLEND);
 				GL11.glPopMatrix();
