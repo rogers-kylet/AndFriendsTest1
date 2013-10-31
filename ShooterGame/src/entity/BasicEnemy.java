@@ -15,8 +15,8 @@ public class BasicEnemy extends BasicEntity {
 		this.angle=90;
 		this.baseHealth=5f;
 		this.health=5f;
-		this.height=20f;
-		this.width=20f;
+		this.height=40f;
+		this.width=40f;
 		this.entityType=entityClass.HOSTILE;
 		this.maxHealth=10f;
 		this.baseHealth=5f;
@@ -65,8 +65,17 @@ public class BasicEnemy extends BasicEntity {
 
 	@Override
 	protected void processMovementTick(Entity target) {
-		this.x += this.speed * Math.cos(Math.toRadians(angle));
-		this.y += this.speed * Math.sin(Math.toRadians(angle));		
+		//this.x += this.speed * Math.cos(Math.toRadians(angle));
+		//this.y += this.speed * Math.sin(Math.toRadians(angle));	
+		
+		float deltaX = target.getX() - this.getX();
+		float deltaY = target.getY() - this.getY();
+		double newAngle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
+		this.setAngle((float) newAngle);
+		
+		this.x += this.speed * Math.cos(Math.toRadians(this.angle));
+		this.y += this.speed * Math.sin(Math.toRadians(this.angle));	
+		//this.move(this);
 	}
 
 }

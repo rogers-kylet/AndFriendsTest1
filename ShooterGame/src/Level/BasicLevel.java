@@ -13,7 +13,10 @@ public class BasicLevel implements Level {
 	String backgroundMusic = "level";
 	List<MenuItem> menuItems;
 	List<Room> roomList;
-	
+	LevelGeneration generation;
+	public BasicLevel(){
+		
+	}
 	@Override
 	public String getName() {
 		return name;

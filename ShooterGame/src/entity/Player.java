@@ -11,13 +11,18 @@ import org.lwjgl.util.vector.Vector3f;
  */
 public class Player extends BasicEntity {
 	
-	//Player-specific number of incincible frames
+	//Player-specific number of invincible frames
 	private static final int INVINCIBILITY_TIMER_START_VALUE = 60;
 	
 	//Number of frames for flash alternation
 	private static final int FLASH_TIMER_START_VALUE = 6;
 	
+	// Default value for shooter timer
+	private static final int SHOOTER_TIMER_START_VALUE = 30;
+	
 	private int flashTimer = 0;
+	private int shooterTimer = 0;
+	boolean canShoot = true;
 
 	public Player(float x, float y, float z, int eid) {
 		this.x = x;
@@ -41,6 +46,7 @@ public class Player extends BasicEntity {
 		this.scale=1f;
 		this.eid = eid;
 		this.hitSfx = "playerhit";
+		this.displayed = true;
 	}
 	
 	@Override
@@ -85,6 +91,9 @@ public class Player extends BasicEntity {
 			}
 		}
 		
+		if(!canShoot) {
+			countDownShooterTimer();
+		}
 	}
 
 	@Override
@@ -105,6 +114,26 @@ public class Player extends BasicEntity {
 	protected void processMovementTick(Entity target) {
 		this.x += this.speed * Math.cos(Math.toRadians(angle));
 		this.y += this.speed * Math.sin(Math.toRadians(angle));		
+	}
+
+	// Counts down the shooter timer by one, setting can shoot to true when it hits zero
+	public void countDownShooterTimer(){
+		shooterTimer -= 1;
+		if(shooterTimer == 0){
+			this.canShoot = true;
+		}
+	}
+	
+	public boolean isCanShoot() {
+		return canShoot;
+	}
+
+	public void setCanShoot(boolean canShoot) {
+		this.canShoot = canShoot;
+	}
+	
+	public void resetShooterTimer() {
+		this.shooterTimer = SHOOTER_TIMER_START_VALUE;
 	}
 
 }

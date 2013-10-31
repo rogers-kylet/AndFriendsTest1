@@ -22,21 +22,21 @@ import org.newdawn.slick.openal.AudioLoader;
 import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.util.ResourceLoader;
 
+import entity.BasicProjectile;
+import entity.Entity;
+import entity.Player;
+
+import room.Room;
+
 import Background.Background;
 import Background.BackgroundObject;
-import Bullet.BasicBullet;
-import Bullet.Bullet;
-import Enemy.BasicEnemy;
-import Enemy.Enemy;
 import GameState.GameState;
-//TODO gamestate shootergame state cant be resolved, fix
 import GameState.ShooterGameState;
-import Level.BasicLevel;
 import Level.BasicMenu;
 import Level.GameOverScreen;
 import Level.Level;
+import Level.LevelGeneration;
 import MenuItem.MenuItem;
-import Player.Player;
 
 
 public class ShooterEngine {
@@ -75,9 +75,9 @@ public class ShooterEngine {
 	//Temporary background object for testing
 	BackgroundObject background;
 	// List that stores all active bullet objects
-	List<Bullet> bulletList;
+	List<Entity> bulletList;
 	// List that stores all active enemy objects
-	List<Enemy> enemyList;
+	List<Entity> enemyList;
 	// List that storse all active menu items
 	List<MenuItem> menuItemList;
 	
@@ -113,7 +113,7 @@ public class ShooterEngine {
 		gameState = new ShooterGameState();
 		
 		//Initialize player
-		player = new Player();
+		player = new Player(400, 300, 0, 0);
 		
 		//Temp for testing purposes
 		background = new Background();
@@ -121,9 +121,9 @@ public class ShooterEngine {
 		background.setY(resolutionHeight/2);
 		
 		//Temp for testing purposes
-		bulletList = new ArrayList<Bullet>();
+		bulletList = new ArrayList<Entity>();
 		// Temp for testing purposes
-		enemyList = new ArrayList<Enemy>();
+		enemyList = new ArrayList<Entity>();
 		
 		enemyTimer = 60;
 		
@@ -166,13 +166,14 @@ public class ShooterEngine {
 		if(level.getType().equals("Gameplay")){
 			
 			// TODO temp logic for making enemies randomly appear above
-			if(enemyTimer == 0){
+			/*if(enemyTimer == 0){
 				enemyList.add(new BasicEnemy((float) (Math.random()*resolutionWidth), -10));
 				enemyTimer = 60;
 			}
 			else{
 				enemyTimer -= 1;
 			}
+			*/
 			
 			//rotate quad
 			// TODO remove this code, rotation should be done, being left for now becuase it makes the basic tests more fun to see movement
@@ -198,7 +199,24 @@ public class ShooterEngine {
 			else if(Keyboard.isKeyDown(Keyboard.KEY_D)) movementDelta = 0;
 			
 			//Attempt movement if any keys were pressed
-			if(movementDelta>-1) player.movePlayer(movementDelta);
+			if(movementDelta>-1) {
+				player.setAngle(movementDelta);
+				player.move();
+				for(Room room: this.level.getRoomList()) {
+					if(!room.isEntered()) {
+						if(
+								( player.getX() - player.getWidth() / 2 < ( room.getX() + room.getWidth() / 2 ) ) && 
+								( player.getX() + player.getWidth() / 2 > ( room.getX() - room.getWidth() / 2 ) ) && 
+								( player.getY() + player.getHeight() / 2 > ( room.getY() - room.getWidth() / 2 ) ) && 
+								( player.getY() - player.getHeight() / 2 < ( room.getY() + room.getWidth() / 2 ) ) ) {
+							for(Entity enemy : room.getEnemyList()) {
+								this.enemyList.add(enemy);
+							}
+							room.setEntered(true);
+						}
+					}
+				}
+			}
 			
 			//shotFireDelta - Direction shot should fire, if allowed.
 			int shotFireDelta = -1;
@@ -222,7 +240,7 @@ public class ShooterEngine {
 				if(player.isCanShoot()){
 					
 					//Add bullet to scene
-					BasicBullet bullet = new BasicBullet(player.getPlayerX(), player.getPlayerY());
+					BasicProjectile bullet = new BasicProjectile(player.getX(), player.getY(), 0f, 1);
 					bullet.setAngle(shotFireDelta);
 					bulletList.add(bullet);
 					sfxMap.get("shot").playAsSoundEffect(1.0f, 1.0f, false);
@@ -394,7 +412,7 @@ public class ShooterEngine {
 		GL11.glTranslatef(0f, 0f, 0f);
 		
 		if(gameState.isCameraFollow()){
-			GL11.glTranslatef(-player.getPlayerX()+(resolutionWidth / 2), -player.getPlayerY()+(resolutionHeight / 2), 0);
+			GL11.glTranslatef(-player.getX()+(resolutionWidth / 2), -player.getY()+(resolutionHeight / 2), 0);
 		}
 		
 		GL11.glPushMatrix();
@@ -409,35 +427,42 @@ public class ShooterEngine {
 				// Temp code for testing
 				// TODO figure out the best order to render to keep things that should be on top on top
 				////////////////////////////////
-				background.render();
+				//background.render();
 				////////////////////////////////
+				for(Room room : this.level.getRoomList()) {
+					for(Entity background : room.getBackground()) {
+						background.render();
+					}
+				}
 				
 		
 				// Loop through the list of active bullets 
-				for(Iterator<Bullet> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
-					Bullet bullet = bulletIt.next();
+				for(Iterator<Entity> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
+					Entity bullet = bulletIt.next();
 					// If the bullet has left the screen, remove it to preserve memory
 					// TODO possibly need to change the logic if things change
-					if(bullet.offScreen()){
+					
+					/*if(bullet.offScreen()){
 						bulletIt.remove();
 					}
-					else{
+					else{*/
 						bullet.move();
 						bullet.render();
-					}
+					/*w}
+					*/
 				}
 				
 				//GL11.glColor3f(1.0f, 0.0f, 0.0f);
 		
 				//TODO make collision detection general for any enemy/bullet size
-				for(Iterator<Enemy> enemyIt = enemyList.iterator(); enemyIt.hasNext();){
-					Enemy enemy = enemyIt.next();
+				for(Iterator<Entity> enemyIt = enemyList.iterator(); enemyIt.hasNext();){
+					Entity enemy = enemyIt.next();
 					// Loop through each bullet (at least for now less bullets than enemies, if that changes possible reverse this logic)
 					// and check to see if a collision has happened
-					for(Iterator<Bullet> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
-						Bullet bullet = bulletIt.next();
+					for(Iterator<Entity> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
+						Entity bullet = bulletIt.next();
 						// TODO remove 30's to be dependent on both the enemy and add a number for the bullet width/height
-						if (enemy.collidWithBullet(bullet)) {
+						if (enemy.collisionDetection(bullet)) {
 							// TODO replace enemyhit with enemy.getHitSfx() once new entity enemy is being used
 							sfxMap.get("enemyhit").playAsSoundEffect(1.0f, 1.0f, false);
 							enemyIt.remove();
@@ -446,17 +471,18 @@ public class ShooterEngine {
 							gameState.addToScore(1);
 							
 							// If the bullet can not penetrate the object, remove it 
-							if(!bullet.penetrate()){
+							/*if(!bullet.penetrate()){
 								bulletIt.remove();
-							}
+							}*/
 						}
 						
 		
 					}
 					
 					// Player collision with enemy
-					if(enemy.collidWithPlayer(player)){
-						player.hurtPlayer(1);
+					if(enemy.collisionDetection(player)){
+						//player.hurtPlayer(1);
+						player.setHealth(player.getHealth()-1);
 						// TODO replace with player.getHitSfx() once using entity player
 						sfxMap.get("playerhit").playAsSoundEffect(1.0f, 1.0f, false);
 						// TODO figure out what should happen for enemy collision, probably shoudln't kill it, but should start invincibility timer for player
@@ -468,13 +494,13 @@ public class ShooterEngine {
 					}
 					
 					// TODO probably make this lower, possibly extract it to the enemy class and make it more general for garbage collection or situation dependent or something
-					if(enemy.getY() > 610){
-						enemyIt.remove();
-					}
-					else{
-						enemy.move();
+					//if(enemy.getY() > 610){
+					//	enemyIt.remove();
+					//}
+					//else{
+						enemy.move(player);
 						enemy.render();
-					}
+					//}
 				}
 				
 				// R, G, B, A Set the color to blue one time only
@@ -483,7 +509,7 @@ public class ShooterEngine {
 				
 				//temp extrapolate to player class
 				// TODO remove once things get real and not just rotate the object based on delta
-				player.setPlayerRotation(rotation);
+				player.setRotation(rotation);
 				// Should probably be last to make sure that it appears on top of everything in game, but have things for the overlay after this to be on top
 				player.render();
 				
@@ -492,8 +518,8 @@ public class ShooterEngine {
 						GL11.glEnable(GL11.GL_BLEND);
 							GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 							// Yeah... that to string is pretty awesome isn't it? 
-							font.drawString(player.getPlayerX() - (resolutionHeight / 2) - 90, player.getPlayerY() - (resolutionHeight / 2) + 10,"Health: " + ((Integer)player.getHealth()).toString(),Color.yellow);
-							font.drawString(player.getPlayerX() + (resolutionHeight / 2) - 10, player.getPlayerY() - (resolutionHeight / 2) + 10,"Score: " + ((Integer)gameState.getScore()).toString(),Color.yellow);
+							font.drawString(player.getX() - (resolutionHeight / 2) - 90, player.getY() - (resolutionHeight / 2) + 10,"Health: " + ((Float)player.getHealth()).toString(),Color.yellow);
+							font.drawString(player.getX() + (resolutionHeight / 2) - 10, player.getY() - (resolutionHeight / 2) + 10,"Score: " + ((Integer)gameState.getScore()).toString(),Color.yellow);
 						GL11.glDisable(GL11.GL_BLEND);
 				GL11.glPopMatrix();
 			}
@@ -530,17 +556,17 @@ public class ShooterEngine {
 		//TODO make this work for any kind of level
 		if(levelName.equals("Gameplay")){
 			// Switch the level
-			this.level = new BasicLevel();
+			this.level = LevelGeneration.generateLevel("level", 0);
 			
 			//TODO most of this stuff will probably need to be changed to update to the current level stuff, or more specific for each level, gamestate souldn't be cleared from level to level
 			// Reset the gamestate.
 			this.gameState = new ShooterGameState();
 			// Reset the player object
-			this.player = new Player();
+			this.player = new Player(400, 300, 0, 0);
 			// Reset the enemy list
-			this.enemyList = new ArrayList<Enemy>();
+			this.enemyList = new ArrayList<Entity>();
 			// Reset the bullet list
-			this.bulletList = new ArrayList<Bullet>();
+			this.bulletList = new ArrayList<Entity>();
 			// Set the camera to follow the player
 			gameState.setCameraFollow(true);
 			playMusic(level.getBackgroundMusic(), 0.2f);

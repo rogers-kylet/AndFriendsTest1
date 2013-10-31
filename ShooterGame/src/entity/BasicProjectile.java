@@ -20,9 +20,9 @@ public class BasicProjectile extends BasicEntity {
 		this.entityType=entityClass.PROJECTILE;
 		this.maxHealth=10f;
 		this.baseHealth=5f;
-		this.maxSpeed=3f;
-		this.speed=3f;
-		this.minimumSpeed=3f;
+		this.maxSpeed=5f;
+		this.speed=5f;
+		this.minimumSpeed=5f;
 		this.name="Unnamed Projectile "+eid;
 		this.rotation=0f;
 		this.rotationSpeed=0f;
@@ -45,7 +45,7 @@ public class BasicProjectile extends BasicEntity {
 				GL11.glVertex2f(this.x + this.width/2, this.y + this.height/2);
 				GL11.glVertex2f(this.x - this.width/2, this.y + this.height/2);
 				GL11.glEnd();
-			GL11.glPopMatrix();
+		GL11.glPopMatrix();
 	}
 
 	@Override

@@ -3,7 +3,11 @@ package Level;
 import java.util.ArrayList;
 import java.util.List;
 
+import Background.Background;
+
+import entity.BasicBackground;
 import entity.BasicEnemy;
+import entity.BasicEntity;
 import entity.Entity;
 
 import room.AnchorPoint;
@@ -18,24 +22,42 @@ public class LevelGeneration {
 	 * @param levelNumber Which level this is for the player (1st 2nd etc...)
 	 * @return The level
 	 */
-	public Level generateLevel(String levelName, int levelNumber) {
+	public static Level generateLevel(String levelName, int levelNumber) {
 		Level theLevel = new BasicLevel();
 		theLevel.setBackgroundMusic(levelName);
 		theLevel.setName(levelName);
 		theLevel.setType("Gameplay");
 		
 		List<Room> roomList = new ArrayList<Room>();
+		Boolean levelGenerated = false;
+		
+		//TODO exract the room creation to a different method, change those hardcoded values, a lot of this will be dependent on how we store the rooms
+		while(!levelGenerated) {
+			Room tempRoom = buildRoom(400,300);
+			roomList.add(tempRoom);
+			tempRoom = buildRoom(1200,900);
+			roomList.add(tempRoom);
+			tempRoom = buildRoom(1200,300);
+			roomList.add(tempRoom);
+			levelGenerated = true;
+		}
+		theLevel.setRoomList(roomList);
+		return theLevel;
+	}
+
+	//TODO need to 
+	public static Room buildRoom(float x, float y) {
 		Room tempRoom = new BasicRoom();
-			tempRoom.setX(400);
-			tempRoom.setY(300);
+			tempRoom.setX(x);
+			tempRoom.setY(y);
 			tempRoom.setRotation(0);
 			tempRoom.setHeight(600);
 			tempRoom.setWidth(800);
 				List<Entity> enemyList = new ArrayList<Entity>();
-				Entity enemy1 = new BasicEnemy(750f,550f,0f,0);
-				Entity enemy2 = new BasicEnemy(50f, 50f, 0f, 1);
-				Entity enemy3 = new BasicEnemy(750f, 50f, 0f, 2);
-				Entity enemy4 = new BasicEnemy(50f, 550f, 0f, 3);
+				Entity enemy1 = new BasicEnemy(x + 350f,y + 250f,0f,0);
+				Entity enemy2 = new BasicEnemy(x - 350f, y - 250f, 0f, 1);
+				Entity enemy3 = new BasicEnemy(x + 350f, y - 250f, 0f, 2);
+				Entity enemy4 = new BasicEnemy(x - 350f, y + 250f, 0f, 3);
 				enemyList.add(enemy1);
 				enemyList.add(enemy2);
 				enemyList.add(enemy3);
@@ -43,23 +65,28 @@ public class LevelGeneration {
 			tempRoom.setEnemyList(enemyList);
 			List<AnchorPoint> anchorPoints = new ArrayList<AnchorPoint>();
 			AnchorPoint point1 = new AnchorPoint();
-				point1.setX(0f);
-				point1.setY(300f);
+				point1.setX(x - 400f);
+				point1.setY(y);
 				anchorPoints.add(point1);
 			AnchorPoint point2 = new AnchorPoint();
-				point2.setX(800);
-				point2.setY(300f);
+				point2.setX(x+400f);
+				point2.setY(y);
 				anchorPoints.add(point2);
 			AnchorPoint point3 = new AnchorPoint();
-				point3.setX(400f);
-				point3.setY(0f);
+				point3.setX(x);
+				point3.setY(y-300f);
 				anchorPoints.add(point3);
 			AnchorPoint point4 = new AnchorPoint();
-				point4.setX(400f);
-				point4.setY(600f);
+				point4.setX(x);
+				point4.setY(y+300f);
 				anchorPoints.add(point4);
 			tempRoom.setAnchorPoints(anchorPoints);
-		roomList.add(tempRoom);
-		return theLevel;
+			
+			List<Entity> backgroundList = new ArrayList<Entity>();
+			Entity background = new BasicBackground(x,y,0,0, tempRoom.getWidth(), tempRoom.getHeight());
+			backgroundList.add(background);
+			tempRoom.setBackground(backgroundList);
+			
+		return tempRoom;
 	}
 }

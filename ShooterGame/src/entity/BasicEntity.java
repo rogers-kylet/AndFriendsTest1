@@ -117,9 +117,8 @@ public abstract class BasicEntity implements Entity {
 		//TODO: Add collision processing
 		
 		//Call Entity specific collision function (If required)
-		processCollisionTick(target);
+		return processCollisionTick(target);
 		
-		return false;
 	}
 	
 	/**

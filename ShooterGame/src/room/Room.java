@@ -38,4 +38,12 @@ public interface Room {
 	
 	void setAnchorPoints(List<AnchorPoint> anchorPoints);
 
+	boolean isEntered();
+
+	void setEntered(boolean entered);
+
+	List<Entity> getBackground();
+
+	void setBackground(List<Entity> background);
+
 }

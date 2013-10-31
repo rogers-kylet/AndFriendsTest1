@@ -8,8 +8,11 @@ public class BasicRoom implements Room {
 
 	float x, y, z, rotation, width, height;
 	
+	boolean entered;
+	
 	List<Entity> enemyList;
 	List<AnchorPoint> anchorPoints;
+	List<Entity> background;
 
 	@Override
 	public float getX() {
@@ -90,4 +93,26 @@ public class BasicRoom implements Room {
 	public void setAnchorPoints(List<AnchorPoint> anchorPoints) {
 		this.anchorPoints = anchorPoints;
 	}
+
+	@Override
+	public boolean isEntered() {
+		return entered;
+	}
+
+	@Override
+	public void setEntered(boolean entered) {
+		this.entered = entered;
+	}
+
+	@Override
+	public List<Entity> getBackground() {
+		return background;
+	}
+
+	@Override
+	public void setBackground(List<Entity> background) {
+		this.background = background;
+	}
+	
+	
 }
