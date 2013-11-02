@@ -1,5 +1,6 @@
 package Level;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +20,9 @@ public class LevelGeneration {
 	 * @param levelName The Name of the Level being generated
 	 * @param levelNumber Which level this is for the player (1st 2nd etc...)
 	 * @return The level
+	 * @throws IOException 
 	 */
-	public static Level generateLevel(String levelName, int levelNumber) {
+	public static Level generateLevel(String levelName, int levelNumber) throws IOException {
 		Level theLevel = new BasicLevel();
 		theLevel.setBackgroundMusic(levelName);
 		theLevel.setName(levelName);
@@ -48,7 +50,7 @@ public class LevelGeneration {
 	}
 
 	//TODO need to 
-	public static Room buildRoom(float x, float y) {
+	public static Room buildRoom(float x, float y) throws IOException {
 		Room tempRoom = new BasicRoom();
 			tempRoom.setX(x);
 			tempRoom.setY(y);

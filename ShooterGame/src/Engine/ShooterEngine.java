@@ -23,6 +23,7 @@ import org.newdawn.slick.openal.AudioLoader;
 import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.util.ResourceLoader;
 
+import entity.BasicBackground;
 import entity.BasicProjectile;
 import entity.Entity;
 import entity.Player;
@@ -36,6 +37,7 @@ import Level.BasicMenu;
 import Level.GameOverScreen;
 import Level.Level;
 import Level.LevelGeneration;
+import Level.PauseOverlay;
 
 
 public class ShooterEngine {
@@ -95,7 +97,9 @@ public class ShooterEngine {
 	int pauseTimer = 0;
 	int pauseTimerStartValue = 10;
 	
-	public void start(){
+	PauseOverlay pauseOverlay;
+	
+	public void start() throws IOException{
 		try{
 			// TODO figure out a better way to do this, save settings to file, change in game etc etc etc
 			resolutionWidth = 800;
@@ -157,7 +161,7 @@ public class ShooterEngine {
 		System.exit(0);
 	}
 	
-	public void update(int delta){
+	public void update(int delta) throws IOException{
 		
 		//TODO change to a switch
 		if(level.getType().equals("Gameplay")){
@@ -256,6 +260,7 @@ public class ShooterEngine {
 							if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 								pauseTimer = pauseTimerStartValue;
 								this.pause = true;
+								this.pauseOverlay = new PauseOverlay(player);
 							}
 						}
 					}
@@ -269,6 +274,28 @@ public class ShooterEngine {
 						}
 					}
 				}
+				
+				if(Mouse.isButtonDown(0)) {
+					int mouseX = Math.abs(Mouse.getX());
+					int mouseY = Math.abs(resolutionHeight - Mouse.getY());
+					for(Iterator<MenuItem> menuIt = pauseOverlay.getMenuItems().iterator(); menuIt.hasNext();){
+						MenuItem menuItem = menuIt.next();
+						//TODO might just want to project pause overlay to avoid this ugly calculation, might not be worth the effort though depending on how things work out
+						if(menuItem.mouseClick(Math.round(mouseX + player.getX() - resolutionWidth / 2), Math.round(mouseY + player.getY() - resolutionHeight / 2))) {
+							if(menuItem.getButtonAction() == "StartButton") {
+								changeLevel("Gameplay");
+								pause = false;
+							} else if(menuItem.getButtonAction() == "MainMenu") {
+								changeLevel("Menu");
+								pause = false;
+							} else if (menuItem.getButtonAction() == "ExitButton") {
+								Display.destroy();
+								System.exit(0);
+							}
+						}
+					}
+				}
+				
 			}
 		}
 		
@@ -283,13 +310,10 @@ public class ShooterEngine {
 			if(Mouse.isButtonDown(0)) {
 				int mouseX = Math.abs(Mouse.getX());
 				int mouseY = Math.abs(resolutionHeight - Mouse.getY());
-				System.out.println("X: " + mouseX);
-				System.out.println("Y: " + mouseY);
 				for(Iterator<MenuItem> menuIt = menuItemList.iterator(); menuIt.hasNext();){
 					MenuItem menuItem = menuIt.next();
 					if(menuItem.mouseClick(mouseX, mouseY)) {
 						if(menuItem.getButtonAction() == "StartButton") {
-							System.out.println("CLICK");
 							changeLevel("Gameplay");
 						} else if (menuItem.getButtonAction() == "ExitButton") {
 							Display.destroy();
@@ -434,7 +458,7 @@ public class ShooterEngine {
 	
 	// Main render method
 	// TODO figure out the nice way to render everything
-	public void renderGL(){
+	public void renderGL() throws IOException{
 		
 		GL11.glLoadIdentity();
 		GL11.glTranslatef(0f, 0f, 0f);
@@ -570,6 +594,10 @@ public class ShooterEngine {
 						menuItem.render();
 					}
 					
+					//Color.white.bind();
+					//GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+					GL11.glDisable(GL11.GL_TEXTURE_2D);
+					//GL11.glDisable(GL11.GL_BLEND);
 					// TODO replace this crappy text code with bitmapped fonts
 					GL11.glPushMatrix();
 							GL11.glEnable(GL11.GL_BLEND);
@@ -580,6 +608,17 @@ public class ShooterEngine {
 							GL11.glDisable(GL11.GL_BLEND);
 					GL11.glPopMatrix();
 					
+					// Render pause screen background
+					for(Iterator<BasicBackground> backgroundIt = pauseOverlay.getBackgroundItems().iterator(); backgroundIt.hasNext();){
+						BasicBackground background = backgroundIt.next();
+						background.render();
+					}
+					
+					// Render menu selection items
+					for(Iterator<MenuItem> menuIt = pauseOverlay.getMenuItems().iterator(); menuIt.hasNext();){
+						MenuItem menuItem = menuIt.next();
+						menuItem.render();
+					}
 				}
 			}
 			// TODO make this work for all menu types, not just a general one
@@ -616,7 +655,7 @@ public class ShooterEngine {
 		GL11.glPopMatrix();
 	}
 	
-	public void changeLevel(String levelName){
+	public void changeLevel(String levelName) throws IOException{
 
 		// Reset the enemy list
 		this.enemyList = new ArrayList<Entity>();
@@ -682,7 +721,7 @@ public class ShooterEngine {
 		SoundStore.get().setMusicVolume(volume);
 	}
 	// It's a main method, you know?
-	public static void main(String[] argv) {
+	public static void main(String[] argv) throws IOException {
 		ShooterEngine shooterEngine = new ShooterEngine();
 		shooterEngine.start();
 	}

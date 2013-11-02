@@ -1,13 +1,21 @@
 package entity;
 
+import java.io.IOException;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureLoader;
+import org.newdawn.slick.util.ResourceLoader;
 
 import entity.BasicEntity.entityClass;
 
 public class BasicBackground extends BasicEntity {
 
-	public BasicBackground(float x, float y, float z, int eid, float width, float height) {
+	private Texture texture;
+	
+	public BasicBackground(float x, float y, float z, int eid, float width, float height) throws IOException {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -17,10 +25,13 @@ public class BasicBackground extends BasicEntity {
 		this.name="Unnamed Background "+eid;
 		this.scale=1f;
 		this.eid = eid;
+		this.texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/images/" + "Tile" + ".png"));
 	}
 	
 	@Override
 	public void render() {
+		
+		/*
 		GL11.glColor3f(0.2f, 0.4f, 0.6f);
 
 		GL11.glPushMatrix();
@@ -36,6 +47,32 @@ public class BasicBackground extends BasicEntity {
 				GL11.glVertex2f(this.x - this.width/2 + 1, this.y + this.height/2 - 1);
 			GL11.glEnd();
 		GL11.glPopMatrix();
+		*/
+		
+		Color.white.bind();
+		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
+		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
+		//texture.bind(); // or GL11.glBind(texture.getTextureID());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureID());
+		
+		GL11.glPushMatrix();
+	
+			// Replace glBeing with vertex buffer
+		
+		
+			GL11.glBegin(GL11.GL_QUADS);
+					GL11.glTexCoord2f(0,0);
+					GL11.glVertex2f(this.x - this.width/2, this.y - this.height/2);
+					GL11.glTexCoord2f(10,0);
+					GL11.glVertex2f(this.x + this.width/2, this.y - this.height/2);
+					GL11.glTexCoord2f(10,10);
+					GL11.glVertex2f(this.x + this.width/2, this.y + this.height/2);
+					GL11.glTexCoord2f(0,10);
+					GL11.glVertex2f(this.x - this.width/2, this.y + this.height/2);
+			GL11.glEnd();
+			
+		GL11.glPopMatrix();
+
 	}
 
 	@Override
