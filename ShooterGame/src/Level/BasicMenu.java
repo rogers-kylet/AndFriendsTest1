@@ -1,12 +1,13 @@
 package Level;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import entity.MenuItem;
+
 import room.Room;
 
-import MenuItem.BasicMenuItem;
-import MenuItem.MenuItem;
 
 public class BasicMenu implements Level {
 
@@ -16,12 +17,13 @@ public class BasicMenu implements Level {
 	List<Room> roomList;
 	String backgroundMusic;
 	
-	public BasicMenu(){
+	public BasicMenu() throws IOException{
 		name = "BasicMenu";
 		type = "Menu";
 		backgroundMusic = "intro";
 		menuItems = new ArrayList<MenuItem>();
-		menuItems.add(new BasicMenuItem("Start"));
+		menuItems.add(new MenuItem(400,400,"StartButton"));
+		menuItems.add(new MenuItem(400,500,"ExitButton"));
 	}
 	@Override
 	public String getName() {

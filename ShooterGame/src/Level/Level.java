@@ -4,7 +4,7 @@ import java.util.List;
 
 import room.Room;
 
-import MenuItem.MenuItem;
+import entity.MenuItem;
 
 public interface Level {
 

@@ -10,6 +10,7 @@ import java.util.Map;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -25,6 +26,7 @@ import org.newdawn.slick.util.ResourceLoader;
 import entity.BasicProjectile;
 import entity.Entity;
 import entity.Player;
+import entity.MenuItem;
 
 import room.Room;
 
@@ -34,7 +36,6 @@ import Level.BasicMenu;
 import Level.GameOverScreen;
 import Level.Level;
 import Level.LevelGeneration;
-import MenuItem.MenuItem;
 
 
 public class ShooterEngine {
@@ -118,7 +119,7 @@ public class ShooterEngine {
 		
 		enemyTimer = 60;
 		
-		level = new BasicMenu();
+		changeLevel("Menu");
 		
 		playMusic(level.getBackgroundMusic());
 		
@@ -155,16 +156,6 @@ public class ShooterEngine {
 		
 		//TODO change to a switch
 		if(level.getType().equals("Gameplay")){
-			
-			// TODO temp logic for making enemies randomly appear above
-			/*if(enemyTimer == 0){
-				enemyList.add(new BasicEnemy((float) (Math.random()*resolutionWidth), -10));
-				enemyTimer = 60;
-			}
-			else{
-				enemyTimer -= 1;
-			}
-			*/
 			
 			//rotate quad
 			// TODO remove this code, rotation should be done, being left for now becuase it makes the basic tests more fun to see movement
@@ -262,11 +253,32 @@ public class ShooterEngine {
 		}
 		
 		else if(level.getType().equals("Menu")){
+			
 			while(Keyboard.next()){
 				if(Keyboard.getEventKey() == Keyboard.KEY_RETURN){
 					changeLevel("Gameplay");
 				}
 			}
+			
+			if(Mouse.isButtonDown(0)) {
+				int mouseX = Math.abs(Mouse.getX());
+				int mouseY = Math.abs(resolutionHeight - Mouse.getY());
+				System.out.println("X: " + mouseX);
+				System.out.println("Y: " + mouseY);
+				for(Iterator<MenuItem> menuIt = menuItemList.iterator(); menuIt.hasNext();){
+					MenuItem menuItem = menuIt.next();
+					if(menuItem.mouseClick(mouseX, mouseY)) {
+						if(menuItem.getButtonAction() == "StartButton") {
+							System.out.println("CLICK");
+							changeLevel("Gameplay");
+						} else if (menuItem.getButtonAction() == "ExitButton") {
+							Display.destroy();
+							System.exit(0);
+						}
+					}
+				}
+			}
+			
 		}
 		
 		updateFPS(); // update FPS Counter
@@ -391,6 +403,7 @@ public class ShooterEngine {
 		GL11.glPushMatrix();
 			GL11.glLoadIdentity();
 			GL11.glOrtho(0, resolutionWidth, resolutionHeight, 0, -1, 1);
+			//GL11.glOrtho(0, 800, 6, 0, -1, 1);
 			GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glPushMatrix();
 	}
@@ -497,6 +510,11 @@ public class ShooterEngine {
 				// Should probably be last to make sure that it appears on top of everything in game, but have things for the overlay after this to be on top
 				renderEntity(player);
 				
+				
+				for(Iterator<MenuItem> menuIt = menuItemList.iterator(); menuIt.hasNext();){
+					MenuItem menuItem = menuIt.next();
+					menuItem.render();
+				}
 				// TODO replace this crappy text code with bitmapped fonts
 				GL11.glPushMatrix();
 						GL11.glEnable(GL11.GL_BLEND);
@@ -516,7 +534,7 @@ public class ShooterEngine {
 						GL11.glEnable(GL11.GL_BLEND);
 							GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 							font.drawString(300, 100, "Test Shooter Game", Color.green);
-							font.drawString(300, 200,"To Start Press Enter",Color.yellow);
+							//font.drawString(300, 200,"To Start Press Enter",Color.yellow);
 						GL11.glDisable(GL11.GL_BLEND);
 				GL11.glPopMatrix();
 				}
@@ -531,39 +549,62 @@ public class ShooterEngine {
 							GL11.glDisable(GL11.GL_BLEND);
 					GL11.glPopMatrix();
 				}
+				
+				for(Iterator<MenuItem> menuIt = menuItemList.iterator(); menuIt.hasNext();){
+					MenuItem menuItem = menuIt.next();
+					menuItem.render();
+				}
 			}
 			
 		GL11.glPopMatrix();
 	}
 	
 	public void changeLevel(String levelName){
+
+		// Reset the enemy list
+		this.enemyList = new ArrayList<Entity>();
+		// Reset the bullet list
+		this.bulletList = new ArrayList<Entity>();
+		// Reset the Menu Item List
+		this.menuItemList = new ArrayList<MenuItem>();
+		
 		//TODO make this work for any kind of level
 		if(levelName.equals("Gameplay")){
+			// Reset the player object
+			this.player = new Player(400, 300, 0, 0);
+			
 			// Switch the level
 			this.level = LevelGeneration.generateLevel("level", 0);
 			
 			//TODO most of this stuff will probably need to be changed to update to the current level stuff, or more specific for each level, gamestate souldn't be cleared from level to level
 			// Reset the gamestate.
 			this.gameState = new ShooterGameState();
-			// Reset the player object
-			this.player = new Player(400, 300, 0, 0);
-			// Reset the enemy list
-			this.enemyList = new ArrayList<Entity>();
-			// Reset the bullet list
-			this.bulletList = new ArrayList<Entity>();
+
 			// Set the camera to follow the player
 			gameState.setCameraFollow(true);
 			playMusic(level.getBackgroundMusic(), 0.2f);
 			
 		} else if(levelName.equals("Menu")){
-			// Swith the level to the main screen
-			this.level = new BasicMenu();
+			// Switch the level to the main screen
+			try {
+				this.level = new BasicMenu();
+				this.menuItemList = this.level.getMenuItems();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			gameState.setCameraFollow(false);
 			playMusic(level.getBackgroundMusic());
 
 		} else if(levelName.equals("Gameover")){
 			// Swith the level to the game over screen
-			this.level = new GameOverScreen();
+			try {
+				this.level = new GameOverScreen();
+				this.menuItemList = this.level.getMenuItems();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			gameState.setCameraFollow(false);
 			playMusic(level.getBackgroundMusic());
 		}

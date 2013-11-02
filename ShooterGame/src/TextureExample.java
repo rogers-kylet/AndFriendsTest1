@@ -9,14 +9,14 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
-import Player.Player;
+//import Player.Player;
 
 
 public class TextureExample {
 
 	/* The texture that will hold the image details */
 	private Texture texture;
-	private Player player;
+	//private Player player;
 	
 	/*
 	 * Start the example
@@ -25,7 +25,7 @@ public class TextureExample {
 		initGL(800,600);
 		init();
 		
-		player = new Player();
+		//player = new Player();
 		
 		while(true){
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
@@ -111,7 +111,7 @@ public class TextureExample {
 			GL11.glVertex2f(100, 100+texture.getTextureHeight());
 		GL11.glEnd();
 		*/
-		player.render(texture);
+		//player.render(texture);
 	}
 	
 	/*
