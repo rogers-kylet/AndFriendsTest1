@@ -253,15 +253,20 @@ public class ShooterEngine {
 							vsync = !vsync;
 							Display.setVSyncEnabled(vsync);
 						} else if(Keyboard.getEventKey() == Keyboard.KEY_ESCAPE && pauseTimer == 0){
-							pauseTimer = pauseTimerStartValue;
-							this.pause = true;
+							if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+								pauseTimer = pauseTimerStartValue;
+								this.pause = true;
+							}
 						}
 					}
 				}
 			} else {
 				while(Keyboard.next()) {
 					if(Keyboard.getEventKey() == Keyboard.KEY_ESCAPE && pauseTimer == 0) {
-						this.pause = false;
+						if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+							this.pause = false;
+							pauseTimer = pauseTimerStartValue;
+						}
 					}
 				}
 			}
@@ -447,11 +452,7 @@ public class ShooterEngine {
 			//TODO change to a switch
 			if(level.getType().equals("Gameplay")){
 				if(!pause) {
-					// Temp code for testing
-					// TODO figure out the best order to render to keep things that should be on top on top
-					////////////////////////////////
-					//background.render();
-					////////////////////////////////
+
 					for(Room room : this.level.getRoomList()) {
 						for(Entity background : room.getBackground()) {
 							renderEntity(background);
@@ -543,6 +544,42 @@ public class ShooterEngine {
 								font.drawString(player.getX() + (resolutionHeight / 2) - 10, player.getY() - (resolutionHeight / 2) + 10,"Score: " + ((Integer)gameState.getScore()).toString(),Color.yellow);
 							GL11.glDisable(GL11.GL_BLEND);
 					GL11.glPopMatrix();
+				} else {
+					for(Room room : this.level.getRoomList()) {
+						for(Entity background : room.getBackground()) {
+							renderEntity(background);
+						}
+					}
+					
+					for(Iterator<Entity> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
+						Entity bullet = bulletIt.next();
+							renderEntity(bullet);
+					}
+					
+					for(Iterator<Entity> enemyIt = enemyList.iterator(); enemyIt.hasNext();){
+						Entity enemy = enemyIt.next();
+						renderEntity(enemy);
+					}
+					
+					// Should probably be last to make sure that it appears on top of everything in game, but have things for the overlay after this to be on top
+					renderEntity(player);
+					
+					
+					for(Iterator<MenuItem> menuIt = menuItemList.iterator(); menuIt.hasNext();){
+						MenuItem menuItem = menuIt.next();
+						menuItem.render();
+					}
+					
+					// TODO replace this crappy text code with bitmapped fonts
+					GL11.glPushMatrix();
+							GL11.glEnable(GL11.GL_BLEND);
+								GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+								// Yeah... that to string is pretty awesome isn't it? 
+								font.drawString(player.getX() - (resolutionHeight / 2) - 90, player.getY() - (resolutionHeight / 2) + 10,"Health: " + ((Integer)Math.round(player.getHealth())).toString(),Color.yellow);
+								font.drawString(player.getX() + (resolutionHeight / 2) - 10, player.getY() - (resolutionHeight / 2) + 10,"Score: " + ((Integer)gameState.getScore()).toString(),Color.yellow);
+							GL11.glDisable(GL11.GL_BLEND);
+					GL11.glPopMatrix();
+					
 				}
 			}
 			// TODO make this work for all menu types, not just a general one
