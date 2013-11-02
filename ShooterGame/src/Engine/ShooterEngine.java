@@ -271,6 +271,8 @@ public class ShooterEngine {
 						if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 							this.pause = false;
 							pauseTimer = pauseTimerStartValue;
+						} else if(Keyboard.getEventKey() == Keyboard.KEY_F){
+							setDisplayMode(resolutionWidth,resolutionHeight, !Display.isFullscreen());
 						}
 					}
 				}
@@ -291,6 +293,8 @@ public class ShooterEngine {
 							} else if (menuItem.getButtonAction() == "ExitButton") {
 								Display.destroy();
 								System.exit(0);
+							} else if(menuItem.getButtonAction() == "FullScreen"){
+							setDisplayMode(resolutionWidth,resolutionHeight, !Display.isFullscreen());
 							}
 						}
 					}
@@ -304,6 +308,8 @@ public class ShooterEngine {
 			while(Keyboard.next()){
 				if(Keyboard.getEventKey() == Keyboard.KEY_RETURN){
 					changeLevel("Gameplay");
+				} else if(Keyboard.getEventKey() == Keyboard.KEY_F){
+					setDisplayMode(resolutionWidth,resolutionHeight, !Display.isFullscreen());
 				}
 			}
 			

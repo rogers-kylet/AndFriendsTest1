@@ -17,6 +17,7 @@ public class PauseOverlay{
 		List<MenuItem> menuItems = new ArrayList<MenuItem>();
 		List<BasicBackground> backgroundItems = new ArrayList<BasicBackground>();
 		
+		menuItems.add(new MenuItem(player.getX(), player.getY() - 100, "FullScreen"));
 		menuItems.add(new MenuItem(player.getX(),player.getY(),"MainMenu"));
 		menuItems.add(new MenuItem(player.getX(),player.getY() + 100,"ExitButton"));
 		backgroundItems.add(new BasicBackground(player.getX(),player.getY(),0,0, 300, 400));
