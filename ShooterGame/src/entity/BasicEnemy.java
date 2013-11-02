@@ -14,6 +14,7 @@ import entity.BasicEntity.entityClass;
 public class BasicEnemy extends BasicEntity {
 
 	private Texture texture;
+	int mask;
 	
 	public BasicEnemy(float x, float y, float z, int eid) throws IOException {
 		this.x = x;
@@ -37,6 +38,7 @@ public class BasicEnemy extends BasicEntity {
 		this.eid = eid;
 		this.hitSfx = "enemyhit";
 		this.texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/images/" + "Enemy" + ".png"));
+		this.mask = (int) Math.floor(Math.random() * 9);
 	}
 	
 	@Override
@@ -58,7 +60,39 @@ public class BasicEnemy extends BasicEntity {
 		GL11.glPopMatrix();
 		*/
 		
-		Color.white.bind();
+		switch(mask) {
+		case 1:
+			Color.white.bind();
+			break;
+		case 2:
+			Color.blue.bind();
+			break;
+		case 3:
+			Color.cyan.bind();
+			break;
+		case 4:
+			Color.green.bind();
+			break;
+		case 5:
+			Color.magenta.bind();
+			break;
+		case 6:
+			Color.orange.bind();
+			break;
+		case 7:
+			Color.pink.bind();
+			break;
+		case 8:
+			Color.red.bind();
+			break;
+		case 9:
+			Color.yellow.bind();
+			break;
+		default:
+			Color.white.bind();
+			break;
+		}
+		
 		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
 		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
 		//texture.bind(); // or GL11.glBind(texture.getTextureID());
