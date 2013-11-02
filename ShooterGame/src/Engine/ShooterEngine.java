@@ -315,6 +315,8 @@ public class ShooterEngine {
 					if(menuItem.mouseClick(mouseX, mouseY)) {
 						if(menuItem.getButtonAction() == "StartButton") {
 							changeLevel("Gameplay");
+						} else if(menuItem.getButtonAction() == "MainMenu") {
+							changeLevel("Menu");
 						} else if (menuItem.getButtonAction() == "ExitButton") {
 							Display.destroy();
 							System.exit(0);
@@ -639,7 +641,7 @@ public class ShooterEngine {
 								GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 								font.drawString(300, 100, "Game Over", Color.green);
 								font.drawString(300, 200, "Your final score was: " + gameState.getScore(), Color.cyan);
-								font.drawString(300, 300,"To Start Press Enter",Color.yellow);
+								//font.drawString(300, 300,"To Start Press Enter",Color.yellow);
 							GL11.glDisable(GL11.GL_BLEND);
 					GL11.glPopMatrix();
 				}
