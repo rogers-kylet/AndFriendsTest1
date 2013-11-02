@@ -30,10 +30,7 @@ public class MenuItem extends BasicEntity {
 	
 			// Replace glBeing with vertex buffer
 		
-		
 			GL11.glBegin(GL11.GL_QUADS);
-			GL11.glColor4f(1.0f, 5.0f, 5.0f, 0.5f);
-
 					GL11.glTexCoord2f(0,0);
 					GL11.glVertex2f(this.x - this.width/2, this.y - this.height/2);
 					GL11.glTexCoord2f(this.texture.getWidth(),0);

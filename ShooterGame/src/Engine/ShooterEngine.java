@@ -90,6 +90,11 @@ public class ShooterEngine {
 	//TODO set this in a config, currently used for font rendering
 	boolean antiAlias = false;
 	
+	boolean pause = false;
+	
+	int pauseTimer = 0;
+	int pauseTimerStartValue = 10;
+	
 	public void start(){
 		try{
 			// TODO figure out a better way to do this, save settings to file, change in game etc etc etc
@@ -156,97 +161,107 @@ public class ShooterEngine {
 		
 		//TODO change to a switch
 		if(level.getType().equals("Gameplay")){
+			if(!pause) {
+				//rotate quad
+				// TODO remove this code, rotation should be done, being left for now becuase it makes the basic tests more fun to see movement
+				rotation += 0.15f * delta;
 			
-			//rotate quad
-			// TODO remove this code, rotation should be done, being left for now becuase it makes the basic tests more fun to see movement
-			rotation += 0.15f * delta;
-		
-			//BEGIN COMPLETED REFACTOR
-			//------------------------
-			
-			//movementDelta is direction, in degrees, the player is currently moving.
-			//TODO: Add movement amortization
-			int movementDelta = -1;
-			
-			//Handle movement angle calculations
-			//Angle of movement is read right to left as description above
-			
-			//Checks if player is moving up, up-left, or up-right respectively.
-			if(Keyboard.isKeyDown(Keyboard.KEY_W)) movementDelta = (Keyboard.isKeyDown(Keyboard.KEY_D)?315:(Keyboard.isKeyDown(Keyboard.KEY_A)?215:270));
-			//Checks if player is moving left or down-left.
-			else if(Keyboard.isKeyDown(Keyboard.KEY_A)) movementDelta = (Keyboard.isKeyDown(Keyboard.KEY_S)?135:180);
-			//Checks if player is down or down-right.
-			else if(Keyboard.isKeyDown(Keyboard.KEY_S)) movementDelta = (Keyboard.isKeyDown(Keyboard.KEY_D)?45:90);
-			//Checks if player is moving right
-			else if(Keyboard.isKeyDown(Keyboard.KEY_D)) movementDelta = 0;
-			
-			//Attempt movement if any keys were pressed
-			if(movementDelta>-1) {
-				player.setAngle(movementDelta);
-				player.move();
-				for(Room room: this.level.getRoomList()) {
-					if(!room.isEntered()) {
-						if(
-								( player.getX() - player.getWidth() / 2 < ( room.getX() + room.getWidth() / 2 ) ) && 
-								( player.getX() + player.getWidth() / 2 > ( room.getX() - room.getWidth() / 2 ) ) && 
-								( player.getY() + player.getHeight() / 2 > ( room.getY() - room.getHeight() / 2 ) ) && 
-								( player.getY() - player.getHeight() / 2 < ( room.getY() + room.getHeight() / 2 ) ) ) {
-							for(Entity enemy : room.getEnemyList()) {
-								this.enemyList.add(enemy);
+				//BEGIN COMPLETED REFACTOR
+				//------------------------
+				
+				//movementDelta is direction, in degrees, the player is currently moving.
+				//TODO: Add movement amortization
+				int movementDelta = -1;
+				
+				//Handle movement angle calculations
+				//Angle of movement is read right to left as description above
+				
+				//Checks if player is moving up, up-left, or up-right respectively.
+				if(Keyboard.isKeyDown(Keyboard.KEY_W)) movementDelta = (Keyboard.isKeyDown(Keyboard.KEY_D)?315:(Keyboard.isKeyDown(Keyboard.KEY_A)?215:270));
+				//Checks if player is moving left or down-left.
+				else if(Keyboard.isKeyDown(Keyboard.KEY_A)) movementDelta = (Keyboard.isKeyDown(Keyboard.KEY_S)?135:180);
+				//Checks if player is down or down-right.
+				else if(Keyboard.isKeyDown(Keyboard.KEY_S)) movementDelta = (Keyboard.isKeyDown(Keyboard.KEY_D)?45:90);
+				//Checks if player is moving right
+				else if(Keyboard.isKeyDown(Keyboard.KEY_D)) movementDelta = 0;
+				
+				//Attempt movement if any keys were pressed
+				if(movementDelta>-1) {
+					player.setAngle(movementDelta);
+					player.move();
+					for(Room room: this.level.getRoomList()) {
+						if(!room.isEntered()) {
+							if(
+									( player.getX() - player.getWidth() / 2 < ( room.getX() + room.getWidth() / 2 ) ) && 
+									( player.getX() + player.getWidth() / 2 > ( room.getX() - room.getWidth() / 2 ) ) && 
+									( player.getY() + player.getHeight() / 2 > ( room.getY() - room.getHeight() / 2 ) ) && 
+									( player.getY() - player.getHeight() / 2 < ( room.getY() + room.getHeight() / 2 ) ) ) {
+								for(Entity enemy : room.getEnemyList()) {
+									this.enemyList.add(enemy);
+								}
+								room.setEntered(true);
 							}
-							room.setEntered(true);
 						}
 					}
 				}
-			}
-			
-			//shotFireDelta - Direction shot should fire, if allowed.
-			int shotFireDelta = -1;
-			
-			//Handle firing angle calculations
-			//Angle of firing is read right to left as description above
-			
-			//Checks if shot should move up, up-left, or up-right respectively.
-			if(Keyboard.isKeyDown(Keyboard.KEY_UP)) shotFireDelta = (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)?315:(Keyboard.isKeyDown(Keyboard.KEY_LEFT)?215:270));
-			//Checks if shot should move left or down-left.
-			else if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) shotFireDelta = (Keyboard.isKeyDown(Keyboard.KEY_DOWN)?135:180);
-			//Checks if shot should move down or down-right.
-			else if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)) shotFireDelta = (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)?45:90);
-			//Checks if shot should move right
-			else if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) shotFireDelta = 0;
-			
-			//Attempt to fire shot if direction is chosen
-			if(shotFireDelta>-1){
 				
-				//Check player shot cooldown
-				if(player.isCanShoot()){
+				//shotFireDelta - Direction shot should fire, if allowed.
+				int shotFireDelta = -1;
+				
+				//Handle firing angle calculations
+				//Angle of firing is read right to left as description above
+				
+				//Checks if shot should move up, up-left, or up-right respectively.
+				if(Keyboard.isKeyDown(Keyboard.KEY_UP)) shotFireDelta = (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)?315:(Keyboard.isKeyDown(Keyboard.KEY_LEFT)?215:270));
+				//Checks if shot should move left or down-left.
+				else if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) shotFireDelta = (Keyboard.isKeyDown(Keyboard.KEY_DOWN)?135:180);
+				//Checks if shot should move down or down-right.
+				else if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)) shotFireDelta = (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)?45:90);
+				//Checks if shot should move right
+				else if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) shotFireDelta = 0;
+				
+				//Attempt to fire shot if direction is chosen
+				if(shotFireDelta>-1){
 					
-					//Add bullet to scene
-					BasicProjectile bullet = new BasicProjectile(player.getX(), player.getY(), 0f, 1);
-					bullet.setAngle(shotFireDelta);
-					bulletList.add(bullet);
-					sfxMap.get("shot").playAsSoundEffect(1.0f, 1.0f, false);
-					// Stop the player from shooting again and reset the bullet timer
-					player.setCanShoot(false);
-					player.resetShooterTimer();
-				}
-			}
-			
-			//----------------------
-			//END COMPLETED REFACTOR
-			
-			while(Keyboard.next()){
-				if(Keyboard.getEventKeyState()){
-					// Pres "F" to set the game to full screen mode
-					// TODO probably remove from button command and put in an options menu
-					if(Keyboard.getEventKey() == Keyboard.KEY_F){
-						setDisplayMode(resolutionWidth,resolutionHeight, !Display.isFullscreen());
+					//Check player shot cooldown
+					if(player.isCanShoot()){
+						
+						//Add bullet to scene
+						BasicProjectile bullet = new BasicProjectile(player.getX(), player.getY(), 0f, 1);
+						bullet.setAngle(shotFireDelta);
+						bulletList.add(bullet);
+						sfxMap.get("shot").playAsSoundEffect(1.0f, 1.0f, false);
+						// Stop the player from shooting again and reset the bullet timer
+						player.setCanShoot(false);
+						player.resetShooterTimer();
 					}
-					// Press V to toggle vsync
-					// TODO remove from keyboard command and set in options
-					else if (Keyboard.getEventKey() == Keyboard.KEY_V) {
-						vsync = !vsync;
-						Display.setVSyncEnabled(vsync);
+				}
+				
+				//----------------------
+				//END COMPLETED REFACTOR
+				
+				while(Keyboard.next()){
+					if(Keyboard.getEventKeyState()){
+						// Pres "F" to set the game to full screen mode
+						// TODO probably remove from button command and put in an options menu
+						if(Keyboard.getEventKey() == Keyboard.KEY_F){
+							setDisplayMode(resolutionWidth,resolutionHeight, !Display.isFullscreen());
+						}
+						// Press V to toggle vsync
+						// TODO remove from keyboard command and set in options
+						else if (Keyboard.getEventKey() == Keyboard.KEY_V) {
+							vsync = !vsync;
+							Display.setVSyncEnabled(vsync);
+						} else if(Keyboard.getEventKey() == Keyboard.KEY_ESCAPE && pauseTimer == 0){
+							pauseTimer = pauseTimerStartValue;
+							this.pause = true;
+						}
+					}
+				}
+			} else {
+				while(Keyboard.next()) {
+					if(Keyboard.getEventKey() == Keyboard.KEY_ESCAPE && pauseTimer == 0) {
+						this.pause = false;
 					}
 				}
 			}
@@ -280,6 +295,10 @@ public class ShooterEngine {
 			}
 			
 		}
+		
+		// Hack to prevent multiple pause clicks
+		// TODO shouldn't be needed, should probably be able to make this work in the key event holding somehow
+		if(pauseTimer > 0){pauseTimer--;}
 		
 		updateFPS(); // update FPS Counter
 	}
@@ -427,103 +446,104 @@ public class ShooterEngine {
 	
 			//TODO change to a switch
 			if(level.getType().equals("Gameplay")){
-			
-				// Temp code for testing
-				// TODO figure out the best order to render to keep things that should be on top on top
-				////////////////////////////////
-				//background.render();
-				////////////////////////////////
-				for(Room room : this.level.getRoomList()) {
-					for(Entity background : room.getBackground()) {
-						renderEntity(background);
-					}
-				}
-				
-		
-				// Loop through the list of active bullets 
-				for(Iterator<Entity> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
-					Entity bullet = bulletIt.next();
-						//TODO add logic to remove the bullet once it has traveled x amount of distance
-						bullet.move();
-						renderEntity(bullet);
-						
-						if(bullet.getHealth() < 1) {
-							bulletIt.remove();
+				if(!pause) {
+					// Temp code for testing
+					// TODO figure out the best order to render to keep things that should be on top on top
+					////////////////////////////////
+					//background.render();
+					////////////////////////////////
+					for(Room room : this.level.getRoomList()) {
+						for(Entity background : room.getBackground()) {
+							renderEntity(background);
 						}
-	
-				}
-				
-				//GL11.glColor3f(1.0f, 0.0f, 0.0f);
-		
-				//TODO make collision detection general for any enemy/bullet size
-				for(Iterator<Entity> enemyIt = enemyList.iterator(); enemyIt.hasNext();){
-					Entity enemy = enemyIt.next();
-					// Loop through each bullet (at least for now less bullets than enemies, if that changes possible reverse this logic)
-					// and check to see if a collision has happened
+					}
+					
+			
+					// Loop through the list of active bullets 
 					for(Iterator<Entity> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
 						Entity bullet = bulletIt.next();
-						// TODO remove 30's to be dependent on both the enemy and add a number for the bullet width/height
-						if (enemy.collisionDetection(bullet)) {
-							// TODO replace enemyhit with enemy.getHitSfx() once new entity enemy is being used
-							sfxMap.get("enemyhit").playAsSoundEffect(1.0f, 1.0f, false);
-							enemy.setHealth(enemy.getHealth() - 1);
-							bullet.setHealth(bullet.getHealth()-1);
+							//TODO add logic to remove the bullet once it has traveled x amount of distance
+							bullet.move();
+							renderEntity(bullet);
 							
 							if(bullet.getHealth() < 1) {
 								bulletIt.remove();
 							}
-
-							gameState.addToScore(1);
-						}
+		
 					}
 					
-					// Player collision with enemy
-					if(enemy.collisionDetection(player)){
-						player.hurtPlayer(1);
+					//GL11.glColor3f(1.0f, 0.0f, 0.0f);
+			
+					//TODO make collision detection general for any enemy/bullet size
+					for(Iterator<Entity> enemyIt = enemyList.iterator(); enemyIt.hasNext();){
+						Entity enemy = enemyIt.next();
+						// Loop through each bullet (at least for now less bullets than enemies, if that changes possible reverse this logic)
+						// and check to see if a collision has happened
+						for(Iterator<Entity> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
+							Entity bullet = bulletIt.next();
+							// TODO remove 30's to be dependent on both the enemy and add a number for the bullet width/height
+							if (enemy.collisionDetection(bullet)) {
+								// TODO replace enemyhit with enemy.getHitSfx() once new entity enemy is being used
+								sfxMap.get("enemyhit").playAsSoundEffect(1.0f, 1.0f, false);
+								enemy.setHealth(enemy.getHealth() - 1);
+								bullet.setHealth(bullet.getHealth()-1);
+								
+								if(bullet.getHealth() < 1) {
+									bulletIt.remove();
+								}
+	
+								gameState.addToScore(1);
+							}
+						}
 						
-						// TODO replace with player.getHitSfx() once using entity player
-						sfxMap.get(player.getHitSfx()).playAsSoundEffect(1.0f, 1.0f, false);
-						// TODO figure out what should happen for enemy collision, probably shoudln't kill it, but should start invincibility timer for player
-
-						enemy.setHealth(enemy.getHealth() -1);
-						if(player.getHealth() == 0){
-							changeLevel("Gameover");
+						// Player collision with enemy
+						if(enemy.collisionDetection(player)){
+							player.hurtPlayer(1);
+							
+							// TODO replace with player.getHitSfx() once using entity player
+							sfxMap.get(player.getHitSfx()).playAsSoundEffect(1.0f, 1.0f, false);
+							// TODO figure out what should happen for enemy collision, probably shoudln't kill it, but should start invincibility timer for player
+	
+							enemy.setHealth(enemy.getHealth() -1);
+							if(player.getHealth() == 0){
+								changeLevel("Gameover");
+							}
+						}
+						
+	
+						if(enemy.getHealth() < 1) {
+							enemyIt.remove();
+						} else {
+							enemy.move(player);
+							renderEntity(enemy);
 						}
 					}
 					
-
-					if(enemy.getHealth() < 1) {
-						enemyIt.remove();
-					} else {
-						enemy.move(player);
-						renderEntity(enemy);
+					// R, G, B, A Set the color to blue one time only
+					// TODO move this code to object specific things, setting the proper colors and all that fun stuff, probably clear for the textures
+					//GL11.glColor3f(0.0f, 1.0f, 0.0f);
+					
+					//temp extrapolate to player class
+					// TODO remove once things get real and not just rotate the object based on delta
+					player.setRotation(rotation);
+					// Should probably be last to make sure that it appears on top of everything in game, but have things for the overlay after this to be on top
+					renderEntity(player);
+					
+					
+					for(Iterator<MenuItem> menuIt = menuItemList.iterator(); menuIt.hasNext();){
+						MenuItem menuItem = menuIt.next();
+						menuItem.render();
 					}
+					// TODO replace this crappy text code with bitmapped fonts
+					GL11.glPushMatrix();
+							GL11.glEnable(GL11.GL_BLEND);
+								GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+								// Yeah... that to string is pretty awesome isn't it? 
+								font.drawString(player.getX() - (resolutionHeight / 2) - 90, player.getY() - (resolutionHeight / 2) + 10,"Health: " + ((Integer)Math.round(player.getHealth())).toString(),Color.yellow);
+								font.drawString(player.getX() + (resolutionHeight / 2) - 10, player.getY() - (resolutionHeight / 2) + 10,"Score: " + ((Integer)gameState.getScore()).toString(),Color.yellow);
+							GL11.glDisable(GL11.GL_BLEND);
+					GL11.glPopMatrix();
 				}
-				
-				// R, G, B, A Set the color to blue one time only
-				// TODO move this code to object specific things, setting the proper colors and all that fun stuff, probably clear for the textures
-				//GL11.glColor3f(0.0f, 1.0f, 0.0f);
-				
-				//temp extrapolate to player class
-				// TODO remove once things get real and not just rotate the object based on delta
-				player.setRotation(rotation);
-				// Should probably be last to make sure that it appears on top of everything in game, but have things for the overlay after this to be on top
-				renderEntity(player);
-				
-				
-				for(Iterator<MenuItem> menuIt = menuItemList.iterator(); menuIt.hasNext();){
-					MenuItem menuItem = menuIt.next();
-					menuItem.render();
-				}
-				// TODO replace this crappy text code with bitmapped fonts
-				GL11.glPushMatrix();
-						GL11.glEnable(GL11.GL_BLEND);
-							GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-							// Yeah... that to string is pretty awesome isn't it? 
-							font.drawString(player.getX() - (resolutionHeight / 2) - 90, player.getY() - (resolutionHeight / 2) + 10,"Health: " + ((Integer)Math.round(player.getHealth())).toString(),Color.yellow);
-							font.drawString(player.getX() + (resolutionHeight / 2) - 10, player.getY() - (resolutionHeight / 2) + 10,"Score: " + ((Integer)gameState.getScore()).toString(),Color.yellow);
-						GL11.glDisable(GL11.GL_BLEND);
-				GL11.glPopMatrix();
 			}
 			// TODO make this work for all menu types, not just a general one
 			else if(level.getType().equals("Menu")){
