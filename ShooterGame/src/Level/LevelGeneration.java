@@ -6,7 +6,6 @@ import java.util.List;
 
 import entity.BasicBackground;
 import entity.BasicEnemy;
-import entity.BasicEntity;
 import entity.Entity;
 
 import room.AnchorPoint;

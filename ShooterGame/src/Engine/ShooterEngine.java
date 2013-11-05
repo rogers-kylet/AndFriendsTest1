@@ -292,6 +292,7 @@ public class ShooterEngine {
 								pause = false;
 							} else if (menuItem.getButtonAction() == "ExitButton") {
 								Display.destroy();
+								AL.destroy();
 								System.exit(0);
 							} else if(menuItem.getButtonAction() == "FullScreen"){
 							setDisplayMode(resolutionWidth,resolutionHeight, !Display.isFullscreen());
@@ -325,6 +326,7 @@ public class ShooterEngine {
 							changeLevel("Menu");
 						} else if (menuItem.getButtonAction() == "ExitButton") {
 							Display.destroy();
+							AL.destroy();
 							System.exit(0);
 						}
 					}
@@ -505,11 +507,21 @@ public class ShooterEngine {
 		
 					}
 					
-					//GL11.glColor3f(1.0f, 0.0f, 0.0f);
 			
 					//TODO make collision detection general for any enemy/bullet size
 					for(Iterator<Entity> enemyIt = enemyList.iterator(); enemyIt.hasNext();){
 						Entity enemy = enemyIt.next();
+						
+						// Dont process enemy if it is off screen
+						if(
+								( enemy.getX() - enemy.getWidth() / 2 < ( player.getX() + resolutionWidth / 2 ) ) && 
+								( enemy.getX() + enemy.getWidth() / 2 > ( player.getX() - resolutionWidth / 2 ) ) && 
+								( enemy.getY() + enemy.getHeight() / 2 > ( player.getY() - resolutionHeight / 2 ) ) && 
+								( enemy.getY() - enemy.getHeight() / 2 < ( player.getY() + resolutionHeight / 2 ) ) ) {
+						} else {
+							continue;
+						}
+						
 						// Loop through each bullet (at least for now less bullets than enemies, if that changes possible reverse this logic)
 						// and check to see if a collision has happened
 						for(Iterator<Entity> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
