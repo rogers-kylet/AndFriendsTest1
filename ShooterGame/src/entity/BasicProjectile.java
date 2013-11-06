@@ -97,10 +97,10 @@ public class BasicProjectile extends BasicEntity {
 			break;
 		}
 		
-		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
-		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
-		//texture.bind(); // or GL11.glBind(texture.getTextureID());
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureID());
+		//GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
+		//GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
+		texture.bind(); // or GL11.glBind(texture.getTextureID());
+		//GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureID());
 		
 		GL11.glPushMatrix();
 	

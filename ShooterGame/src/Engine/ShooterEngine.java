@@ -508,14 +508,15 @@ public class ShooterEngine {
 					
 					// TODO replace this crappy text code with bitmapped fonts
 					GL11.glPushMatrix();
+					
 							GL11.glEnable(GL11.GL_BLEND);
 								GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 								// Yeah... that to string is pretty awesome isn't it? 
 								font.drawString(player.getX() - (resolutionHeight / 2) - 90, player.getY() - (resolutionHeight / 2) + 10,"Health: " + ((Integer)Math.round(player.getHealth())).toString(),Color.yellow);
 								font.drawString(player.getX() + (resolutionHeight / 2) - 10, player.getY() - (resolutionHeight / 2) + 10,"Score: " + ((Integer)gameState.getScore()).toString(),Color.yellow);
 							GL11.glDisable(GL11.GL_BLEND);
+
 					GL11.glPopMatrix();
-					
 				} 
 				
 				// Pause Screen Render
