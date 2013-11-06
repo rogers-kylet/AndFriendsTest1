@@ -487,86 +487,15 @@ public class ShooterEngine {
 			if(level.getType().equals("Gameplay")){
 				if(!pause) {
 
-					for(Room room : this.level.getRoomList()) {
-						for(Entity background : room.getBackground()) {
-							renderEntity(background);
-						}
-					}
+					// Process and render rooms
+					processRoom();
 					
-			
-					// Loop through the list of active bullets 
-					for(Iterator<Entity> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
-						Entity bullet = bulletIt.next();
-							//TODO add logic to remove the bullet once it has traveled x amount of distance
-							bullet.move();
-							renderEntity(bullet);
-							
-							if(bullet.getHealth() < 1) {
-								bulletIt.remove();
-							}
-		
-					}
+					// Process and render bullets
+					processBullet();
 					
-			
-					//TODO make collision detection general for any enemy/bullet size
-					for(Iterator<Entity> enemyIt = enemyList.iterator(); enemyIt.hasNext();){
-						Entity enemy = enemyIt.next();
-						
-						// Dont process enemy if it is off screen
-						if(
-								( enemy.getX() - enemy.getWidth() / 2 < ( player.getX() + resolutionWidth / 2 ) ) && 
-								( enemy.getX() + enemy.getWidth() / 2 > ( player.getX() - resolutionWidth / 2 ) ) && 
-								( enemy.getY() + enemy.getHeight() / 2 > ( player.getY() - resolutionHeight / 2 ) ) && 
-								( enemy.getY() - enemy.getHeight() / 2 < ( player.getY() + resolutionHeight / 2 ) ) ) {
-						} else {
-							continue;
-						}
-						
-						// Loop through each bullet (at least for now less bullets than enemies, if that changes possible reverse this logic)
-						// and check to see if a collision has happened
-						for(Iterator<Entity> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
-							Entity bullet = bulletIt.next();
-							// TODO remove 30's to be dependent on both the enemy and add a number for the bullet width/height
-							if (enemy.collisionDetection(bullet)) {
-								// TODO replace enemyhit with enemy.getHitSfx() once new entity enemy is being used
-								sfxMap.get("enemyhit").playAsSoundEffect(1.0f, 1.0f, false);
-								enemy.setHealth(enemy.getHealth() - 1);
-								bullet.setHealth(bullet.getHealth()-1);
-								
-								if(bullet.getHealth() < 1) {
-									bulletIt.remove();
-								}
-	
-								gameState.addToScore(1);
-							}
-						}
-						
-						// Player collision with enemy
-						if(enemy.collisionDetection(player)){
-							player.hurtPlayer(1);
-							
-							// TODO replace with player.getHitSfx() once using entity player
-							sfxMap.get(player.getHitSfx()).playAsSoundEffect(1.0f, 1.0f, false);
-							// TODO figure out what should happen for enemy collision, probably shoudln't kill it, but should start invincibility timer for player
-	
-							enemy.setHealth(enemy.getHealth() -1);
-							if(player.getHealth() == 0){
-								changeLevel("Gameover");
-							}
-						}
-						
-	
-						if(enemy.getHealth() < 1) {
-							enemyIt.remove();
-						} else {
-							enemy.move(player);
-							renderEntity(enemy);
-						}
-					}
+					// Process and render enemies
+					processEnemy();
 					
-					// R, G, B, A Set the color to blue one time only
-					// TODO move this code to object specific things, setting the proper colors and all that fun stuff, probably clear for the textures
-					//GL11.glColor3f(0.0f, 1.0f, 0.0f);
 					
 					//temp extrapolate to player class
 					// TODO remove once things get real and not just rotate the object based on delta
@@ -574,11 +503,9 @@ public class ShooterEngine {
 					// Should probably be last to make sure that it appears on top of everything in game, but have things for the overlay after this to be on top
 					renderEntity(player);
 					
+					// Process and render menu items
+					processMenuItems();
 					
-					for(Iterator<MenuItem> menuIt = menuItemList.iterator(); menuIt.hasNext();){
-						MenuItem menuItem = menuIt.next();
-						menuItem.render();
-					}
 					// TODO replace this crappy text code with bitmapped fonts
 					GL11.glPushMatrix();
 							GL11.glEnable(GL11.GL_BLEND);
@@ -588,55 +515,12 @@ public class ShooterEngine {
 								font.drawString(player.getX() + (resolutionHeight / 2) - 10, player.getY() - (resolutionHeight / 2) + 10,"Score: " + ((Integer)gameState.getScore()).toString(),Color.yellow);
 							GL11.glDisable(GL11.GL_BLEND);
 					GL11.glPopMatrix();
-				} else {
-					for(Room room : this.level.getRoomList()) {
-						for(Entity background : room.getBackground()) {
-							renderEntity(background);
-						}
-					}
 					
-					for(Iterator<Entity> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
-						Entity bullet = bulletIt.next();
-							renderEntity(bullet);
-					}
-					
-					for(Iterator<Entity> enemyIt = enemyList.iterator(); enemyIt.hasNext();){
-						Entity enemy = enemyIt.next();
-						renderEntity(enemy);
-					}
-					
-					// Should probably be last to make sure that it appears on top of everything in game, but have things for the overlay after this to be on top
-					renderEntity(player);
-					
-					
-					for(Iterator<MenuItem> menuIt = menuItemList.iterator(); menuIt.hasNext();){
-						MenuItem menuItem = menuIt.next();
-						menuItem.render();
-					}
-					
-					
-					// TODO replace this crappy text code with bitmapped fonts
-					GL11.glPushMatrix();
-							GL11.glEnable(GL11.GL_BLEND);
-								GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-								Color.transparent.bind();
-
-								font.drawString(player.getX() - (resolutionHeight / 2) - 90, player.getY() - (resolutionHeight / 2) + 10,"Health: " + ((Integer)Math.round(player.getHealth())).toString(),Color.yellow);
-								font.drawString(player.getX() + (resolutionHeight / 2) - 10, player.getY() - (resolutionHeight / 2) + 10,"Score: " + ((Integer)gameState.getScore()).toString(),Color.yellow);
-							GL11.glDisable(GL11.GL_BLEND);
-					GL11.glPopMatrix();
-					
-					// Render pause screen background
-					for(Iterator<BasicBackground> backgroundIt = pauseOverlay.getBackgroundItems().iterator(); backgroundIt.hasNext();){
-						BasicBackground background = backgroundIt.next();
-						background.render();
-					}
-					
-					// Render menu selection items
-					for(Iterator<MenuItem> menuIt = pauseOverlay.getMenuItems().iterator(); menuIt.hasNext();){
-						MenuItem menuItem = menuIt.next();
-						menuItem.render();
-					}
+				} 
+				
+				// Pause Screen Render
+				else {
+					processPauseScreen();
 				}
 			}
 			// TODO make this work for all menu types, not just a general one
@@ -664,13 +548,140 @@ public class ShooterEngine {
 					GL11.glPopMatrix();
 				}
 				
-				for(Iterator<MenuItem> menuIt = menuItemList.iterator(); menuIt.hasNext();){
-					MenuItem menuItem = menuIt.next();
-					menuItem.render();
-				}
+				processMenuItems();
 			}
 			
 		GL11.glPopMatrix();
+	}
+
+	public void processPauseScreen() {
+		// Process and render rooms
+		processRoom();
+		
+		for(Iterator<Entity> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
+			Entity bullet = bulletIt.next();
+				renderEntity(bullet);
+		}
+		
+		for(Iterator<Entity> enemyIt = enemyList.iterator(); enemyIt.hasNext();){
+			Entity enemy = enemyIt.next();
+			renderEntity(enemy);
+		}
+		
+		// Should probably be last to make sure that it appears on top of everything in game, but have things for the overlay after this to be on top
+		renderEntity(player);
+		
+		
+		processMenuItems();
+		
+		
+		// TODO replace this crappy text code with bitmapped fonts
+		GL11.glPushMatrix();
+				GL11.glEnable(GL11.GL_BLEND);
+					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+					Color.transparent.bind();
+
+					font.drawString(player.getX() - (resolutionHeight / 2) - 90, player.getY() - (resolutionHeight / 2) + 10,"Health: " + ((Integer)Math.round(player.getHealth())).toString(),Color.yellow);
+					font.drawString(player.getX() + (resolutionHeight / 2) - 10, player.getY() - (resolutionHeight / 2) + 10,"Score: " + ((Integer)gameState.getScore()).toString(),Color.yellow);
+				GL11.glDisable(GL11.GL_BLEND);
+		GL11.glPopMatrix();
+		
+		// Render pause screen background
+		for(Iterator<BasicBackground> backgroundIt = pauseOverlay.getBackgroundItems().iterator(); backgroundIt.hasNext();){
+			BasicBackground background = backgroundIt.next();
+			background.render();
+		}
+		
+		// Render menu selection items
+		for(Iterator<MenuItem> menuIt = pauseOverlay.getMenuItems().iterator(); menuIt.hasNext();){
+			MenuItem menuItem = menuIt.next();
+			menuItem.render();
+		}
+	}
+
+	public void processMenuItems() {
+		for(Iterator<MenuItem> menuIt = menuItemList.iterator(); menuIt.hasNext();){
+			MenuItem menuItem = menuIt.next();
+			menuItem.render();
+		}
+	}
+
+	public void processRoom() {
+		for(Room room : this.level.getRoomList()) {
+			for(Entity background : room.getBackground()) {
+				renderEntity(background);
+			}
+		}
+	}
+
+	public void processBullet() {
+		for(Iterator<Entity> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
+			Entity bullet = bulletIt.next();
+				//TODO add logic to remove the bullet once it has traveled x amount of distance
+				bullet.move();
+				renderEntity(bullet);
+				
+				if(bullet.getHealth() < 1) {
+					bulletIt.remove();
+				}
+		}
+	}
+
+	public void processEnemy() throws IOException {
+		for(Iterator<Entity> enemyIt = enemyList.iterator(); enemyIt.hasNext();){
+			Entity enemy = enemyIt.next();
+			
+			// Dont process enemy if it is off screen
+			if(
+					( enemy.getX() - enemy.getWidth() / 2 < ( player.getX() + resolutionWidth / 2 ) ) && 
+					( enemy.getX() + enemy.getWidth() / 2 > ( player.getX() - resolutionWidth / 2 ) ) && 
+					( enemy.getY() + enemy.getHeight() / 2 > ( player.getY() - resolutionHeight / 2 ) ) && 
+					( enemy.getY() - enemy.getHeight() / 2 < ( player.getY() + resolutionHeight / 2 ) ) ) {
+			} else {
+				continue;
+			}
+			
+			// Loop through each bullet (at least for now less bullets than enemies, if that changes possible reverse this logic)
+			// and check to see if a collision has happened
+			for(Iterator<Entity> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
+				Entity bullet = bulletIt.next();
+				// TODO remove 30's to be dependent on both the enemy and add a number for the bullet width/height
+				if (enemy.collisionDetection(bullet)) {
+					// TODO replace enemyhit with enemy.getHitSfx() once new entity enemy is being used
+					sfxMap.get("enemyhit").playAsSoundEffect(1.0f, 1.0f, false);
+					enemy.setHealth(enemy.getHealth() - 1);
+					bullet.setHealth(bullet.getHealth()-1);
+					
+					if(bullet.getHealth() < 1) {
+						bulletIt.remove();
+					}
+
+					gameState.addToScore(1);
+				}
+			}
+			
+			// Player collision with enemy
+			if(enemy.collisionDetection(player)){
+				player.hurtPlayer(1);
+				
+				// TODO replace with player.getHitSfx() once using entity player
+				sfxMap.get(player.getHitSfx()).playAsSoundEffect(1.0f, 1.0f, false);
+				// TODO figure out what should happen for enemy collision, probably shoudln't kill it, but should start invincibility timer for player
+
+				enemy.setHealth(enemy.getHealth() -1);
+				if(player.getHealth() == 0){
+					changeLevel("Gameover");
+				}
+			}
+			
+
+			if(enemy.getHealth() < 1) {
+				enemyIt.remove();
+			} else {
+				enemy.move(player);
+				renderEntity(enemy);
+			}
+		}
 	}
 	
 	public void changeLevel(String levelName) throws IOException{
@@ -711,7 +722,7 @@ public class ShooterEngine {
 			playMusic(level.getBackgroundMusic());
 
 		} else if(levelName.equals("Gameover")){
-			// Swith the level to the game over screen
+			// Switch the level to the game over screen
 			try {
 				this.level = new GameOverScreen();
 				this.menuItemList = this.level.getMenuItems();
