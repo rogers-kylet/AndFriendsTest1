@@ -1,7 +1,11 @@
 package room;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import entity.BasicBackground;
+import entity.BasicWall;
 import entity.Entity;
 
 public class BasicRoom implements Room {
@@ -14,6 +18,7 @@ public class BasicRoom implements Room {
 	List<Entity> enemyList;
 	List<AnchorPoint> anchorPoints;
 	List<Entity> background;
+	List<Entity> wallList;
 	
 	Room parentRoom;
 
@@ -30,6 +35,54 @@ public class BasicRoom implements Room {
 			return false;
 		}
 	}
+	
+	// Loop through anchor points and place a wall either along the entire expanse or two breaking where the door would be
+	// At some point also need o place wall connectors/determine whether it is an inwardly or outwardly facing wall
+	@Override
+	public void generateWalls() throws IOException{
+		wallList = new ArrayList<Entity>();
+		for(AnchorPoint anchorPoint: anchorPoints) {
+			
+			if(anchorPoint.isHooked()) {
+				BasicWall background1 = null;
+				BasicWall background2 = null;
+				if(anchorPoint.getDirection().equals("left")) {
+					background1 = new BasicWall(anchorPoint.getX(),anchorPoint.getY() - this.height/3,0,0, 40, this.height/3);
+					background2 = new BasicWall(anchorPoint.getX(), anchorPoint.getY() + this.height/3, 0, 0, 40, this.height/3);
+				} else if(anchorPoint.getDirection().equals("right")) {
+					background1 = new BasicWall(anchorPoint.getX(),anchorPoint.getY() - this.height/3,0,0, 40, this.height/3);
+					background2 = new BasicWall(anchorPoint.getX(), anchorPoint.getY() + this.height/3, 0, 0, 40, this.height/3);
+				} else if(anchorPoint.getDirection().equals("up")) {
+					background1 = new BasicWall(anchorPoint.getX() - this.width/3,anchorPoint.getY(),0,0, this.width/3, 40);
+					background2 = new BasicWall(anchorPoint.getX() + this.width/3, anchorPoint.getY(), 0, 0, this.width/3, 40);
+				} else if(anchorPoint.getDirection().equals("down")) {
+					background1 = new BasicWall(anchorPoint.getX() - this.width/3,anchorPoint.getY(),0,0, this.width/3, 40);
+					background2 = new BasicWall(anchorPoint.getX() + this.width/3, anchorPoint.getY(), 0, 0, this.width/3,40);
+				}
+				background1.setTexture("wall");
+				background.add(background1);
+				background2.setTexture("wall");
+				background.add(background2);
+				wallList.add(background1);
+				wallList.add(background2);
+			} else {
+				BasicWall background1 = null;
+				if(anchorPoint.getDirection().equals("left")) {
+					background1 = new BasicWall(anchorPoint.getX(),anchorPoint.getY(),0,0, 40, this.height);
+				} else if(anchorPoint.getDirection().equals("right")) {
+					background1 = new BasicWall(anchorPoint.getX(),anchorPoint.getY(),0,0, 40, this.height);
+				} else if(anchorPoint.getDirection().equals("up")) {
+					background1 = new BasicWall(anchorPoint.getX(),anchorPoint.getY(),0,0, this.width, 40);
+				} else if(anchorPoint.getDirection().equals("down")) {
+					background1 = new BasicWall(anchorPoint.getX(),anchorPoint.getY(),0,0, this.width, 40);
+				}
+				background1.setTexture("wall");
+				background.add(background1);
+				wallList.add(background1);
+			}
+		}
+	}
+	
 	@Override
 	public float getX() {
 		return x;
@@ -149,4 +202,16 @@ public class BasicRoom implements Room {
 	public void setParentRoom(Room parentRoom) {
 		this.parentRoom = parentRoom;
 	}
+
+	@Override
+	public List<Entity> getWallList() {
+		return wallList;
+	}
+
+	@Override
+	public void setWallList(List<Entity> wallList) {
+		this.wallList = wallList;
+	}
+	
+	
 }

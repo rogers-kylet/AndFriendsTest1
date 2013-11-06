@@ -25,6 +25,7 @@ import org.newdawn.slick.util.ResourceLoader;
 
 import entity.BasicBackground;
 import entity.BasicProjectile;
+import entity.BasicWall;
 import entity.Entity;
 import entity.Player;
 import entity.MenuItem;
@@ -192,6 +193,8 @@ public class ShooterEngine {
 				//Attempt movement if any keys were pressed
 				if(movementDelta>-1) {
 					player.setAngle(movementDelta);
+					float oldX = player.getX();
+					float oldY = player.getY();
 					player.move();
 					for(Room room: this.level.getRoomList()) {
 						if(!room.isEntered()) {
@@ -204,6 +207,12 @@ public class ShooterEngine {
 									this.enemyList.add(enemy);
 								}
 								room.setEntered(true);
+							}
+						}
+						for(Entity wall: room.getWallList()) {
+							if(wall.collisionDetection(player)) {
+								player.setX(oldX);
+								player.setY(oldY);
 							}
 						}
 					}

@@ -107,6 +107,9 @@ public class LevelGeneration {
 				levelGenerated = true;
 			}
 		}
+		for(Room room : roomList) {
+			room.generateWalls();
+		}
 		theLevel.setRoomList(roomList);
 		return theLevel;
 	}

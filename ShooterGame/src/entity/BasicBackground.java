@@ -13,7 +13,7 @@ import entity.BasicEntity.entityClass;
 
 public class BasicBackground extends BasicEntity {
 
-	private Texture texture;
+	protected Texture texture;
 	int mask;
 	
 	public BasicBackground(float x, float y, float z, int eid, float width, float height) throws IOException {

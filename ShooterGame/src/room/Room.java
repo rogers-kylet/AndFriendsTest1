@@ -1,5 +1,6 @@
 package room;
 
+import java.io.IOException;
 import java.util.List;
 
 import entity.Entity;
@@ -55,5 +56,11 @@ public interface Room {
 	void setParentRoom(Room parentRoom);
 
 	boolean roomCollision(Room theRoom);
+
+	void generateWalls() throws IOException;
+
+	void setWallList(List<Entity> wallList);
+
+	List<Entity> getWallList();
 
 }
