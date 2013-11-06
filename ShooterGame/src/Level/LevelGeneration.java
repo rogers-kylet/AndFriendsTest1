@@ -32,7 +32,7 @@ public class LevelGeneration {
 		
 		//TODO exract the room creation to a different method, change those hardcoded values, a lot of this will be dependent on how we store the rooms
 		while(!levelGenerated) {
-			Room tempRoom = buildRoom(400,300);
+			Room tempRoom = buildStartRoom(400,300);
 			roomList.add(tempRoom);
 			tempRoom = buildRoom(1200,900);
 			roomList.add(tempRoom);
@@ -56,6 +56,7 @@ public class LevelGeneration {
 			tempRoom.setRotation(0);
 			tempRoom.setHeight(600);
 			tempRoom.setWidth(800);
+			tempRoom.setType("normal");
 				List<Entity> enemyList = new ArrayList<Entity>();
 				Entity enemy1 = new BasicEnemy(x + 350f,y + 250f,0f,0);
 				Entity enemy2 = new BasicEnemy(x - 350f, y - 250f, 0f, 1);
@@ -66,6 +67,43 @@ public class LevelGeneration {
 				enemyList.add(enemy3);
 				enemyList.add(enemy4);
 			tempRoom.setEnemyList(enemyList);
+			List<AnchorPoint> anchorPoints = new ArrayList<AnchorPoint>();
+			AnchorPoint point1 = new AnchorPoint();
+				point1.setX(x - 400f);
+				point1.setY(y);
+				anchorPoints.add(point1);
+			AnchorPoint point2 = new AnchorPoint();
+				point2.setX(x+400f);
+				point2.setY(y);
+				anchorPoints.add(point2);
+			AnchorPoint point3 = new AnchorPoint();
+				point3.setX(x);
+				point3.setY(y-300f);
+				anchorPoints.add(point3);
+			AnchorPoint point4 = new AnchorPoint();
+				point4.setX(x);
+				point4.setY(y+300f);
+				anchorPoints.add(point4);
+			tempRoom.setAnchorPoints(anchorPoints);
+			
+			List<Entity> backgroundList = new ArrayList<Entity>();
+			Entity background = new BasicBackground(x,y,0,0, tempRoom.getWidth(), tempRoom.getHeight());
+			backgroundList.add(background);
+			tempRoom.setBackground(backgroundList);
+			
+		return tempRoom;
+	}
+	
+	public static Room buildStartRoom(float x, float y) throws IOException {
+		Room tempRoom = new BasicRoom();
+			tempRoom.setX(x);
+			tempRoom.setY(y);
+			tempRoom.setRotation(0);
+			tempRoom.setHeight(600);
+			tempRoom.setWidth(800);
+			tempRoom.setType("start");
+			tempRoom.setEnemyList(new ArrayList<Entity>());
+			
 			List<AnchorPoint> anchorPoints = new ArrayList<AnchorPoint>();
 			AnchorPoint point1 = new AnchorPoint();
 				point1.setX(x - 400f);

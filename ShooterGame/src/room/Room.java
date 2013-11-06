@@ -46,4 +46,8 @@ public interface Room {
 
 	void setBackground(List<Entity> background);
 
+	void setType(String type);
+
+	String getType();
+
 }

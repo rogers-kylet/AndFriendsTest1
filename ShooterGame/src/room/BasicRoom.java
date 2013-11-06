@@ -8,6 +8,7 @@ public class BasicRoom implements Room {
 
 	float x, y, z, rotation, width, height;
 	
+	String type;
 	boolean entered;
 	
 	List<Entity> enemyList;
@@ -112,6 +113,16 @@ public class BasicRoom implements Room {
 	@Override
 	public void setBackground(List<Entity> background) {
 		this.background = background;
+	}
+
+	@Override
+	public String getType() {
+		return type;
+	}
+
+	@Override
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 	
