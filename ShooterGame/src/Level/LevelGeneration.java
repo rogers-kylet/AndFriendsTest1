@@ -2,7 +2,10 @@ package Level;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import entity.BasicBackground;
 import entity.BasicEnemy;
@@ -29,20 +32,80 @@ public class LevelGeneration {
 		
 		List<Room> roomList = new ArrayList<Room>();
 		Boolean levelGenerated = false;
+		int roomCount = 0;
+		
+		Queue<Room> theQueue = new LinkedList<Room>();
+		
+		Room startRoom = buildStartRoom(400,300);
+		theQueue.add(startRoom);
+		roomList.add(startRoom);
 		
 		//TODO exract the room creation to a different method, change those hardcoded values, a lot of this will be dependent on how we store the rooms
 		while(!levelGenerated) {
-			Room tempRoom = buildStartRoom(400,300);
-			roomList.add(tempRoom);
-			tempRoom = buildRoom(1200,900);
-			roomList.add(tempRoom);
-			tempRoom = buildRoom(1200,300);
-			roomList.add(tempRoom);
-			tempRoom = buildRoom(2000, 900);
-			roomList.add(tempRoom);
-			tempRoom = buildRoom(2000, 1500);
-			roomList.add(tempRoom);
-			levelGenerated = true;
+
+			Room tempRoom = theQueue.poll();
+			List<AnchorPoint> anchorPoints = tempRoom.getAnchorPoints();
+
+			Collections.shuffle(anchorPoints);
+			
+			// TODO need to refactor to use anchor points to place the rooms, meaning we need to generate them but without their x/y coordinates and then set them
+			for(AnchorPoint anchorPoint : anchorPoints){
+				if(!anchorPoint.isHooked()) {
+					Room nextRoom = new BasicRoom();
+					if(anchorPoint.getDirection().equals("left")){
+						nextRoom = buildRoom(anchorPoint.getX()-400,anchorPoint.getY());
+						for(AnchorPoint hookedAnchorPoint: nextRoom.getAnchorPoints()) {
+							if(hookedAnchorPoint.getDirection().equals("right")) {
+								hookedAnchorPoint.setHooked(true);
+							}
+						}
+					} else if(anchorPoint.getDirection().equals("right")){
+						nextRoom = buildRoom(anchorPoint.getX() + 400,anchorPoint.getY());
+						for(AnchorPoint hookedAnchorPoint: nextRoom.getAnchorPoints()) {
+							if(hookedAnchorPoint.getDirection().equals("left")) {
+								hookedAnchorPoint.setHooked(true);
+							}
+						}
+					} else if(anchorPoint.getDirection().equals("up")){
+						nextRoom = buildRoom(anchorPoint.getX(),anchorPoint.getY() - 300);
+						for(AnchorPoint hookedAnchorPoint: nextRoom.getAnchorPoints()) {
+							if(hookedAnchorPoint.getDirection().equals("down")) {
+								hookedAnchorPoint.setHooked(true);
+							}
+						}
+					} else if(anchorPoint.getDirection().equals("down")){
+						nextRoom = buildRoom(anchorPoint.getX(),anchorPoint.getY() + 300);
+						for(AnchorPoint hookedAnchorPoint: nextRoom.getAnchorPoints()) {
+							if(hookedAnchorPoint.getDirection().equals("up")) {
+								hookedAnchorPoint.setHooked(true);
+							}
+						}
+					}
+					boolean roomOkay = true;
+					for(Room room: roomList) {
+						if(room.roomCollision(nextRoom)) {
+							roomOkay = false;
+						}
+					}
+					if(roomOkay) {
+						anchorPoint.setHooked(true);
+						nextRoom.setParentRoom(tempRoom);
+						roomCount++;
+						roomList.add(nextRoom);
+						theQueue.add(nextRoom);
+						break;
+					} else {
+						continue;
+					}
+				} else {
+					continue;
+				}
+			}
+			
+			// Temp number to allow for basic level scaling
+			if(roomCount >= 10+levelNumber) {
+				levelGenerated = true;
+			}
 		}
 		theLevel.setRoomList(roomList);
 		return theLevel;
@@ -71,18 +134,22 @@ public class LevelGeneration {
 			AnchorPoint point1 = new AnchorPoint();
 				point1.setX(x - 400f);
 				point1.setY(y);
+				point1.setDirection("left");
 				anchorPoints.add(point1);
 			AnchorPoint point2 = new AnchorPoint();
 				point2.setX(x+400f);
 				point2.setY(y);
+				point2.setDirection("right");
 				anchorPoints.add(point2);
 			AnchorPoint point3 = new AnchorPoint();
 				point3.setX(x);
 				point3.setY(y-300f);
+				point3.setDirection("up");
 				anchorPoints.add(point3);
 			AnchorPoint point4 = new AnchorPoint();
 				point4.setX(x);
 				point4.setY(y+300f);
+				point4.setDirection("down");
 				anchorPoints.add(point4);
 			tempRoom.setAnchorPoints(anchorPoints);
 			
@@ -108,23 +175,28 @@ public class LevelGeneration {
 			AnchorPoint point1 = new AnchorPoint();
 				point1.setX(x - 400f);
 				point1.setY(y);
+				point1.setDirection("left");
 				anchorPoints.add(point1);
 			AnchorPoint point2 = new AnchorPoint();
 				point2.setX(x+400f);
 				point2.setY(y);
+				point2.setDirection("right");
 				anchorPoints.add(point2);
 			AnchorPoint point3 = new AnchorPoint();
 				point3.setX(x);
 				point3.setY(y-300f);
+				point3.setDirection("up");
 				anchorPoints.add(point3);
 			AnchorPoint point4 = new AnchorPoint();
 				point4.setX(x);
 				point4.setY(y+300f);
+				point4.setDirection("down");
 				anchorPoints.add(point4);
 			tempRoom.setAnchorPoints(anchorPoints);
 			
 			List<Entity> backgroundList = new ArrayList<Entity>();
-			Entity background = new BasicBackground(x,y,0,0, tempRoom.getWidth(), tempRoom.getHeight());
+			BasicBackground background = new BasicBackground(x,y,0,0, tempRoom.getWidth(), tempRoom.getHeight());
+			background.setTexture("startRoom");
 			backgroundList.add(background);
 			tempRoom.setBackground(backgroundList);
 			

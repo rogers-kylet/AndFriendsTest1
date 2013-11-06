@@ -50,4 +50,10 @@ public interface Room {
 
 	String getType();
 
+	Room getParentRoom();
+
+	void setParentRoom(Room parentRoom);
+
+	boolean roomCollision(Room theRoom);
+
 }

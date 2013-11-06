@@ -120,4 +120,14 @@ public class BasicBackground extends BasicEntity {
 
 	}
 
+	public Texture getTexture() {
+		return texture;
+	}
+
+	public void setTexture(String textureName) throws IOException {
+		this.texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/images/" + textureName + ".png"));;
+	}
+	
+	
+
 }

@@ -14,7 +14,22 @@ public class BasicRoom implements Room {
 	List<Entity> enemyList;
 	List<AnchorPoint> anchorPoints;
 	List<Entity> background;
+	
+	Room parentRoom;
 
+	@Override
+	public boolean roomCollision(Room theRoom) {
+		if(
+				( theRoom.getX() - theRoom.getWidth() / 2 < ( this.getX() + this.width / 2 ) ) && 
+				( theRoom.getX() + theRoom.getWidth() / 2 > ( this.getX() - this.width / 2 ) ) && 
+				( theRoom.getY() + theRoom.getHeight() / 2 > ( this.getY() - this.height / 2 ) ) && 
+				( theRoom.getY() - theRoom.getHeight() / 2 < ( this.getY() + this.height / 2 ) ) ) {
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 	@Override
 	public float getX() {
 		return x;
@@ -124,6 +139,14 @@ public class BasicRoom implements Room {
 	public void setType(String type) {
 		this.type = type;
 	}
-	
-	
+
+	@Override
+	public Room getParentRoom() {
+		return parentRoom;
+	}
+
+	@Override
+	public void setParentRoom(Room parentRoom) {
+		this.parentRoom = parentRoom;
+	}
 }

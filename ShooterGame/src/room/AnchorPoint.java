@@ -5,6 +5,7 @@ public class AnchorPoint {
 
 	float x, y;
 	
+	String direction;
 	// Determine if a room has been generated based off of this point
 	boolean hooked;
 
@@ -30,6 +31,14 @@ public class AnchorPoint {
 
 	public void setHooked(boolean hooked) {
 		this.hooked = hooked;
+	}
+
+	public String getDirection() {
+		return direction;
+	}
+
+	public void setDirection(String direction) {
+		this.direction = direction;
 	}
 	
 }
