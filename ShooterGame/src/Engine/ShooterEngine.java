@@ -621,6 +621,20 @@ public class ShooterEngine {
 			for(Entity background : room.getBackground()) {
 				renderEntity(background);
 			}
+			for(Entity wall : room.getWallList()) {
+				
+				//Only check for collision if the wall was rendered
+				if(renderEntity(wall)) {
+				
+					//TODO need to extract current room determined from player movement code and then just check the walls in that room against the bullet instead of every room against the bullet
+					for(Iterator<Entity> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
+						Entity bullet = bulletIt.next();
+						if(wall.collisionDetection(bullet)){
+							bulletIt.remove();
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -765,14 +779,17 @@ public class ShooterEngine {
 		shooterEngine.start();
 	}
 	
-	public void renderEntity(Entity entity) {
+	public boolean renderEntity(Entity entity) {
 		if(
 				( entity.getX() - entity.getWidth() / 2 < ( player.getX() + resolutionWidth / 2 ) ) && 
 				( entity.getX() + entity.getWidth() / 2 > ( player.getX() - resolutionWidth / 2 ) ) && 
 				( entity.getY() + entity.getHeight() / 2 > ( player.getY() - resolutionHeight / 2 ) ) && 
 				( entity.getY() - entity.getHeight() / 2 < ( player.getY() + resolutionHeight / 2 ) ) ) {
 			entity.render();
-		} 
+			return true;
+		} else{
+			return false;
+		}
 	}
 }
 

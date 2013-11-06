@@ -40,6 +40,7 @@ public class BasicRoom implements Room {
 	// At some point also need o place wall connectors/determine whether it is an inwardly or outwardly facing wall
 	@Override
 	public void generateWalls() throws IOException{
+		// TODO add seperate process/render for walls
 		wallList = new ArrayList<Entity>();
 		for(AnchorPoint anchorPoint: anchorPoints) {
 			
@@ -60,9 +61,7 @@ public class BasicRoom implements Room {
 					background2 = new BasicWall(anchorPoint.getX() + this.width/3, anchorPoint.getY(), 0, 0, this.width/3,40);
 				}
 				background1.setTexture("wall");
-				background.add(background1);
 				background2.setTexture("wall");
-				background.add(background2);
 				wallList.add(background1);
 				wallList.add(background2);
 			} else {
@@ -77,7 +76,6 @@ public class BasicRoom implements Room {
 					background1 = new BasicWall(anchorPoint.getX(),anchorPoint.getY(),0,0, this.width, 40);
 				}
 				background1.setTexture("wall");
-				background.add(background1);
 				wallList.add(background1);
 			}
 		}
