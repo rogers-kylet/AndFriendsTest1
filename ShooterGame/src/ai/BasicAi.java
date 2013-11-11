@@ -1,5 +1,7 @@
 package ai;
 
+import java.util.List;
+
 import entity.Entity;
 import entityAttack.EntityAttack;
 import entityMovement.EntityMovement;
@@ -19,8 +21,8 @@ public class BasicAi implements Ai {
 	}
 	
 	@Override
-	public void attack(Entity target, Entity relatedEntity) {
-		this.enemyAttack.attack(target, relatedEntity);
+	public List<Entity> attack(Entity target, Entity relatedEntity) {
+		return this.enemyAttack.attack(target, relatedEntity);
 	}
 	
 	@Override
