@@ -103,9 +103,10 @@ public class ShooterEngine {
 	public void start() throws IOException{
 		try{
 			// TODO figure out a better way to do this, save settings to file, change in game etc etc etc
-			resolutionWidth = 800;
-			resolutionHeight = 600;
+			resolutionWidth = 1280;
+			resolutionHeight = 720;
 			Display.setDisplayMode(new DisplayMode(resolutionWidth, resolutionHeight));
+			//TODO need to change this creation code to set more specific things, deff add some multisampling
 			Display.create();
 		} catch (LWJGLException e) {
 			e.printStackTrace();
@@ -464,7 +465,7 @@ public class ShooterEngine {
         //GL11.glEnable(GL11.GL_BLEND);
         //GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
  
-        //GL11.glViewport(0,0,800,600);
+        GL11.glViewport(0,0,resolutionWidth,resolutionHeight);
         
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glPushMatrix();

@@ -9,12 +9,18 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
+import ai.Ai;
+import ai.BasicAi;
+
 import entity.BasicEntity.entityClass;
+import entityMovement.BasicEntityMovement;
+import entityMovement.EntityMovement;
 
 public class BasicEnemy extends BasicEntity {
 
 	private Texture texture;
 	int mask;
+	Ai ai;
 	
 	public BasicEnemy(float x, float y, float z, int eid) throws IOException {
 		this.x = x;
@@ -39,6 +45,7 @@ public class BasicEnemy extends BasicEntity {
 		this.hitSfx = "enemyhit";
 		this.texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/images/" + "Enemy" + ".png"));
 		this.mask = (int) Math.floor(Math.random() * 9);
+		this.ai = new BasicAi(new BasicEntityMovement());
 	}
 	
 	@Override
@@ -136,17 +143,16 @@ public class BasicEnemy extends BasicEntity {
 
 	@Override
 	protected void processMovementTick(Entity target) {
-		//this.x += this.speed * Math.cos(Math.toRadians(angle));
-		//this.y += this.speed * Math.sin(Math.toRadians(angle));	
-		
+		/*
 		float deltaX = target.getX() - this.getX();
 		float deltaY = target.getY() - this.getY();
 		double newAngle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
 		this.setAngle((float) newAngle);
 		
 		this.x += this.speed * Math.cos(Math.toRadians(this.angle));
-		this.y += this.speed * Math.sin(Math.toRadians(this.angle));	
-		//this.move(this);
+		this.y += this.speed * Math.sin(Math.toRadians(this.angle));
+		*/
+		this.ai.getEntityMovement().move(this, target);
 	}
 
 }
