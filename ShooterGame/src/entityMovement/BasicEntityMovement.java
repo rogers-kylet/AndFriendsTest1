@@ -4,6 +4,12 @@ import entity.Entity;
 
 public class BasicEntityMovement implements EntityMovement {
 
+	boolean isMoving;
+	
+	public BasicEntityMovement() {
+		this.isMoving = false;
+	}
+	
 	/* (non-Javadoc)
 	 * @see entityMovement.EntityMovement#move(entity.Entity)
 	 */
@@ -11,6 +17,7 @@ public class BasicEntityMovement implements EntityMovement {
 	public void move(Entity entity) {
 		entity.setX((float) (entity.getX() + (entity.getSpeed() * Math.sin(Math.toRadians(entity.getAngle())))));
 		entity.setY((float) (entity.getY() + (entity.getSpeed() * Math.sin(Math.toRadians(entity.getAngle())))));
+		isMoving = true;
 	}
 	
 	/* (non-Javadoc)
@@ -25,5 +32,19 @@ public class BasicEntityMovement implements EntityMovement {
 		
 		entity.setX(entity.getX() + entity.getSpeed() * (float)Math.cos(Math.toRadians(entity.getAngle())));
 		entity.setY(entity.getY() + entity.getSpeed() * (float)Math.sin(Math.toRadians(entity.getAngle())));
+		
+		isMoving = true;
 	}
+
+	@Override
+	public boolean isMoving() {
+		return isMoving;
+	}
+
+	@Override
+	public void setMoving(boolean isMoving) {
+		this.isMoving = isMoving;
+	}
+	
+	
 }

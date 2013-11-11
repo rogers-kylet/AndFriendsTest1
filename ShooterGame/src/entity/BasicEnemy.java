@@ -152,7 +152,7 @@ public class BasicEnemy extends BasicEntity {
 		this.x += this.speed * Math.cos(Math.toRadians(this.angle));
 		this.y += this.speed * Math.sin(Math.toRadians(this.angle));
 		*/
-		this.ai.getEntityMovement().move(this, target);
+		this.ai.move(this, target);
 	}
 
 }

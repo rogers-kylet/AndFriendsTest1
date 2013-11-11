@@ -18,4 +18,8 @@ public interface EntityMovement {
 	 */
 	public abstract void move(Entity entity, Entity relativeEntity);
 
+	boolean isMoving();
+
+	void setMoving(boolean isMoving);
+
 }

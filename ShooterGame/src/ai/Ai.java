@@ -1,5 +1,6 @@
 package ai;
 
+import entity.Entity;
 import entityAttack.EntityAttack;
 import entityMovement.EntityMovement;
 
@@ -12,5 +13,9 @@ public interface Ai {
 	EntityAttack getEnemyAttack();
 
 	void setEnemyAttack(EntityAttack enemyAttack);
+
+	void move(Entity target, Entity relatedEntity);
+
+	void attack(Entity target, Entity relatedEntity);
 
 }
