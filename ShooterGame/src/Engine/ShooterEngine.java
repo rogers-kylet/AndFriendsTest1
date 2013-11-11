@@ -25,7 +25,6 @@ import org.newdawn.slick.util.ResourceLoader;
 
 import entity.BasicBackground;
 import entity.BasicProjectile;
-import entity.BasicWall;
 import entity.Entity;
 import entity.Player;
 import entity.MenuItem;
@@ -74,8 +73,10 @@ public class ShooterEngine {
 	//Player Object
 	Player player;
 
-	// List that stores all active bullet objects
-	List<Entity> bulletList;
+	// List that stores all active bullets shot by the player
+	List<Entity> playerBulletList;
+	// List that stores all active bullets shot by enemies
+	List<Entity> enemyBulletList;
 	// List that stores all active enemy objects
 	List<Entity> enemyList;
 	// List that storse all active menu items
@@ -124,7 +125,7 @@ public class ShooterEngine {
 		player = new Player(400, 300, 0, 0);
 		
 		//Temp for testing purposes
-		bulletList = new ArrayList<Entity>();
+		playerBulletList = new ArrayList<Entity>();
 		// Temp for testing purposes
 		enemyList = new ArrayList<Entity>();
 		
@@ -243,7 +244,7 @@ public class ShooterEngine {
 						//Add bullet to scene
 						BasicProjectile bullet = new BasicProjectile(player.getX(), player.getY(), 0f, 1);
 						bullet.setAngle(shotFireDelta);
-						bulletList.add(bullet);
+						playerBulletList.add(bullet);
 						sfxMap.get("shot").playAsSoundEffect(1.0f, 1.0f, false);
 						// Stop the player from shooting again and reset the bullet timer
 						player.setCanShoot(false);
@@ -569,7 +570,7 @@ public class ShooterEngine {
 		// Process and render rooms
 		processRoom();
 		
-		for(Iterator<Entity> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
+		for(Iterator<Entity> bulletIt = playerBulletList.iterator(); bulletIt.hasNext();){
 			Entity bullet = bulletIt.next();
 				renderEntity(bullet);
 		}
@@ -628,7 +629,7 @@ public class ShooterEngine {
 				if(renderEntity(wall)) {
 				
 					//TODO need to extract current room determined from player movement code and then just check the walls in that room against the bullet instead of every room against the bullet
-					for(Iterator<Entity> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
+					for(Iterator<Entity> bulletIt = playerBulletList.iterator(); bulletIt.hasNext();){
 						Entity bullet = bulletIt.next();
 						if(wall.collisionDetection(bullet)){
 							bulletIt.remove();
@@ -640,7 +641,7 @@ public class ShooterEngine {
 	}
 
 	public void processBullet() {
-		for(Iterator<Entity> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
+		for(Iterator<Entity> bulletIt = playerBulletList.iterator(); bulletIt.hasNext();){
 			Entity bullet = bulletIt.next();
 				//TODO add logic to remove the bullet once it has traveled x amount of distance
 				bullet.move();
@@ -668,7 +669,7 @@ public class ShooterEngine {
 			
 			// Loop through each bullet (at least for now less bullets than enemies, if that changes possible reverse this logic)
 			// and check to see if a collision has happened
-			for(Iterator<Entity> bulletIt = bulletList.iterator(); bulletIt.hasNext();){
+			for(Iterator<Entity> bulletIt = playerBulletList.iterator(); bulletIt.hasNext();){
 				Entity bullet = bulletIt.next();
 				// TODO remove 30's to be dependent on both the enemy and add a number for the bullet width/height
 				if (enemy.collisionDetection(bullet)) {
@@ -714,7 +715,7 @@ public class ShooterEngine {
 		// Reset the enemy list
 		this.enemyList = new ArrayList<Entity>();
 		// Reset the bullet list
-		this.bulletList = new ArrayList<Entity>();
+		this.playerBulletList = new ArrayList<Entity>();
 		// Reset the Menu Item List
 		this.menuItemList = new ArrayList<MenuItem>();
 		
