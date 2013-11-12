@@ -136,6 +136,7 @@ public class ShooterEngine {
 		playMusic(level.getBackgroundMusic());
 		
 		sfxMap = new HashMap<String, Audio>();
+		
 		//TODO temp logic to load test sfxMap, names should be stored in entities 
 		try {
 			sfxMap.put("shot", AudioLoader.getAudio("WAV", ResourceLoader.getResourceAsStream("assets/sfx/" + "shot" + ".wav")));
@@ -145,6 +146,7 @@ public class ShooterEngine {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		// TODO temp code for displaying the ugly unusable fonts
 		Font theFont = new Font("Times New Roman", Font.PLAIN, 24);
 		font = new TrueTypeFont(theFont, antiAlias);
@@ -704,7 +706,21 @@ public class ShooterEngine {
 			if(enemy.getHealth() < 1) {
 				enemyIt.remove();
 			} else {
+				float oldX = enemy.getX();
+				float oldY = enemy.getY();
+				
 				enemy.move(player);
+				
+				for(Room room: this.level.getRoomList()) {
+					for(Entity wall: room.getWallList()) {
+						if(wall.collisionDetection(enemy)) {
+							//TODO change this from not moving to pointing in the direction of the closest edge of the wall
+							enemy.setX(oldX);
+							enemy.setY(oldY);
+						}
+					}
+				}
+				
 				renderEntity(enemy);
 			}
 		}
