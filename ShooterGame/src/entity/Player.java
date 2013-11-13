@@ -12,6 +12,10 @@ import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
 import weapon.BasicWeapon;
+import weapon.CircleShot;
+import weapon.MirrorShot;
+import weapon.QuadShot;
+import weapon.TripleShot;
 import weapon.Weapon;
 
 /**
@@ -38,7 +42,7 @@ public class Player extends BasicEntity {
 	private Texture texture;
 	
 	private Weapon weapon;
-	
+	private int weaponIndex;
 	private List<Weapon> weaponList;
 
 	public Player(float x, float y, float z, int eid) throws IOException {
@@ -66,9 +70,18 @@ public class Player extends BasicEntity {
 		this.displayed = true;
 		this.texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/images/" + "Player" + ".png"));
 		Weapon weapon = new BasicWeapon();
+		Weapon weapon2 = new TripleShot();
+		Weapon weapon3 = new MirrorShot();
+		Weapon weapon4 = new QuadShot();
+		Weapon weapon5 = new CircleShot();
 		this.weapon = weapon;
 		this.weaponList = new ArrayList<Weapon>();
 		this.weaponList.add(weapon);
+		this.weaponList.add(weapon2);
+		this.weaponList.add(weapon3);
+		this.weaponList.add(weapon4);
+		this.weaponList.add(weapon5);
+		this.weaponIndex = 0;
 	}
 	
 	@Override
@@ -177,13 +190,37 @@ public class Player extends BasicEntity {
 		}
 	}
 	
+	public void addWeapon(Weapon weapon) {
+		this.weapon = weapon;
+		this.weaponList.add(weapon);
+		this.weaponIndex = this.weaponList.size()-1;
+	}
+	
+	public void changeWeapon(int newWeaponIndex) {
+		if(newWeaponIndex <= -1) {
+			newWeaponIndex = this.weaponList.size() - 1;
+		} else if(newWeaponIndex >= this.weaponList.size()) {
+			newWeaponIndex = 0;
+		}
+		
+		this.weaponIndex = newWeaponIndex;
+		this.weapon = weaponList.get(newWeaponIndex);
+	}
+	
+	public void scrollWeaponUp(){
+		this.changeWeapon(this.weaponIndex + 1);
+	}
+	
+	public void scrollWeaponDown(){
+		this.changeWeapon(this.weaponIndex - 1);
+	}
+	
 	public boolean isCanShoot() { return canShoot; }
 
 	public void setCanShoot(boolean canShoot) { this.canShoot = canShoot; }
 	
 	public void resetShooterTimer() { this.shooterTimer = SHOOTER_TIMER_START_VALUE; }
 
-	
 	// Sets the invincibility timer back to it's default start value
 	public void resetInvincibilityTimer(){ this.invincibleTime = INVINCIBILITY_TIMER_START_VALUE; }
 	
@@ -200,5 +237,11 @@ public class Player extends BasicEntity {
 	public List<Weapon> getWeaponList() { return weaponList; }
 
 	public void setWeaponList(List<Weapon> weaponList) { this.weaponList = weaponList; }
+
+	public int getWeaponIndex() { return weaponIndex; }
+
+	public void setWeaponIndex(int weaponIndex) { this.weaponIndex = weaponIndex; }
+	
+	
 	
 }

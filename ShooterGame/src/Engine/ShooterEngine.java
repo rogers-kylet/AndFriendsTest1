@@ -98,6 +98,8 @@ public class ShooterEngine {
 	
 	int pauseTimer = 0;
 	int pauseTimerStartValue = 10;
+	int weaponSwitchTimer = 0;
+	int weaponSwitchTimerStartValue = 15;
 	
 	PauseOverlay pauseOverlay;
 	
@@ -261,6 +263,24 @@ public class ShooterEngine {
 				//----------------------
 				//END COMPLETED REFACTOR
 				
+				// I would hope there'sa better way to do this...but i guess it works... 
+				if(weaponSwitchTimer == 0) {
+					boolean wepSwitch = false;
+					if(Keyboard.isKeyDown(Keyboard.KEY_Q)) { player.scrollWeaponDown(); wepSwitch = true; }
+					if(Keyboard.isKeyDown(Keyboard.KEY_E)) { player.scrollWeaponUp(); wepSwitch = true; }
+					if(Keyboard.isKeyDown(Keyboard.KEY_1)) { player.changeWeapon(0); wepSwitch = true; }
+					if(Keyboard.isKeyDown(Keyboard.KEY_2)) { player.changeWeapon(1); wepSwitch = true; }
+					if(Keyboard.isKeyDown(Keyboard.KEY_3)) { player.changeWeapon(2); wepSwitch = true; }
+					if(Keyboard.isKeyDown(Keyboard.KEY_4)) { player.changeWeapon(3); wepSwitch = true; }
+					if(Keyboard.isKeyDown(Keyboard.KEY_5)) { player.changeWeapon(4); wepSwitch = true; }
+					if(Keyboard.isKeyDown(Keyboard.KEY_6)) { player.changeWeapon(5); wepSwitch = true;}
+					if(Keyboard.isKeyDown(Keyboard.KEY_7)) { player.changeWeapon(6); wepSwitch = true; }
+					if(Keyboard.isKeyDown(Keyboard.KEY_8)) { player.changeWeapon(7); wepSwitch = true; }
+					if(Keyboard.isKeyDown(Keyboard.KEY_9)) { player.changeWeapon(8); wepSwitch = true; }
+					if(Keyboard.isKeyDown(Keyboard.KEY_0)) { player.changeWeapon(9); wepSwitch = true; }
+					if(wepSwitch) { weaponSwitchTimer = weaponSwitchTimerStartValue; }
+				}
+				
 				while(Keyboard.next()){
 					if(Keyboard.getEventKeyState()){
 						// Pres "F" to set the game to full screen mode
@@ -355,7 +375,7 @@ public class ShooterEngine {
 		// Hack to prevent multiple pause clicks
 		// TODO shouldn't be needed, should probably be able to make this work in the key event holding somehow
 		if(pauseTimer > 0){pauseTimer--;}
-		
+		if(weaponSwitchTimer > 0) { weaponSwitchTimer--;}
 		updateFPS(); // update FPS Counter
 	}
 	
@@ -531,6 +551,8 @@ public class ShooterEngine {
 								// Yeah... that to string is pretty awesome isn't it? 
 								font.drawString(player.getX() - (resolutionHeight / 2) - 90, player.getY() - (resolutionHeight / 2) + 10,"Health: " + ((Integer)Math.round(player.getHealth())).toString(),Color.yellow);
 								font.drawString(player.getX() + (resolutionHeight / 2) - 10, player.getY() - (resolutionHeight / 2) + 10,"Score: " + ((Integer)gameState.getScore()).toString(),Color.yellow);
+								font.drawString(player.getX() - (resolutionHeight / 2) + 10, player.getY() - (resolutionHeight / 2) + 10,"Weapon: " + ((Integer)player.getWeaponIndex()).toString(),Color.yellow);
+
 							GL11.glDisable(GL11.GL_BLEND);
 
 					GL11.glPopMatrix();
@@ -741,6 +763,7 @@ public class ShooterEngine {
 		
 		//TODO make this work for any kind of level
 		if(levelName.equals("Gameplay")){
+			
 			// Reset the player object
 			this.player = new Player(400, 300, 0, 0);
 			
