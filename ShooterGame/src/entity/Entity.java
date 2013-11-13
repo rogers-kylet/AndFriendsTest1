@@ -1,5 +1,8 @@
 package entity;
 
+import java.io.IOException;
+import java.util.List;
+
 import org.lwjgl.util.vector.Vector3f;
 
 /** 
@@ -201,5 +204,7 @@ public interface Entity {
 	 *
 	 */
 	public boolean collisionDetection(Entity target);
+
+	List<Entity> attack(float angle) throws IOException;
 
 }

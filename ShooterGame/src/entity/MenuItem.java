@@ -1,6 +1,7 @@
 package entity;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
@@ -71,6 +72,10 @@ public class MenuItem extends BasicEntity {
 	
 	public String getButtonAction(){
 		return this.buttonAction;
+	}
+	@Override
+	public List<Entity> attack(float angle) {
+		return null;
 	}
 
 }

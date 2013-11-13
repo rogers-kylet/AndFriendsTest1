@@ -1,6 +1,7 @@
 package entity;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
@@ -153,6 +154,11 @@ public class BasicEnemy extends BasicEntity {
 		this.y += this.speed * Math.sin(Math.toRadians(this.angle));
 		*/
 		this.ai.move(this, target);
+	}
+
+	@Override
+	public List<Entity> attack(float angle) {
+		return null;
 	}
 
 }

@@ -243,11 +243,15 @@ public class ShooterEngine {
 					//Check player shot cooldown
 					if(player.isCanShoot()){
 						
-						//Add bullet to scene
-						BasicProjectile bullet = new BasicProjectile(player.getX(), player.getY(), 0f, 1);
-						bullet.setAngle(shotFireDelta);
-						playerBulletList.add(bullet);
+						List<Entity> bulletList = player.attack(shotFireDelta);
+						
+						for(Entity bullet: bulletList){
+							playerBulletList.add(bullet);
+						}
+
+						//TODO get this from the players weapon
 						sfxMap.get("shot").playAsSoundEffect(1.0f, 1.0f, false);
+						
 						// Stop the player from shooting again and reset the bullet timer
 						player.setCanShoot(false);
 						player.resetShooterTimer();

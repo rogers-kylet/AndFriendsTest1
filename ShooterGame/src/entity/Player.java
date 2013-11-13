@@ -1,6 +1,8 @@
 package entity;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
@@ -8,6 +10,9 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
+
+import weapon.BasicWeapon;
+import weapon.Weapon;
 
 /**
  * Player
@@ -31,6 +36,10 @@ public class Player extends BasicEntity {
 	boolean canShoot = true;
 	
 	private Texture texture;
+	
+	private Weapon weapon;
+	
+	private List<Weapon> weaponList;
 
 	public Player(float x, float y, float z, int eid) throws IOException {
 		this.x = x;
@@ -56,6 +65,10 @@ public class Player extends BasicEntity {
 		this.hitSfx = "playerhit";
 		this.displayed = true;
 		this.texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/images/" + "Player" + ".png"));
+		Weapon weapon = new BasicWeapon();
+		this.weapon = weapon;
+		this.weaponList = new ArrayList<Weapon>();
+		this.weaponList.add(weapon);
 	}
 	
 	@Override
@@ -63,22 +76,7 @@ public class Player extends BasicEntity {
 		
 		//Push player model to world coordinates for display
 		if(displayed){
-			/*
-			GL11.glColor3f(0.0f, 1.0f, 0.0f);
-	
-			GL11.glPushMatrix();
-				GL11.glTranslatef(this.x,this.y,0);
-				GL11.glRotatef(this.rotation, 0f, 0f, 1f);
-				GL11.glTranslatef(-this.x, -this.y, 0);
-				
-				GL11.glBegin(GL11.GL_QUADS);
-					GL11.glVertex2f(this.x - 25, this.y - 25);
-					GL11.glVertex2f(this.x + 25, this.y - 25);
-					GL11.glVertex2f(this.x + 25, this.y + 25);
-					GL11.glVertex2f(this.x - 25, this.y + 25);
-				GL11.glEnd();
-			GL11.glPopMatrix();
-			*/
+			
 			if(!invincible){
 			Color.white.bind();
 			} else {
@@ -156,26 +154,6 @@ public class Player extends BasicEntity {
 		this.y += this.speed * Math.sin(Math.toRadians(angle));		
 	}
 
-	// Counts down the shooter timer by one, setting can shoot to true when it hits zero
-	public void countDownShooterTimer(){
-		shooterTimer -= 1;
-		if(shooterTimer == 0){
-			this.canShoot = true;
-		}
-	}
-	
-	public boolean isCanShoot() {
-		return canShoot;
-	}
-
-	public void setCanShoot(boolean canShoot) {
-		this.canShoot = canShoot;
-	}
-	
-	public void resetShooterTimer() {
-		this.shooterTimer = SHOOTER_TIMER_START_VALUE;
-	}
-
 	// Hurts the player by the given amount of damage
 	public void hurtPlayer(int damage) {
 		if(!invincible){
@@ -186,12 +164,41 @@ public class Player extends BasicEntity {
 		}
 	}
 	
-	// Sets the invincibility timer back to it's default start value
-	public void resetInvincibilityTimer(){
-		this.invincibleTime = INVINCIBILITY_TIMER_START_VALUE;
+	@Override
+	public List<Entity> attack(float angle) throws IOException{
+		return this.weapon.attack(angle, this);
 	}
 	
-	public void resetFlashTimer(){
-		flashTimer = FLASH_TIMER_START_VALUE;
+	// Counts down the shooter timer by one, setting can shoot to true when it hits zero
+	public void countDownShooterTimer(){
+		shooterTimer -= 1;
+		if(shooterTimer == 0){
+			this.canShoot = true;
+		}
 	}
+	
+	public boolean isCanShoot() { return canShoot; }
+
+	public void setCanShoot(boolean canShoot) { this.canShoot = canShoot; }
+	
+	public void resetShooterTimer() { this.shooterTimer = SHOOTER_TIMER_START_VALUE; }
+
+	
+	// Sets the invincibility timer back to it's default start value
+	public void resetInvincibilityTimer(){ this.invincibleTime = INVINCIBILITY_TIMER_START_VALUE; }
+	
+	public void resetFlashTimer(){ flashTimer = FLASH_TIMER_START_VALUE; }
+
+	public Texture getTexture() { return texture; }
+
+	public void setTexture(Texture texture) { this.texture = texture; }
+
+	public Weapon getWeapon() { return weapon; }
+
+	public void setWeapon(Weapon weapon) { this.weapon = weapon; }
+
+	public List<Weapon> getWeaponList() { return weaponList; }
+
+	public void setWeaponList(List<Weapon> weaponList) { this.weaponList = weaponList; }
+	
 }
