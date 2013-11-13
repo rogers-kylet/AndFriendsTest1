@@ -91,6 +91,10 @@ public class LevelGeneration {
 						anchorPoint.setHooked(true);
 						nextRoom.setParentRoom(tempRoom);
 						roomCount++;
+						if(roomCount >= 10+levelNumber) {
+							BasicBackground tempBack = (BasicBackground) nextRoom.getBackground().get(0);
+							tempBack.setTexture("endRoom");
+						}
 						roomList.add(nextRoom);
 						theQueue.add(nextRoom);
 						break;

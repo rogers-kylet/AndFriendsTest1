@@ -26,7 +26,7 @@ public class TripleSideShot extends BasicWeapon {
 		bullet2.setAngle(angle);
 		bulletList.add(bullet2);
 		
-		BasicProjectile bullet3 = new BasicProjectile(player.getX(), player.getY(), 0f, 1);
+		BasicProjectile bullet3 = new BasicProjectile(player.getX() + 30 * (float)Math.cos(Math.toRadians(angle)), player.getY() + 30 * (float)Math.sin(Math.toRadians(angle)), 0f, 1);
 		bullet3.setAngle(angle);
 		bulletList.add(bullet3);
 
