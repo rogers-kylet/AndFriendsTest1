@@ -13,6 +13,7 @@ import org.newdawn.slick.util.ResourceLoader;
 
 import weapon.BasicWeapon;
 import weapon.CircleShot;
+import weapon.DoubleShot;
 import weapon.MirrorShot;
 import weapon.QuadShot;
 import weapon.TripleShot;
@@ -74,6 +75,7 @@ public class Player extends BasicEntity {
 		Weapon weapon3 = new MirrorShot();
 		Weapon weapon4 = new QuadShot();
 		Weapon weapon5 = new CircleShot();
+		Weapon weapon6 = new DoubleShot();
 		this.weapon = weapon;
 		this.weaponList = new ArrayList<Weapon>();
 		this.weaponList.add(weapon);
@@ -81,6 +83,7 @@ public class Player extends BasicEntity {
 		this.weaponList.add(weapon3);
 		this.weaponList.add(weapon4);
 		this.weaponList.add(weapon5);
+		this.weaponList.add(weapon6);
 		this.weaponIndex = 0;
 	}
 	
