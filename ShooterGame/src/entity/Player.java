@@ -17,6 +17,7 @@ import weapon.DoubleShot;
 import weapon.MirrorShot;
 import weapon.QuadShot;
 import weapon.TripleShot;
+import weapon.TripleSideShot;
 import weapon.Weapon;
 
 /**
@@ -70,12 +71,15 @@ public class Player extends BasicEntity {
 		this.hitSfx = "playerhit";
 		this.displayed = true;
 		this.texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/images/" + "Player" + ".png"));
+		
+		//TODO need to make a weapon builder that can add the various properties of these weapons
 		Weapon weapon = new BasicWeapon();
 		Weapon weapon2 = new TripleShot();
 		Weapon weapon3 = new MirrorShot();
 		Weapon weapon4 = new QuadShot();
 		Weapon weapon5 = new CircleShot();
 		Weapon weapon6 = new DoubleShot();
+		Weapon weapon7 = new TripleSideShot();
 		this.weapon = weapon;
 		this.weaponList = new ArrayList<Weapon>();
 		this.weaponList.add(weapon);
@@ -84,6 +88,7 @@ public class Player extends BasicEntity {
 		this.weaponList.add(weapon4);
 		this.weaponList.add(weapon5);
 		this.weaponList.add(weapon6);
+		this.weaponList.add(weapon7);
 		this.weaponIndex = 0;
 	}
 	
