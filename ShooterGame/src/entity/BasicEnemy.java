@@ -13,9 +13,7 @@ import org.newdawn.slick.util.ResourceLoader;
 import ai.Ai;
 import ai.BasicAi;
 
-import entity.BasicEntity.entityClass;
 import entityMovement.BasicEntityMovement;
-import entityMovement.EntityMovement;
 
 public class BasicEnemy extends BasicEntity {
 

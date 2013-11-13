@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import entity.BasicBackground;
 import entity.BasicWall;
 import entity.Entity;
 

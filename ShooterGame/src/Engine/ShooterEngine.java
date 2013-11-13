@@ -24,7 +24,6 @@ import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.util.ResourceLoader;
 
 import entity.BasicBackground;
-import entity.BasicProjectile;
 import entity.Entity;
 import entity.Player;
 import entity.MenuItem;

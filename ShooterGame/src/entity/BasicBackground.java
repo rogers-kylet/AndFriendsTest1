@@ -10,8 +10,6 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
-import entity.BasicEntity.entityClass;
-
 public class BasicBackground extends BasicEntity {
 
 	protected Texture texture;

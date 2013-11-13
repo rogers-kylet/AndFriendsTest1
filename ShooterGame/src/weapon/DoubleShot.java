@@ -18,11 +18,11 @@ public class DoubleShot extends BasicWeapon {
 	@Override
 	public List<Entity> attack(float angle, Entity player) throws IOException {
 		List<Entity> bulletList = new ArrayList<Entity>();
-		BasicProjectile bullet = new BasicProjectile(player.getX() + 2 * (float)Math.cos(Math.toRadians(angle + 90)), player.getY() + 2 * (float)Math.cos(Math.toRadians(angle + 90)), 0f, 1);
+		BasicProjectile bullet = new BasicProjectile(player.getX() + 15 * (float)Math.cos(Math.toRadians(angle + 90)), player.getY() + 15 * (float)Math.sin(Math.toRadians(angle + 90)), 0f, 1);
 		bullet.setAngle(angle);
 		bulletList.add(bullet);
 		
-		BasicProjectile bullet2 = new BasicProjectile(player.getX() + 2 * (float)Math.cos(Math.toRadians(angle - 90)), player.getY() + 2 * (float)Math.cos(Math.toRadians(angle - 90)), 0f, 1);
+		BasicProjectile bullet2 = new BasicProjectile(player.getX() + 15 * (float)Math.cos(Math.toRadians(angle - 90)), player.getY() + 15 * (float)Math.sin(Math.toRadians(angle - 90)), 0f, 1);
 		bullet2.setAngle(angle);
 		bulletList.add(bullet2);
 
