@@ -24,6 +24,7 @@ import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.util.ResourceLoader;
 
 import entity.BasicBackground;
+import entity.BasicWall;
 import entity.Entity;
 import entity.Player;
 import entity.MenuItem;
@@ -102,6 +103,8 @@ public class ShooterEngine {
 	
 	PauseOverlay pauseOverlay;
 	
+	BasicBackground theBackground;
+	
 	public void start() throws IOException{
 		try{
 			// TODO figure out a better way to do this, save settings to file, change in game etc etc etc
@@ -132,6 +135,9 @@ public class ShooterEngine {
 		
 		enemyTimer = 60;
 		
+		//TODO temp for checking background support
+		theBackground = new BasicWall(400,300,0, 0, resolutionWidth, resolutionHeight);
+		theBackground.setTexture("background");
 		changeLevel("Menu");
 		
 		playMusic(level.getBackgroundMusic());
@@ -204,10 +210,11 @@ public class ShooterEngine {
 					for(Room room: this.level.getRoomList()) {
 						if(!room.isEntered()) {
 							if(
-									( player.getX() - player.getWidth() / 2 < ( room.getX() + room.getWidth() / 2 ) ) && 
-									( player.getX() + player.getWidth() / 2 > ( room.getX() - room.getWidth() / 2 ) ) && 
-									( player.getY() + player.getHeight() / 2 > ( room.getY() - room.getHeight() / 2 ) ) && 
-									( player.getY() - player.getHeight() / 2 < ( room.getY() + room.getHeight() / 2 ) ) ) {
+									( room.getX() - room.getWidth() / 2 < ( player.getX() + resolutionWidth / 2 ) ) && 
+									( room.getX() + room.getWidth() / 2 > ( player.getX() - resolutionWidth / 2 ) ) && 
+									( room.getY() + room.getHeight() / 2 > ( player.getY() - resolutionHeight / 2 ) ) && 
+									( room.getY() - room.getHeight() / 2 < ( player.getY() + resolutionHeight / 2 ) ) ) {
+								
 								for(Entity enemy : room.getEnemyList()) {
 									this.enemyList.add(enemy);
 								}
@@ -523,6 +530,7 @@ public class ShooterEngine {
 			if(level.getType().equals("Gameplay")){
 				if(!pause) {
 
+					processBackground();
 					// Process and render rooms
 					processRoom();
 					
@@ -645,6 +653,12 @@ public class ShooterEngine {
 		}
 	}
 
+	public void processBackground() {
+		this.theBackground.setX(player.getX());
+		this.theBackground.setY(player.getY());
+		this.theBackground.render();
+	}
+	
 	public void processRoom() {
 		for(Room room : this.level.getRoomList()) {
 			for(Entity background : room.getBackground()) {
