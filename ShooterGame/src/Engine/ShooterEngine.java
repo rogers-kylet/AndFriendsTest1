@@ -209,6 +209,7 @@ public class ShooterEngine {
 					player.move();
 					for(Room room: this.level.getRoomList()) {
 						if(!room.isEntered()) {
+							//TODO maybe room should extend entity to use the onScreen method....
 							if(
 									( room.getX() - room.getWidth() / 2 < ( player.getX() + resolutionWidth / 2 ) ) && 
 									( room.getX() + room.getWidth() / 2 > ( player.getX() - resolutionWidth / 2 ) ) && 
@@ -699,14 +700,8 @@ public class ShooterEngine {
 			Entity enemy = enemyIt.next();
 			
 			// Dont process enemy if it is off screen
-			if(
-					( enemy.getX() - enemy.getWidth() / 2 < ( player.getX() + resolutionWidth / 2 ) ) && 
-					( enemy.getX() + enemy.getWidth() / 2 > ( player.getX() - resolutionWidth / 2 ) ) && 
-					( enemy.getY() + enemy.getHeight() / 2 > ( player.getY() - resolutionHeight / 2 ) ) && 
-					( enemy.getY() - enemy.getHeight() / 2 < ( player.getY() + resolutionHeight / 2 ) ) ) {
-			} else {
-				continue;
-			}
+			if(onScreen(enemy)){} 
+			else { continue; }
 			
 			// Loop through each bullet (at least for now less bullets than enemies, if that changes possible reverse this logic)
 			// and check to see if a collision has happened
@@ -838,12 +833,20 @@ public class ShooterEngine {
 	}
 	
 	public boolean renderEntity(Entity entity) {
+		if(onScreen(entity)) {
+			entity.render();
+			return true;
+		} else{
+			return false;
+		}
+	}
+	
+	public boolean onScreen(Entity entity) {
 		if(
 				( entity.getX() - entity.getWidth() / 2 < ( player.getX() + resolutionWidth / 2 ) ) && 
 				( entity.getX() + entity.getWidth() / 2 > ( player.getX() - resolutionWidth / 2 ) ) && 
 				( entity.getY() + entity.getHeight() / 2 > ( player.getY() - resolutionHeight / 2 ) ) && 
 				( entity.getY() - entity.getHeight() / 2 < ( player.getY() + resolutionHeight / 2 ) ) ) {
-			entity.render();
 			return true;
 		} else{
 			return false;
