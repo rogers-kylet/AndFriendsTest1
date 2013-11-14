@@ -539,31 +539,31 @@ public class ShooterEngine {
 					processBullet();
 					
 					// Process and render enemies
-					processEnemy();
-					
-					
-					//temp extrapolate to player class
-					// TODO remove once things get real and not just rotate the object based on delta
-					player.setRotation(rotation);
-					// Should probably be last to make sure that it appears on top of everything in game, but have things for the overlay after this to be on top
-					renderEntity(player);
-					
-					// Process and render menu items
-					processMenuItems();
-					
-					// TODO replace this crappy text code with bitmapped fonts
-					GL11.glPushMatrix();
-					
-							GL11.glEnable(GL11.GL_BLEND);
-								GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-								// Yeah... that to string is pretty awesome isn't it? 
-								font.drawString(player.getX() - (resolutionHeight / 2) - 90, player.getY() - (resolutionHeight / 2) + 10,"Health: " + ((Integer)Math.round(player.getHealth())).toString(),Color.yellow);
-								font.drawString(player.getX() + (resolutionHeight / 2) - 10, player.getY() - (resolutionHeight / 2) + 10,"Score: " + ((Integer)gameState.getScore()).toString(),Color.yellow);
-								font.drawString(player.getX() - (resolutionHeight / 2) + 10, player.getY() - (resolutionHeight / 2) + 10,"Weapon: " + ((Integer)player.getWeaponIndex()).toString(),Color.yellow);
-
-							GL11.glDisable(GL11.GL_BLEND);
-
-					GL11.glPopMatrix();
+					if(processEnemy()){
+										
+						//temp extrapolate to player class
+						// TODO remove once things get real and not just rotate the object based on delta
+						player.setRotation(rotation);
+						// Should probably be last to make sure that it appears on top of everything in game, but have things for the overlay after this to be on top
+						renderEntity(player);
+						
+						// Process and render menu items
+						processMenuItems();
+						
+						// TODO replace this crappy text code with bitmapped fonts
+						GL11.glPushMatrix();
+						
+								GL11.glEnable(GL11.GL_BLEND);
+									GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+									// Yeah... that to string is pretty awesome isn't it? 
+									font.drawString(player.getX() - (resolutionHeight / 2) - 90, player.getY() - (resolutionHeight / 2) + 10,"Health: " + ((Integer)Math.round(player.getHealth())).toString(),Color.yellow);
+									font.drawString(player.getX() + (resolutionHeight / 2) - 10, player.getY() - (resolutionHeight / 2) + 10,"Score: " + ((Integer)gameState.getScore()).toString(),Color.yellow);
+									font.drawString(player.getX() - (resolutionHeight / 2) + 10, player.getY() - (resolutionHeight / 2) + 10,"Weapon: " + ((Integer)player.getWeaponIndex()).toString(),Color.yellow);
+	
+								GL11.glDisable(GL11.GL_BLEND);
+	
+						GL11.glPopMatrix();
+					}
 				} 
 				
 				// Pause Screen Render
@@ -695,7 +695,7 @@ public class ShooterEngine {
 		}
 	}
 
-	public void processEnemy() throws IOException {
+	public boolean processEnemy() throws IOException {
 		for(Iterator<Entity> enemyIt = enemyList.iterator(); enemyIt.hasNext();){
 			Entity enemy = enemyIt.next();
 			
@@ -733,6 +733,7 @@ public class ShooterEngine {
 				enemy.setHealth(enemy.getHealth() -1);
 				if(player.getHealth() == 0){
 					changeLevel("Gameover");
+					return false;
 				}
 			}
 			
@@ -758,6 +759,7 @@ public class ShooterEngine {
 				renderEntity(enemy);
 			}
 		}
+		return true;
 	}
 	
 	public void changeLevel(String levelName) throws IOException{
