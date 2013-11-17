@@ -677,6 +677,7 @@ public class ShooterEngine {
 				if(renderEntity(wall)) {
 				
 					//TODO need to extract current room determined from player movement code and then just check the walls in that room against the bullet instead of every room against the bullet
+					//but then the wall won't be rendered....
 					for(Iterator<Entity> bulletIt = playerBulletList.iterator(); bulletIt.hasNext();){
 						Entity bullet = bulletIt.next();
 						if(wall.collisionDetection(bullet)){
