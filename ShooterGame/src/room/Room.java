@@ -63,4 +63,8 @@ public interface Room {
 
 	List<Entity> getWallList();
 
+	List<Entity> getPickupList();
+
+	void setPickupList(List<Entity> pickupList);
+
 }

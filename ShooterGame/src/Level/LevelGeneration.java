@@ -9,6 +9,7 @@ import java.util.Queue;
 
 import entity.BasicBackground;
 import entity.BasicEnemy;
+import entity.BasicPickup;
 import entity.Entity;
 
 import room.AnchorPoint;
@@ -94,6 +95,11 @@ public class LevelGeneration {
 						if(roomCount >= 10+levelNumber) {
 							BasicBackground tempBack = (BasicBackground) nextRoom.getBackground().get(0);
 							tempBack.setTexture("endRoom");
+							BasicPickup endDoor = new BasicPickup(nextRoom.getX(), nextRoom.getY(), 0, 0, 40, 40);
+							endDoor.setPickupType("end");
+							List<Entity> pickUpList = new ArrayList<Entity>();
+							pickUpList.add(endDoor);
+							nextRoom.setPickupList(pickUpList);
 						}
 						roomList.add(nextRoom);
 						theQueue.add(nextRoom);
@@ -159,7 +165,7 @@ public class LevelGeneration {
 				point4.setDirection("down");
 				anchorPoints.add(point4);
 			tempRoom.setAnchorPoints(anchorPoints);
-			
+			tempRoom.setPickupList(new ArrayList<Entity>());
 			List<Entity> backgroundList = new ArrayList<Entity>();
 			Entity background = new BasicBackground(x,y,0,0, tempRoom.getWidth(), tempRoom.getHeight());
 			backgroundList.add(background);
@@ -200,7 +206,7 @@ public class LevelGeneration {
 				point4.setDirection("down");
 				anchorPoints.add(point4);
 			tempRoom.setAnchorPoints(anchorPoints);
-			
+			tempRoom.setPickupList(new ArrayList<Entity>());
 			List<Entity> backgroundList = new ArrayList<Entity>();
 			BasicBackground background = new BasicBackground(x,y,0,0, tempRoom.getWidth(), tempRoom.getHeight());
 			background.setTexture("startRoom");

@@ -99,6 +99,8 @@ public class ShooterEngine {
 	
 	boolean pause = false;
 	
+	boolean changeLevel;
+	
 	int pauseTimer = 0;
 	int pauseTimerStartValue = 10;
 	int weaponSwitchTimer = 0;
@@ -207,8 +209,8 @@ public class ShooterEngine {
 				//Attempt movement if any keys were pressed
 				if(movementDelta>-1) {
 					player.setAngle(movementDelta);
-					float oldX = player.getX();
-					float oldY = player.getY();
+					float oldX = player.getX(), oldY = player.getY();
+					
 					player.move();
 					for(Room room: this.level.getRoomList()) {
 						if(!room.isEntered()) {
@@ -219,10 +221,9 @@ public class ShooterEngine {
 									( room.getY() + room.getHeight() / 2 > ( player.getY() - resolutionHeight / 2 ) ) && 
 									( room.getY() - room.getHeight() / 2 < ( player.getY() + resolutionHeight / 2 ) ) ) {
 								
-								for(Entity enemy : room.getEnemyList()) {
-									this.enemyList.add(enemy);
-								}
+								for(Entity enemy : room.getEnemyList()) { this.enemyList.add(enemy); }
 								room.setEntered(true);
+								this.pickupList.addAll(room.getPickupList());
 							}
 						}
 						for(Entity wall: room.getWallList()) {
@@ -257,9 +258,7 @@ public class ShooterEngine {
 						
 						List<Entity> bulletList = player.attack(shotFireDelta);
 						
-						for(Entity bullet: bulletList){
-							playerBulletList.add(bullet);
-						}
+						for(Entity bullet: bulletList){ playerBulletList.add(bullet); }
 
 						//TODO get this from the players weapon
 						sfxMap.get("shot").playAsSoundEffect(1.0f, 1.0f, false);
@@ -298,6 +297,7 @@ public class ShooterEngine {
 						if(Keyboard.getEventKey() == Keyboard.KEY_F){
 							setDisplayMode(resolutionWidth,resolutionHeight, !Display.isFullscreen());
 						}
+						
 						// Press V to toggle vsync
 						// TODO remove from keyboard command and set in options
 						else if (Keyboard.getEventKey() == Keyboard.KEY_V) {
@@ -325,8 +325,8 @@ public class ShooterEngine {
 				}
 				
 				if(Mouse.isButtonDown(0)) {
-					int mouseX = Math.abs(Mouse.getX());
-					int mouseY = Math.abs(resolutionHeight - Mouse.getY());
+					int mouseX = Math.abs(Mouse.getX()), mouseY = Math.abs(resolutionHeight - Mouse.getY());
+					
 					for(Iterator<MenuItem> menuIt = pauseOverlay.getMenuItems().iterator(); menuIt.hasNext();){
 						MenuItem menuItem = menuIt.next();
 						//TODO might just want to project pause overlay to avoid this ugly calculation, might not be worth the effort though depending on how things work out
@@ -520,9 +520,8 @@ public class ShooterEngine {
 		GL11.glLoadIdentity();
 		GL11.glTranslatef(0f, 0f, 0f);
 		
-		if(gameState.isCameraFollow()){
-			GL11.glTranslatef(-player.getX()+(resolutionWidth / 2), -player.getY()+(resolutionHeight / 2), 0);
-		}
+		// Have the camera follow the player
+		if(gameState.isCameraFollow()){ GL11.glTranslatef(-player.getX()+(resolutionWidth / 2), -player.getY()+(resolutionHeight / 2), 0); }
 		
 		GL11.glPushMatrix();
 			// Clear the screen adn the deph buffer
@@ -535,20 +534,10 @@ public class ShooterEngine {
 				if(!pause) {
 
 					processBackground();
-					
-					// Process and render rooms
 					processRoom();
-					
-					// Process and render pickups
 					processPickUps();
-					
 					processEnemyBullet();
-						
-						// Process and render bullets
 					processPlayerBullet();
-					
-					// Process and render enemies
-					// Returns false if the enemy killed the player
 					processEnemy();
 										
 					//temp extrapolate to player class
@@ -574,9 +563,9 @@ public class ShooterEngine {
 
 					GL11.glPopMatrix();
 					
-					if(player.getHealth() == 0){
-						changeLevel("Gameover");
-					}
+					if(player.getHealth() == 0){ changeLevel("Gameover"); }
+					// Need to update change level to be more specific
+					if(this.changeLevel) { changeLevel("Gameplay"); }
 				} 
 				
 				// Pause Screen Render
@@ -621,12 +610,16 @@ public class ShooterEngine {
 			renderEntity(pickup);
 			
 			if(player.collisionDetection(pickup)) {
-				if(pickup.getPickupType().equals("heart")) {
-					this.player.setHealth(this.player.getHealth() + 1);
-				} else if(pickup.getPickupType().equals("money")) {
-					this.gameState.setScore(this.gameState.getScore() + 10);
+				if(!pickup.getPickupType().equals("end")) {
+					if(pickup.getPickupType().equals("heart")) {
+						this.player.setHealth(this.player.getHealth() + 1);
+					} else if(pickup.getPickupType().equals("money")) {
+						this.gameState.setScore(this.gameState.getScore() + 10);
+					}
+					pickupIt.remove();
+				} else {
+					this.changeLevel = true;
 				}
-				pickupIt.remove();
 			}
 		}
 	}
@@ -634,6 +627,8 @@ public class ShooterEngine {
 	public void processPauseScreen() {
 		// Process and render rooms
 		processRoom();
+		
+		processPickUps();
 		
 		for(Iterator<Entity> bulletIt = playerBulletList.iterator(); bulletIt.hasNext();){
 			Entity bullet = bulletIt.next();
@@ -691,9 +686,7 @@ public class ShooterEngine {
 	
 	public void processRoom() {
 		for(Room room : this.level.getRoomList()) {
-			for(Entity background : room.getBackground()) {
-				renderEntity(background);
-			}
+			for(Entity background : room.getBackground()) { renderEntity(background); }
 			for(Entity wall : room.getWallList()) {
 				
 				//Only check for collision if the wall was rendered
@@ -703,9 +696,7 @@ public class ShooterEngine {
 					//but then the wall won't be rendered....
 					for(Iterator<Entity> bulletIt = playerBulletList.iterator(); bulletIt.hasNext();){
 						Entity bullet = bulletIt.next();
-						if(wall.collisionDetection(bullet)){
-							bulletIt.remove();
-						}
+						if(wall.collisionDetection(bullet)){ bulletIt.remove(); }
 					}
 				}
 			}
@@ -720,13 +711,10 @@ public class ShooterEngine {
 	public void processPlayerBullet() {
 		for(Iterator<Entity> bulletIt = playerBulletList.iterator(); bulletIt.hasNext();){
 			Entity bullet = bulletIt.next();
-				//TODO add logic to remove the bullet once it has traveled x amount of distance
 				bullet.move();
 				renderEntity(bullet);
 				
-				if(bullet.getHealth() < 1) {
-					bulletIt.remove();
-				}
+				if(bullet.getHealth() < 1) { bulletIt.remove(); }
 		}
 	}
 
@@ -767,7 +755,6 @@ public class ShooterEngine {
 				enemy.setHealth(enemy.getHealth() -1);
 			}
 			
-
 			if(enemy.getHealth() < 1) {
 				float enemyX = enemy.getX();
 				float enemyY = enemy.getY();
@@ -815,18 +802,17 @@ public class ShooterEngine {
 		// Reset the pickup list
 		this.pickupList = new ArrayList<Entity>();
 		
+		this.changeLevel = false;
 		//TODO make this work for any kind of level
 		if(levelName.equals("Gameplay")){
 			
-			// Reset the player object
-			this.player = new Player(400, 300, 0, 0);
+			//TODO change this to be specific to the levels start room
+			player.setX(400); player.setY(300);
 			
 			// Switch the level
 			this.level = LevelGeneration.generateLevel("level", 0);
 			
 			//TODO most of this stuff will probably need to be changed to update to the current level stuff, or more specific for each level, gamestate souldn't be cleared from level to level
-			// Reset the gamestate.
-			this.gameState = new ShooterGameState();
 
 			// Set the camera to follow the player
 			gameState.setCameraFollow(true);
