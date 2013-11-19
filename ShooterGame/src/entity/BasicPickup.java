@@ -14,6 +14,7 @@ import entity.BasicEntity.entityClass;
 public class BasicPickup extends BasicEntity {
 
 	String pickupType;
+	float pickupValue;
 	private Texture texture;
 	private int mask;
 	
@@ -129,5 +130,9 @@ public class BasicPickup extends BasicEntity {
 	public void setMask(int mask) { this.mask = mask; }
 	
 	public String getPickupType() { return pickupType; }
+
+	public float getPickupValue() { 	return pickupValue; }
+
+	public void setPickupValue(float pickupValue) { this.pickupValue = pickupValue; }
 
 }

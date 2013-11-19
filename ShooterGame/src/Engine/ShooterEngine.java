@@ -613,11 +613,11 @@ public class ShooterEngine {
 				if(!pickup.getPickupType().equals("end")) {
 					if(pickup.getPickupType().equals("heart")) {
 						if(player.getHealth() < player.getMaxHealth()) {
-							this.player.setHealth(this.player.getHealth() + 1);
+							this.player.setHealth(this.player.getHealth() + pickup.getPickupValue());
 							pickupIt.remove();
 						} 
 					} else if(pickup.getPickupType().equals("money")) {
-						this.gameState.setMoney(this.gameState.getMoney() + 10);
+						this.gameState.setMoney((int) (this.gameState.getMoney() + pickup.getPickupValue()));
 						pickupIt.remove();
 					}
 				} else {
@@ -765,8 +765,10 @@ public class ShooterEngine {
 				BasicPickup pickup = new BasicPickup(enemyX, enemyY, 0, 0, 20, 20);
 				if(rand >= .5) {
 					pickup.setPickupType("heart");
+					pickup.setPickupValue(1);
 				} else {
 					pickup.setPickupType("money");
+					pickup.setPickupValue(10);
 				}
 				this.pickupList.add(pickup);
 				
