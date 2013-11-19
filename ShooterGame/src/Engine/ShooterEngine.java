@@ -612,11 +612,14 @@ public class ShooterEngine {
 			if(player.collisionDetection(pickup)) {
 				if(!pickup.getPickupType().equals("end")) {
 					if(pickup.getPickupType().equals("heart")) {
-						this.player.setHealth(this.player.getHealth() + 1);
+						if(player.getHealth() < player.getMaxHealth()) {
+							this.player.setHealth(this.player.getHealth() + 1);
+							pickupIt.remove();
+						} 
 					} else if(pickup.getPickupType().equals("money")) {
 						this.gameState.setScore(this.gameState.getScore() + 10);
+						pickupIt.remove();
 					}
-					pickupIt.remove();
 				} else {
 					this.changeLevel = true;
 				}

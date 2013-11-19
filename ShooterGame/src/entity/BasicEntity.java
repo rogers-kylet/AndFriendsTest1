@@ -133,11 +133,13 @@ public abstract class BasicEntity implements Entity {
 	 */
 	protected abstract void processMovementTick(Entity target);
 
-	public String getHitSfx() {
-		return hitSfx;
-	}
+	public String getHitSfx() { return hitSfx; }
 
-	public void setHitSfx(String hitSfx) {
-		this.hitSfx = hitSfx;
-	}
+	public void setHitSfx(String hitSfx) { this.hitSfx = hitSfx; }
+
+	public float getMaxHealth() { return maxHealth; }
+
+	public void setMaxHealth(float maxHealth) { this.maxHealth = maxHealth; }
+	
+	
 }
