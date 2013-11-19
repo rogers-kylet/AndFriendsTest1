@@ -70,12 +70,11 @@ public class MenuItem extends BasicEntity {
 		}
 	}
 	
-	public String getButtonAction(){
-		return this.buttonAction;
-	}
 	@Override
 	public List<Entity> attack(float angle) {
 		return null;
 	}
+	
+	public String getButtonAction(){ return this.buttonAction; }
 
 }

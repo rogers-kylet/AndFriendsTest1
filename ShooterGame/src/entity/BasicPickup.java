@@ -110,10 +110,6 @@ public class BasicPickup extends BasicEntity {
 
 	}
 
-	public String getPickupType() {
-		return pickupType;
-	}
-
 	public void setPickupType(String pickupType) {
 		this.pickupType = pickupType;
 		try {
@@ -124,20 +120,14 @@ public class BasicPickup extends BasicEntity {
 		}
 	}
 
-	public Texture getTexture() {
-		return texture;
-	}
+	public Texture getTexture() { return texture; }
 
-	public void setTexture(Texture texture) {
-		this.texture = texture;
-	}
+	public void setTexture(Texture texture) { this.texture = texture; }
 
-	public int getMask() {
-		return mask;
-	}
+	public int getMask() { return mask; }
 
-	public void setMask(int mask) {
-		this.mask = mask;
-	}
+	public void setMask(int mask) { this.mask = mask; }
+	
+	public String getPickupType() { return pickupType; }
 
 }

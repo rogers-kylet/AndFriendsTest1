@@ -556,7 +556,7 @@ public class ShooterEngine {
 								GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 								// Yeah... that to string is pretty awesome isn't it? 
 								font.drawString(player.getX() - (resolutionHeight / 2) - 90, player.getY() - (resolutionHeight / 2) + 10,"Health: " + ((Integer)Math.round(player.getHealth())).toString(),Color.yellow);
-								font.drawString(player.getX() + (resolutionHeight / 2) - 10, player.getY() - (resolutionHeight / 2) + 10,"Money: " + ((Integer)gameState.getScore()).toString(),Color.yellow);
+								font.drawString(player.getX() + (resolutionHeight / 2) - 10, player.getY() - (resolutionHeight / 2) + 10,"Money: " + ((Integer)gameState.getMoney()).toString(),Color.yellow);
 								font.drawString(player.getX() - (resolutionHeight / 2) + 20, player.getY() - (resolutionHeight / 2) + 10,"Weapon: " + ((Integer)player.getWeaponIndex()).toString(),Color.yellow);
 
 							GL11.glDisable(GL11.GL_BLEND);
@@ -592,7 +592,7 @@ public class ShooterEngine {
 							GL11.glEnable(GL11.GL_BLEND);
 								GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 								font.drawString(300, 100, "Game Over", Color.green);
-								font.drawString(300, 200, "Your final score was: " + gameState.getScore(), Color.cyan);
+								font.drawString(300, 200, "Your final score was: " + gameState.getMoney(), Color.cyan);
 								//font.drawString(300, 300,"To Start Press Enter",Color.yellow);
 							GL11.glDisable(GL11.GL_BLEND);
 					GL11.glPopMatrix();
@@ -617,7 +617,7 @@ public class ShooterEngine {
 							pickupIt.remove();
 						} 
 					} else if(pickup.getPickupType().equals("money")) {
-						this.gameState.setScore(this.gameState.getScore() + 10);
+						this.gameState.setMoney(this.gameState.getMoney() + 10);
 						pickupIt.remove();
 					}
 				} else {
@@ -657,7 +657,7 @@ public class ShooterEngine {
 					Color.transparent.bind();
 
 					font.drawString(player.getX() - (resolutionHeight / 2) - 90, player.getY() - (resolutionHeight / 2) + 10,"Health: " + ((Integer)Math.round(player.getHealth())).toString(),Color.yellow);
-					font.drawString(player.getX() + (resolutionHeight / 2) - 10, player.getY() - (resolutionHeight / 2) + 10,"Score: " + ((Integer)gameState.getScore()).toString(),Color.yellow);
+					font.drawString(player.getX() + (resolutionHeight / 2) - 10, player.getY() - (resolutionHeight / 2) + 10,"Score: " + ((Integer)gameState.getMoney()).toString(),Color.yellow);
 				GL11.glDisable(GL11.GL_BLEND);
 		GL11.glPopMatrix();
 		

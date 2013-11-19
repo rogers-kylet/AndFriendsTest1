@@ -25,21 +25,13 @@ public class PauseOverlay{
 		this.backgroundItems = backgroundItems;
 	}
 
-	public List<MenuItem> getMenuItems() {
-		return menuItems;
-	}
+	public List<MenuItem> getMenuItems() { return menuItems; }
 
-	public void setMenuItems(List<MenuItem> menuItems) {
-		this.menuItems = menuItems;
-	}
+	public void setMenuItems(List<MenuItem> menuItems) { this.menuItems = menuItems; }
 
-	public List<BasicBackground> getBackgroundItems() {
-		return backgroundItems;
-	}
+	public List<BasicBackground> getBackgroundItems() { return backgroundItems; }
 
-	public void setBackgroundItems(List<BasicBackground> backgroundItems) {
-		this.backgroundItems = backgroundItems;
-	}
+	public void setBackgroundItems(List<BasicBackground> backgroundItems) { this.backgroundItems = backgroundItems; }
 
 	
 }

@@ -25,47 +25,36 @@ public class BasicMenu implements Level {
 		menuItems.add(new MenuItem(400,400,"StartButton"));
 		menuItems.add(new MenuItem(400,500,"ExitButton"));
 	}
+	
 	@Override
-	public String getName() {
-		return name;
-	}
+	public String getName() { return name; }
 
 	@Override
-	public String getType() {
-		return type;
-	}
+	public String getType() { return type; }
+	
 	@Override
-	public List<MenuItem> getMenuItems() {
-		return menuItems;
-	}
+	public List<MenuItem> getMenuItems() { return menuItems; }
+	
 	@Override
-	public void setMenuItems(List<MenuItem> menuItems) {
-		this.menuItems = menuItems;
-	}
+	public void setMenuItems(List<MenuItem> menuItems) { this.menuItems = menuItems; }
+	
 	@Override
-	public void setType(String type) {
-		this.type = type;
-	}
+	public void setType(String type) { this.type = type; }
+	
 	@Override
-	public void setName(String name) {
-		this.name = name;
-	}
+	public void setName(String name) { this.name = name; }
+	
 	@Override
-	public void setRoomList(List<Room> roomList) {
-		this.roomList = roomList;
-	}
+	public void setRoomList(List<Room> roomList) { this.roomList = roomList; }
+	
 	@Override
-	public List<Room> getRoomList() {
-		return this.roomList;
-	}
+	public List<Room> getRoomList() { return this.roomList; }
+	
 	@Override
-	public String getBackgroundMusic() {
-		return backgroundMusic;
-	}
+	public String getBackgroundMusic() { return backgroundMusic; }
+	
 	@Override
-	public void setBackgroundMusic(String backgroundMusic) {
-		this.backgroundMusic = backgroundMusic;
-	}
+	public void setBackgroundMusic(String backgroundMusic) { this.backgroundMusic = backgroundMusic; }
 	
 
 }

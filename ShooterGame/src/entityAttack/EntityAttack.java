@@ -22,4 +22,7 @@ public interface EntityAttack {
 
 	List<Entity> attack(Entity target);
 
+	boolean countdownShootTimer();
+	
+	boolean countdownShootTimer(int tick);
 }

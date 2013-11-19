@@ -42,11 +42,11 @@ public class BasicEntityAttack implements EntityAttack {
 	@Override
 	public void setDefaultShootTimerValue(int defaultShootTimerValue) { this.defaultShootTimerValue = defaultShootTimerValue; }
 	
-	private boolean countdownShootTimer(){
-		return countdownShootTimer(1);
-	}
+	@Override
+	public boolean countdownShootTimer(){ return countdownShootTimer(1); }
 	
-	private boolean countdownShootTimer(int tick){
+	@Override
+	public boolean countdownShootTimer(int tick){
 		this.shootTimer -= tick;
 		
 		if(this.shootTimer == 0) {

@@ -3,13 +3,13 @@ package GameState;
 public interface GameState {
 
 	// Gets the current game score
-	int getScore();
+	int getMoney();
 	// Sets the current game score
-	void setScore(int newScore);
+	void setMoney(int newMoney);
 	// Adds value to current score
-	void addToScore(int newScore);
+	void addToMoney(int newMoney);
 	// Resets the score back to 0
-	void resetScore();
+	void resetMoney();
 	// Gets the current level
 	String getLevel();
 	// Sets the current level
