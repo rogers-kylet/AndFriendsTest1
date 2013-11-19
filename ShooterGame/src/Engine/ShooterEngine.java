@@ -24,6 +24,7 @@ import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.util.ResourceLoader;
 
 import entity.BasicBackground;
+import entity.BasicPickup;
 import entity.BasicWall;
 import entity.Entity;
 import entity.Player;
@@ -81,6 +82,8 @@ public class ShooterEngine {
 	List<Entity> enemyList;
 	// List that storse all active menu items
 	List<MenuItem> menuItemList;
+	// List that stores all the active pickups
+	List<Entity> pickupList;
 	
 	// The current level
 	Level level;
@@ -532,8 +535,12 @@ public class ShooterEngine {
 				if(!pause) {
 
 					processBackground();
+					
 					// Process and render rooms
 					processRoom();
+					
+					// Process and render pickups
+					processPickUps();
 					
 					processEnemyBullet();
 						
@@ -560,8 +567,8 @@ public class ShooterEngine {
 								GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 								// Yeah... that to string is pretty awesome isn't it? 
 								font.drawString(player.getX() - (resolutionHeight / 2) - 90, player.getY() - (resolutionHeight / 2) + 10,"Health: " + ((Integer)Math.round(player.getHealth())).toString(),Color.yellow);
-								font.drawString(player.getX() + (resolutionHeight / 2) - 10, player.getY() - (resolutionHeight / 2) + 10,"Score: " + ((Integer)gameState.getScore()).toString(),Color.yellow);
-								font.drawString(player.getX() - (resolutionHeight / 2) + 10, player.getY() - (resolutionHeight / 2) + 10,"Weapon: " + ((Integer)player.getWeaponIndex()).toString(),Color.yellow);
+								font.drawString(player.getX() + (resolutionHeight / 2) - 10, player.getY() - (resolutionHeight / 2) + 10,"Money: " + ((Integer)gameState.getScore()).toString(),Color.yellow);
+								font.drawString(player.getX() - (resolutionHeight / 2) + 20, player.getY() - (resolutionHeight / 2) + 10,"Weapon: " + ((Integer)player.getWeaponIndex()).toString(),Color.yellow);
 
 							GL11.glDisable(GL11.GL_BLEND);
 
@@ -608,6 +615,22 @@ public class ShooterEngine {
 		GL11.glPopMatrix();
 	}
 
+	public void processPickUps() {
+		for(Iterator<Entity> pickupIt = this.pickupList.iterator(); pickupIt.hasNext();) {
+			BasicPickup pickup = (BasicPickup) pickupIt.next();
+			renderEntity(pickup);
+			
+			if(player.collisionDetection(pickup)) {
+				if(pickup.getPickupType().equals("heart")) {
+					this.player.setHealth(this.player.getHealth() + 1);
+				} else if(pickup.getPickupType().equals("money")) {
+					this.gameState.setScore(this.gameState.getScore() + 10);
+				}
+				pickupIt.remove();
+			}
+		}
+	}
+	
 	public void processPauseScreen() {
 		// Process and render rooms
 		processRoom();
@@ -730,7 +753,6 @@ public class ShooterEngine {
 						bulletIt.remove();
 					}
 
-					gameState.addToScore(1);
 				}
 			}
 			
@@ -747,7 +769,19 @@ public class ShooterEngine {
 			
 
 			if(enemy.getHealth() < 1) {
+				float enemyX = enemy.getX();
+				float enemyY = enemy.getY();
+				Double rand = Math.random();
+				BasicPickup pickup = new BasicPickup(enemyX, enemyY, 0, 0, 20, 20);
+				if(rand >= .5) {
+					pickup.setPickupType("heart");
+				} else {
+					pickup.setPickupType("money");
+				}
+				this.pickupList.add(pickup);
+				
 				enemyIt.remove();
+
 			} else {
 				float oldX = enemy.getX();
 				float oldY = enemy.getY();
@@ -778,6 +812,8 @@ public class ShooterEngine {
 		this.playerBulletList = new ArrayList<Entity>();
 		// Reset the Menu Item List
 		this.menuItemList = new ArrayList<MenuItem>();
+		// Reset the pickup list
+		this.pickupList = new ArrayList<Entity>();
 		
 		//TODO make this work for any kind of level
 		if(levelName.equals("Gameplay")){
