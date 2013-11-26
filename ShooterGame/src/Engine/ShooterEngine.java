@@ -635,7 +635,7 @@ public class ShooterEngine {
 		
 		for(Iterator<Entity> bulletIt = playerBulletList.iterator(); bulletIt.hasNext();){
 			Entity bullet = bulletIt.next();
-				renderEntity(bullet);
+			renderEntity(bullet);
 		}
 		
 		for(Iterator<Entity> enemyIt = enemyList.iterator(); enemyIt.hasNext();){
@@ -740,10 +740,7 @@ public class ShooterEngine {
 					enemy.setHealth(enemy.getHealth() - 1);
 					bullet.setHealth(bullet.getHealth()-1);
 					
-					if(bullet.getHealth() < 1) {
-						bulletIt.remove();
-					}
-
+					if(bullet.getHealth() < 1) { bulletIt.remove(); }
 				}
 			}
 			
@@ -828,10 +825,7 @@ public class ShooterEngine {
 			try {
 				this.level = new BasicMenu();
 				this.menuItemList = this.level.getMenuItems();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			} catch (IOException e) { e.printStackTrace(); }
 			gameState.setCameraFollow(false);
 			playMusic(level.getBackgroundMusic());
 
@@ -840,24 +834,17 @@ public class ShooterEngine {
 			try {
 				this.level = new GameOverScreen();
 				this.menuItemList = this.level.getMenuItems();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			} catch (IOException e) { e.printStackTrace(); }
 			gameState.setCameraFollow(false);
 			playMusic(level.getBackgroundMusic());
 		}
 	}
 
-	public void playMusic(String musicName){
-		playMusic(musicName, 0.5f);
-	}
+	public void playMusic(String musicName){ playMusic(musicName, 0.5f); }
+	
 	public void playMusic(String musicName, float volume) {
-		try{
-			currentMusic = AudioLoader.getAudio("WAV", ResourceLoader.getResourceAsStream("assets/music/" + musicName + ".wav"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		try{ currentMusic = AudioLoader.getAudio("WAV", ResourceLoader.getResourceAsStream("assets/music/" + musicName + ".wav")); } 
+		catch (IOException e) { e.printStackTrace(); }
 		currentMusic.playAsMusic(1.0f, 1.0f, true);
 		//TODO when should polling occur elsewhere?
 		SoundStore.get().poll(0);
@@ -873,9 +860,7 @@ public class ShooterEngine {
 		if(onScreen(entity)) {
 			entity.render();
 			return true;
-		} else{
-			return false;
-		}
+		} else{ return false; }
 	}
 	
 	public boolean onScreen(Entity entity) {
@@ -885,9 +870,7 @@ public class ShooterEngine {
 				( entity.getY() + entity.getHeight() / 2 > ( player.getY() - resolutionHeight / 2 ) ) && 
 				( entity.getY() - entity.getHeight() / 2 < ( player.getY() + resolutionHeight / 2 ) ) ) {
 			return true;
-		} else{
-			return false;
-		}
+		} else{ return false; }
 	}
 }
 
