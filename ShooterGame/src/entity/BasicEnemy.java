@@ -139,6 +139,12 @@ public class BasicEnemy extends BasicEntity {
 	public List<Entity> attack(Entity target) throws IOException  {
 		return this.ai.attack(this, target);
 	}
+
+	@Override
+	public void setTexture(Texture texture) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 
 }

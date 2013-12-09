@@ -417,30 +417,50 @@ public class ShooterEngine {
 						} 
 					}*/
 					//TODO need to figure out this logic when you can think better....
+					
+					System.out.println(player.getAngle());
 					if(player.getAngle() == 0 || player.getAngle() == 90 || player.getAngle() == 180 || player.getAngle() == 270) {
 						player.setX(oldX);
 						player.setY(oldY);
 						System.out.println(player.getAngle());
 					} else if(player.getAngle() == 45){
 						//TODO refactor when non-squares come into play
-						//SOmething is wrong with y collision...need to figure it out
-						if(player.getX() + player.getWidth()/2 <= wall.getX() - wall.getWidth()/2) {
-							player.setX(oldX);
-						}
-						else if(player.getY() - player.getHeight()/2 <= wall.getY() + wall.getHeight()/2) {
+						// TODO change from reseting to oldX oldY to reseting both and switching the angle to preserve momentum
+						if(player.getY() + player.getHeight()/2 > wall.getY() - wall.getHeight()/2 
+								&& oldY + player.getHeight()/2 < wall.getY() - wall.getHeight()/2){
 							player.setY(oldY);
+						}
+						if(player.getX() + player.getWidth()/2 > wall.getX() - wall.getWidth()/2 
+								&& oldX + player.getWidth()/2 < wall.getX() - wall.getWidth()/2){
+							player.setX(oldX);
 						}
 					} else if(player.getAngle() == 135) {
-						if(player.getX() > wall.getX() && Math.abs(player.getX() - wall.getX()) <= player.getWidth()/2 + wall.getWidth()/2) {
-							player.setX(oldX);
-						}
-						else if(player.getY() - player.getHeight()/2 <= wall.getY() + wall.getHeight()/2) {
+						if(player.getY() + player.getHeight()/2 > wall.getY() - wall.getHeight()/2 
+								&& oldY + player.getHeight()/2 < wall.getY() - wall.getHeight()/2){
 							player.setY(oldY);
 						}
-					} else if(player.getAngle() == 225) {
-
+						if(player.getX() - player.getWidth()/2 < wall.getX() + wall.getWidth()/2 
+								&& oldX - player.getWidth()/2 > wall.getX() + wall.getWidth()/2){
+							player.setX(oldX);
+						}
+					} else if(player.getAngle() == 215) {
+						if(player.getY() - player.getHeight()/2 < wall.getY() + wall.getHeight()/2 
+								&& oldY - player.getHeight()/2 > wall.getY() + wall.getHeight()/2){
+							player.setY(oldY);
+						}
+						if(player.getX() - player.getWidth()/2 < wall.getX() + wall.getWidth()/2 
+								&& oldX - player.getWidth()/2 > wall.getX() + wall.getWidth()/2){
+							player.setX(oldX);
+						}
 					} else if (player.getAngle() == 315) {
-						
+						if(player.getY() - player.getHeight()/2 < wall.getY() + wall.getHeight()/2 
+								&& oldY - player.getHeight()/2 > wall.getY() + wall.getHeight()/2){
+							player.setY(oldY);
+						}
+						if(player.getX() + player.getWidth()/2 > wall.getX() - wall.getWidth()/2 
+								&& oldX + player.getWidth()/2 < wall.getX() - wall.getWidth()/2){
+							player.setX(oldX);
+						}
 					}
 				}
 			}
@@ -557,8 +577,8 @@ public class ShooterEngine {
 		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);                
         GL11.glClearDepth(1);                                       
  
-        //GL11.glEnable(GL11.GL_BLEND);
-        //GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
  
         GL11.glViewport(0,0,resolutionWidth,resolutionHeight);
         

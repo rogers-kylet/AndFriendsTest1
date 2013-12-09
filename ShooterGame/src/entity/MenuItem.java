@@ -78,5 +78,10 @@ public class MenuItem extends BasicEntity {
 	public String getButtonAction(){ return this.buttonAction; }
 	@Override
 	public List<Entity> attack(Entity target) throws IOException { return null; }
+	@Override
+	public void setTexture(Texture texture) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

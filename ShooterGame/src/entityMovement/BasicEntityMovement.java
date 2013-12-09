@@ -26,7 +26,7 @@ public class BasicEntityMovement implements EntityMovement {
 	@Override
 	public void move(Entity entity, Entity relativeEntity) {
 		double distance = Math.sqrt(Math.pow(entity.getX() - relativeEntity.getX(), 2) + Math.pow(entity.getY() - relativeEntity.getY(), 2));
-		if(distance > 100){
+		if(distance > 150){
 			float deltaX = relativeEntity.getX() - entity.getX();
 			float deltaY = relativeEntity.getY() - entity.getY();
 			double newAngle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
@@ -36,7 +36,7 @@ public class BasicEntityMovement implements EntityMovement {
 			entity.setY(entity.getY() + entity.getSpeed() * (float)Math.sin(Math.toRadians(entity.getAngle())));
 			
 			isMoving = true;
-		} else if(distance < 100 - 10){
+		} else if(distance < 150 - 10){
 			float deltaX = relativeEntity.getX() - entity.getX();
 			float deltaY = relativeEntity.getY() - entity.getY();
 			double newAngle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;

@@ -3,6 +3,9 @@ package entityAttack;
 import java.io.IOException;
 import java.util.List;
 
+import org.newdawn.slick.opengl.TextureLoader;
+import org.newdawn.slick.util.ResourceLoader;
+
 import timer.BasicTimer;
 import timer.Timer;
 import weapon.BasicWeapon;
@@ -48,7 +51,12 @@ public class BasicEntityAttack implements EntityAttack {
 			this.canShootTimer.reset();
 			canAttack = false;
 			
-			return this.weapon.attack(newAngle, target);
+			List<Entity> bulletList = this.weapon.attack(newAngle, target);
+			
+			for(Entity bullet: bulletList){
+				bullet.setTexture(TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/images/" + "enemyBullet" + ".png")));
+			}
+			return bulletList;
 			
 		} else {
 			canShootTimer.countDown();

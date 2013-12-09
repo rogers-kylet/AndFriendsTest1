@@ -135,6 +135,12 @@ public class BasicBackground extends BasicEntity {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public void setTexture(Texture texture) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 

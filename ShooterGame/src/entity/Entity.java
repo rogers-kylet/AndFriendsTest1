@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.lwjgl.util.vector.Vector3f;
+import org.newdawn.slick.opengl.Texture;
 
 /** 
  *  Base interface for any mobile or living object on screen.
@@ -208,5 +209,7 @@ public interface Entity {
 	List<Entity> attack(float angle) throws IOException;
 	
 	List<Entity> attack(Entity target) throws IOException;
+
+	void setTexture(Texture texture);
 
 }

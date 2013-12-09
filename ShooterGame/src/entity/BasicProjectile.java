@@ -40,7 +40,7 @@ public class BasicProjectile extends BasicEntity {
 		this.scale=1f;
 		this.eid = eid;
 		this.distance = 0;
-		this.maxDistance = 50;
+		this.maxDistance = 75;
 		this.texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/images/" + "Bullet" + ".png"));
 		this.mask = (int) Math.floor(Math.random() * 9);
 	}
@@ -97,11 +97,13 @@ public class BasicProjectile extends BasicEntity {
 			break;
 		}
 		
+
 		//GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
 		//GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
-		texture.bind(); // or GL11.glBind(texture.getTextureID());
 		//GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureID());
 		
+		texture.bind(); // or GL11.glBind(texture.getTextureID());
+
 		GL11.glPushMatrix();
 	
 			// Replace glBegin with vertex buffer
@@ -156,4 +158,10 @@ public class BasicProjectile extends BasicEntity {
 	@Override
 	public List<Entity> attack(Entity target) throws IOException { return null; }
 
+	public Texture getTexture() { return texture; }
+
+	@Override
+	public void setTexture(Texture texture) { this.texture = texture; }
+
+	
 }
