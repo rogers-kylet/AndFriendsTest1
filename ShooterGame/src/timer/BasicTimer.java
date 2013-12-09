@@ -2,8 +2,13 @@ package timer;
 
 public class BasicTimer implements Timer {
 
-	private int StartValue, currentTime;
+	private int startValue, currentTime;
 	boolean ticking;
+	
+	public BasicTimer(int startValue) {
+		this.startValue = startValue;
+		this.ticking = false;
+	}
 	
 	@Override
 	public boolean countDown() {
@@ -19,15 +24,20 @@ public class BasicTimer implements Timer {
 
 	@Override
 	public void reset() { 
-		this.currentTime = this.StartValue; 
+		this.currentTime = this.startValue; 
 		this.ticking = true;
 	}
 	
 	@Override
-	public int getStartValue() { return StartValue; }
+	public boolean isStopped() {
+		return !this.ticking;
+	}
+	
+	@Override
+	public int getStartValue() { return startValue; }
 
 	@Override
-	public void setStartValue(int startValue) { StartValue = startValue; }
+	public void setStartValue(int startValue) { this.startValue = startValue; }
 
 	@Override
 	public int getCurrentTime() { return currentTime; }

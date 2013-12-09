@@ -13,6 +13,7 @@ import org.newdawn.slick.util.ResourceLoader;
 import ai.Ai;
 import ai.BasicAi;
 
+import entityAttack.BasicEntityAttack;
 import entityMovement.BasicEntityMovement;
 
 public class BasicEnemy extends BasicEntity {
@@ -44,27 +45,11 @@ public class BasicEnemy extends BasicEntity {
 		this.hitSfx = "enemyhit";
 		this.texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/images/" + "Enemy" + ".png"));
 		this.mask = (int) Math.floor(Math.random() * 9);
-		this.ai = new BasicAi(new BasicEntityMovement());
+		this.ai = new BasicAi(new BasicEntityMovement(), new BasicEntityAttack());
 	}
 	
 	@Override
 	public void render() {
-		/*
-		GL11.glColor3f(1.0f, 0.0f, 0.0f);
-
-		GL11.glPushMatrix();
-			GL11.glTranslatef(this.x,this.y,0);
-			GL11.glRotatef(this.rotation, 0f, 0f, 1f);
-			GL11.glTranslatef(-this.x, -this.y, 0);
-			
-			GL11.glBegin(GL11.GL_QUADS);
-				GL11.glVertex2f(this.x - this.width/2, this.y - this.height/2);
-				GL11.glVertex2f(this.x + this.width/2, this.y - this.height/2);
-				GL11.glVertex2f(this.x + this.width/2, this.y + this.height/2);
-				GL11.glVertex2f(this.x - this.width/2, this.y + this.height/2);
-			GL11.glEnd();
-		GL11.glPopMatrix();
-		*/
 		
 		switch(mask) {
 		case 1:
@@ -142,15 +127,6 @@ public class BasicEnemy extends BasicEntity {
 
 	@Override
 	protected void processMovementTick(Entity target) {
-		/*
-		float deltaX = target.getX() - this.getX();
-		float deltaY = target.getY() - this.getY();
-		double newAngle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
-		this.setAngle((float) newAngle);
-		
-		this.x += this.speed * Math.cos(Math.toRadians(this.angle));
-		this.y += this.speed * Math.sin(Math.toRadians(this.angle));
-		*/
 		this.ai.move(this, target);
 	}
 
@@ -158,5 +134,11 @@ public class BasicEnemy extends BasicEntity {
 	public List<Entity> attack(float angle) {
 		return null;
 	}
+	
+	@Override
+	public List<Entity> attack(Entity target) throws IOException  {
+		return this.ai.attack(this, target);
+	}
+	
 
 }

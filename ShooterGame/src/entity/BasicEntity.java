@@ -1,5 +1,8 @@
 package entity;
 
+import java.io.IOException;
+import java.util.List;
+
 import org.lwjgl.util.vector.Vector3f;
 
 /** 
@@ -108,10 +111,8 @@ public abstract class BasicEntity implements Entity {
 		processMovementTick(target);
 	}
 
-	public void move() {
-		//Call move with self as target - Forces wander mode
-		move(this);
-	}
+	//Call move with self as target - Forces wander mode
+	public void move() { move(this); }
 	
 	public boolean collisionDetection(Entity target) {
 		//TODO: Add collision processing
@@ -140,6 +141,8 @@ public abstract class BasicEntity implements Entity {
 	public float getMaxHealth() { return maxHealth; }
 
 	public void setMaxHealth(float maxHealth) { this.maxHealth = maxHealth; }
+	
+	public abstract List<Entity> attack(Entity target) throws IOException;
 	
 	
 }

@@ -135,4 +135,7 @@ public class BasicPickup extends BasicEntity {
 
 	public void setPickupValue(float pickupValue) { this.pickupValue = pickupValue; }
 
+	@Override
+	public List<Entity> attack(Entity target) throws IOException { return null; }
+
 }

@@ -56,37 +56,27 @@ public class LevelGeneration {
 					if(anchorPoint.getDirection().equals("left")){
 						nextRoom = buildRoom(anchorPoint.getX()-400,anchorPoint.getY());
 						for(AnchorPoint hookedAnchorPoint: nextRoom.getAnchorPoints()) {
-							if(hookedAnchorPoint.getDirection().equals("right")) {
-								hookedAnchorPoint.setHooked(true);
-							}
+							if(hookedAnchorPoint.getDirection().equals("right")) { hookedAnchorPoint.setHooked(true); }
 						}
 					} else if(anchorPoint.getDirection().equals("right")){
 						nextRoom = buildRoom(anchorPoint.getX() + 400,anchorPoint.getY());
 						for(AnchorPoint hookedAnchorPoint: nextRoom.getAnchorPoints()) {
-							if(hookedAnchorPoint.getDirection().equals("left")) {
-								hookedAnchorPoint.setHooked(true);
-							}
+							if(hookedAnchorPoint.getDirection().equals("left")) { hookedAnchorPoint.setHooked(true); }
 						}
 					} else if(anchorPoint.getDirection().equals("up")){
 						nextRoom = buildRoom(anchorPoint.getX(),anchorPoint.getY() - 300);
 						for(AnchorPoint hookedAnchorPoint: nextRoom.getAnchorPoints()) {
-							if(hookedAnchorPoint.getDirection().equals("down")) {
-								hookedAnchorPoint.setHooked(true);
-							}
+							if(hookedAnchorPoint.getDirection().equals("down")) { hookedAnchorPoint.setHooked(true); }
 						}
 					} else if(anchorPoint.getDirection().equals("down")){
 						nextRoom = buildRoom(anchorPoint.getX(),anchorPoint.getY() + 300);
 						for(AnchorPoint hookedAnchorPoint: nextRoom.getAnchorPoints()) {
-							if(hookedAnchorPoint.getDirection().equals("up")) {
-								hookedAnchorPoint.setHooked(true);
-							}
+							if(hookedAnchorPoint.getDirection().equals("up")) { hookedAnchorPoint.setHooked(true); }
 						}
 					}
 					boolean roomOkay = true;
 					for(Room room: roomList) {
-						if(room.roomCollision(nextRoom)) {
-							roomOkay = false;
-						}
+						if(room.roomCollision(nextRoom)) { roomOkay = false; }
 					}
 					if(roomOkay) {
 						anchorPoint.setHooked(true);
@@ -104,22 +94,14 @@ public class LevelGeneration {
 						roomList.add(nextRoom);
 						theQueue.add(nextRoom);
 						break;
-					} else {
-						continue;
-					}
-				} else {
-					continue;
-				}
+					} else { continue; }
+				} else { continue; }
 			}
 			
 			// Temp number to allow for basic level scaling
-			if(roomCount >= 10+levelNumber) {
-				levelGenerated = true;
-			}
+			if(roomCount >= 10+levelNumber) { levelGenerated = true; }
 		}
-		for(Room room : roomList) {
-			room.generateWalls();
-		}
+		for(Room room : roomList) { room.generateWalls(); }
 		theLevel.setRoomList(roomList);
 		return theLevel;
 	}

@@ -14,4 +14,6 @@ public interface Timer {
 
 	int getCurrentTime();
 
+	boolean isStopped();
+
 }

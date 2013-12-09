@@ -129,6 +129,12 @@ public class BasicBackground extends BasicEntity {
 	public List<Entity> attack(float angle) {
 		return null;
 	}
+
+	@Override
+	public List<Entity> attack(Entity target) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 

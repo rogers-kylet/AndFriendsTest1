@@ -1,5 +1,6 @@
 package ai;
 
+import java.io.IOException;
 import java.util.List;
 
 import entity.Entity;
@@ -9,11 +10,19 @@ import entityMovement.EntityMovement;
 public class BasicAi implements Ai {
 
 	EntityMovement entityMovement;
-	EntityAttack enemyAttack;
+	EntityAttack entityAttack;
 
 	public BasicAi(){};
 	
-	public BasicAi(EntityMovement entityMovement) { this.entityMovement = entityMovement; }
+	public BasicAi(EntityMovement entityMovement) { 
+		this.entityMovement = entityMovement; 
+		
+	}
+	
+	public BasicAi(EntityMovement entityMovement, EntityAttack entityAttack) {
+		this.entityMovement = entityMovement;
+		this.entityAttack = entityAttack;
+	}
 	
 	@Override
 	public void move(Entity target, Entity relatedEntity){
@@ -21,8 +30,13 @@ public class BasicAi implements Ai {
 	}
 	
 	@Override
-	public List<Entity> attack(Entity target, Entity relatedEntity) {
-		return this.enemyAttack.attack(target, relatedEntity);
+	public List<Entity> attack(Entity target, Entity relatedEntity) throws IOException {
+		return this.entityAttack.attack(target, relatedEntity);
+	}
+	
+	@Override
+	public List<Entity> processTick(Entity target, Entity relatedEntity, List<Entity> enemyBulletList) {
+		return null;
 	}
 	
 	@Override
@@ -32,10 +46,12 @@ public class BasicAi implements Ai {
 	public void setEntityMovement(EntityMovement entityMovement) { this.entityMovement = entityMovement; }
 
 	@Override
-	public EntityAttack getEnemyAttack() { return enemyAttack; }
+	public EntityAttack getEnemyAttack() { return entityAttack; }
 
 	@Override
-	public void setEnemyAttack(EntityAttack enemyAttack) { this.enemyAttack = enemyAttack; }
+	public void setEnemyAttack(EntityAttack enemyAttack) { this.entityAttack = enemyAttack; }
+
+
 	
 	
 }

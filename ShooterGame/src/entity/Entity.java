@@ -206,5 +206,7 @@ public interface Entity {
 	public boolean collisionDetection(Entity target);
 
 	List<Entity> attack(float angle) throws IOException;
+	
+	List<Entity> attack(Entity target) throws IOException;
 
 }

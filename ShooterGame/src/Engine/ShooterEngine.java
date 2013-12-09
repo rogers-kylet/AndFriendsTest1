@@ -208,31 +208,7 @@ public class ShooterEngine {
 				
 				//Attempt movement if any keys were pressed
 				if(movementDelta>-1) {
-					player.setAngle(movementDelta);
-					float oldX = player.getX(), oldY = player.getY();
-					
-					player.move();
-					for(Room room: this.level.getRoomList()) {
-						if(!room.isEntered()) {
-							//TODO maybe room should extend entity to use the onScreen method....
-							if(
-									( room.getX() - room.getWidth() / 2 < ( player.getX() + resolutionWidth / 2 ) ) && 
-									( room.getX() + room.getWidth() / 2 > ( player.getX() - resolutionWidth / 2 ) ) && 
-									( room.getY() + room.getHeight() / 2 > ( player.getY() - resolutionHeight / 2 ) ) && 
-									( room.getY() - room.getHeight() / 2 < ( player.getY() + resolutionHeight / 2 ) ) ) {
-								
-								for(Entity enemy : room.getEnemyList()) { this.enemyList.add(enemy); }
-								room.setEntered(true);
-								this.pickupList.addAll(room.getPickupList());
-							}
-						}
-						for(Entity wall: room.getWallList()) {
-							if(wall.collisionDetection(player)) {
-								player.setX(oldX);
-								player.setY(oldY);
-							}
-						}
-					}
+					processPlayerMove(movementDelta);
 				}
 				
 				//shotFireDelta - Direction shot should fire, if allowed.
@@ -387,6 +363,88 @@ public class ShooterEngine {
 		if(pauseTimer > 0){pauseTimer--;}
 		if(weaponSwitchTimer > 0) { weaponSwitchTimer--;}
 		updateFPS(); // update FPS Counter
+	}
+
+	private void processPlayerMove(int movementDelta) {
+		player.setAngle(movementDelta);
+		float oldX = player.getX(), oldY = player.getY();
+		
+		player.move();
+		for(Room room: this.level.getRoomList()) {
+			if(!room.isEntered()) {
+				//TODO maybe room should extend entity to use the onScreen method....
+				if(
+						( room.getX() - room.getWidth() / 2 < ( player.getX() + resolutionWidth / 2 ) ) && 
+						( room.getX() + room.getWidth() / 2 > ( player.getX() - resolutionWidth / 2 ) ) && 
+						( room.getY() + room.getHeight() / 2 > ( player.getY() - resolutionHeight / 2 ) ) && 
+						( room.getY() - room.getHeight() / 2 < ( player.getY() + resolutionHeight / 2 ) ) ) {
+					
+					for(Entity enemy : room.getEnemyList()) { this.enemyList.add(enemy); }
+					room.setEntered(true);
+					this.pickupList.addAll(room.getPickupList());
+				}
+			}
+			for(Entity wall: room.getWallList()) {
+				if(wall.collisionDetection(player)) {
+					//player.setX(oldX);
+					//player.setY(oldY);
+					// TODO extract this and make it more general to work for enemies and other things that shouldn't stop
+					//TODO need to change getX < getX to check that the distance etween them is below a certain threshold to determine if it's a top, down, left or right cllision
+					//TODO actually... maybe this logic should just determine the direction of the collision, and only set x or y if the collision happened, that way it will stll handle multiple walls
+					/*if(player.getX() < wall.getX()) {
+						if(player.getAngle() == 45) {
+							newMovementDelta = 90;
+						} else if(player.getAngle() == 315) {
+							newMovementDelta = 270;
+						} 
+					} else if(player.getY() < wall.getY()) {
+						if(player.getAngle() == 45){
+							newMovementDelta = 0;
+						} else if(player.getAngle() == 135) {
+							newMovementDelta = 180;
+						}                                 
+					} else if(player.getX() > wall.getX()) {
+						if(player.getAngle() == 135){
+							newMovementDelta = 90;
+						} else if(player.getAngle() == 225) {
+							newMovementDelta = 270;
+						}
+					} else if(player.getY() > wall.getY()) {
+						if(player.getAngle() == 225) {
+							newMovementDelta = 180;
+						} else if(player.getAngle() == 315) {
+							newMovementDelta = 0;
+						} 
+					}*/
+					//TODO need to figure out this logic when you can think better....
+					if(player.getAngle() == 0 || player.getAngle() == 90 || player.getAngle() == 180 || player.getAngle() == 270) {
+						player.setX(oldX);
+						player.setY(oldY);
+						System.out.println(player.getAngle());
+					} else if(player.getAngle() == 45){
+						//TODO refactor when non-squares come into play
+						//SOmething is wrong with y collision...need to figure it out
+						if(player.getX() + player.getWidth()/2 <= wall.getX() - wall.getWidth()/2) {
+							player.setX(oldX);
+						}
+						else if(player.getY() - player.getHeight()/2 <= wall.getY() + wall.getHeight()/2) {
+							player.setY(oldY);
+						}
+					} else if(player.getAngle() == 135) {
+						if(player.getX() > wall.getX() && Math.abs(player.getX() - wall.getX()) <= player.getWidth()/2 + wall.getWidth()/2) {
+							player.setX(oldX);
+						}
+						else if(player.getY() - player.getHeight()/2 <= wall.getY() + wall.getHeight()/2) {
+							player.setY(oldY);
+						}
+					} else if(player.getAngle() == 225) {
+
+					} else if (player.getAngle() == 315) {
+						
+					}
+				}
+			}
+		}
 	}
 	
 	/*
@@ -701,15 +759,34 @@ public class ShooterEngine {
 						Entity bullet = bulletIt.next();
 						if(wall.collisionDetection(bullet)){ bulletIt.remove(); }
 					}
+					for(Iterator<Entity> bulletIt = enemyBulletList.iterator(); bulletIt.hasNext();) {
+						Entity bullet = bulletIt.next();
+						if(wall.collisionDetection(bullet)) { bulletIt.remove(); }
+					}
 				}
 			}
 		}
 	}
 
 	//TODO this
-	public boolean processEnemyBullet(){
-		return true;
-	}
+	public void processEnemyBullet(){
+		for(Iterator<Entity> bulletIt = enemyBulletList.iterator(); bulletIt.hasNext();){
+			Entity bullet = bulletIt.next();
+				bullet.move();
+				
+				// Player collision with enemy
+				if(bullet.collisionDetection(player)){
+					player.hurtPlayer(1);
+					
+					// TODO replace with player.getHitSfx() once using entity player
+					sfxMap.get(player.getHitSfx()).playAsSoundEffect(1.0f, 1.0f, false);
+					bullet.setHealth(bullet.getHealth() -1 );
+				}
+				
+				renderEntity(bullet);
+				
+				if(bullet.getHealth() < 1) { bulletIt.remove(); }
+		}	}
 	
 	public void processPlayerBullet() {
 		for(Iterator<Entity> bulletIt = playerBulletList.iterator(); bulletIt.hasNext();){
@@ -752,7 +829,7 @@ public class ShooterEngine {
 				sfxMap.get(player.getHitSfx()).playAsSoundEffect(1.0f, 1.0f, false);
 				// TODO figure out what should happen for enemy collision, probably shoudln't kill it, but should start invincibility timer for player
 
-				enemy.setHealth(enemy.getHealth() -1);
+				//enemy.setHealth(enemy.getHealth() -1);
 			}
 			
 			if(enemy.getHealth() < 1) {
@@ -776,6 +853,10 @@ public class ShooterEngine {
 				float oldY = enemy.getY();
 				
 				enemy.move(player);
+				List<Entity> enemyBullets = enemy.attack(player);
+				if(enemyBullets != null) {
+					this.enemyBulletList.addAll(enemyBullets);
+				}
 				
 				for(Room room: this.level.getRoomList()) {
 					for(Entity wall: room.getWallList()) {
@@ -799,10 +880,13 @@ public class ShooterEngine {
 		this.enemyList = new ArrayList<Entity>();
 		// Reset the bullet list
 		this.playerBulletList = new ArrayList<Entity>();
+		// Reset the enemy bullet list.
+		this.enemyBulletList = new ArrayList<Entity>();
 		// Reset the Menu Item List
 		this.menuItemList = new ArrayList<MenuItem>();
 		// Reset the pickup list
 		this.pickupList = new ArrayList<Entity>();
+		
 		
 		this.changeLevel = false;
 		//TODO make this work for any kind of level
@@ -834,6 +918,7 @@ public class ShooterEngine {
 			try {
 				this.level = new GameOverScreen();
 				this.menuItemList = this.level.getMenuItems();
+				this.player = new Player(400, 300, 0, 0);
 			} catch (IOException e) { e.printStackTrace(); }
 			gameState.setCameraFollow(false);
 			playMusic(level.getBackgroundMusic());

@@ -1,5 +1,6 @@
 package entityAttack;
 
+import java.io.IOException;
 import java.util.List;
 
 import entity.Entity;
@@ -10,7 +11,7 @@ public interface EntityAttack {
 
 	void setCanAttack(boolean canAttack);
 
-	List<Entity> attack(Entity target, Entity relatedEntity);
+	List<Entity> attack(Entity target, Entity relatedEntity) throws IOException;
 
 	int getShootTimer();
 

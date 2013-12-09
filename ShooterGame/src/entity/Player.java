@@ -150,9 +150,7 @@ public class Player extends BasicEntity {
 			}
 		}
 		
-		if(!canShoot) {
-			countDownShooterTimer();
-		}
+		if(!canShoot) { countDownShooterTimer(); }
 	}
 
 	@Override
@@ -164,9 +162,7 @@ public class Player extends BasicEntity {
 				( target.getY() - target.getHeight() / 2 < ( this.getY() + this.height / 2 ) ) ) {
 			return true;
 		}
-		else {
-			return false;
-		}
+		else { return false; }
 	}
 
 	@Override
@@ -193,9 +189,7 @@ public class Player extends BasicEntity {
 	// Counts down the shooter timer by one, setting can shoot to true when it hits zero
 	public void countDownShooterTimer(){
 		shooterTimer -= 1;
-		if(shooterTimer == 0){
-			this.canShoot = true;
-		}
+		if(shooterTimer == 0){ this.canShoot = true; }
 	}
 	
 	public void addWeapon(Weapon weapon) {
@@ -249,6 +243,12 @@ public class Player extends BasicEntity {
 	public int getWeaponIndex() { return weaponIndex; }
 
 	public void setWeaponIndex(int weaponIndex) { this.weaponIndex = weaponIndex; }
+
+	@Override
+	public List<Entity> attack(Entity target) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 	

@@ -153,4 +153,7 @@ public class BasicProjectile extends BasicEntity {
 		return null;
 	}
 
+	@Override
+	public List<Entity> attack(Entity target) throws IOException { return null; }
+
 }

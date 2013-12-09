@@ -1,7 +1,14 @@
 package entityAttack;
 
+import java.io.IOException;
 import java.util.List;
 
+import timer.BasicTimer;
+import timer.Timer;
+import weapon.BasicWeapon;
+import weapon.Weapon;
+
+import entity.BasicProjectile;
 import entity.Entity;
 
 public class BasicEntityAttack implements EntityAttack {
@@ -9,9 +16,14 @@ public class BasicEntityAttack implements EntityAttack {
 	boolean canAttack;
 	int shootTimer;
 	int defaultShootTimerValue;
+	Weapon weapon;
+	Timer canShootTimer;
 
 	public BasicEntityAttack() {
-		
+		weapon = new BasicWeapon();
+		canShootTimer = new BasicTimer((int) (Math.random() * 40 + 60));
+		canShootTimer.reset();
+		canAttack = false;
 	}
 	
 	@Override
@@ -26,8 +38,27 @@ public class BasicEntityAttack implements EntityAttack {
 	}
 	
 	@Override
-	public List<Entity> attack(Entity target, Entity relatedEntity) {
-		return null;
+	public List<Entity> attack(Entity target, Entity relatedEntity) throws IOException {
+		if(canAttack) {
+			float deltaX = relatedEntity.getX() - target.getX();
+			float deltaY = relatedEntity.getY() - target.getY();
+			float newAngle = (float) (Math.atan2(deltaY, deltaX) * 180 / Math.PI);
+			
+			canShootTimer.setStartValue((int) (Math.random() * 40 + 60));
+			this.canShootTimer.reset();
+			canAttack = false;
+			
+			return this.weapon.attack(newAngle, target);
+			
+		} else {
+			canShootTimer.countDown();
+			if(canShootTimer.isStopped()) {
+				canAttack = true;
+			} else {
+				canAttack = false;
+			}
+			return null;
+		}
 	}
 
 	@Override
@@ -52,9 +83,7 @@ public class BasicEntityAttack implements EntityAttack {
 		if(this.shootTimer == 0) {
 			canAttack = true;
 			return true;
-		} else {
-			return false;
-		}
+		} else { return false; }
 	}
 
 }
