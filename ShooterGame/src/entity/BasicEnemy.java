@@ -16,6 +16,8 @@ import ai.BasicAi;
 import entityAttack.BasicEntityAttack;
 import entityMovement.BasicEntityMovement;
 
+import room.Room;
+
 public class BasicEnemy extends BasicEntity {
 
 	private Texture texture;
@@ -128,6 +130,11 @@ public class BasicEnemy extends BasicEntity {
 	@Override
 	protected void processMovementTick(Entity target) {
 		this.ai.move(this, target);
+	}
+	
+	@Override
+	public void processMovementTick(Entity target, List<Room> entityList) {
+		this.ai.move(this, target, entityList);
 	}
 
 	@Override

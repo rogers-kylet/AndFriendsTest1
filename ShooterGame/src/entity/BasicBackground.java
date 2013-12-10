@@ -10,6 +10,8 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
+import room.Room;
+
 public class BasicBackground extends BasicEntity {
 
 	protected Texture texture;
@@ -138,6 +140,12 @@ public class BasicBackground extends BasicEntity {
 
 	@Override
 	public void setTexture(Texture texture) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void processMovementTick(Entity target, List<Room> entityList) {
 		// TODO Auto-generated method stub
 		
 	}

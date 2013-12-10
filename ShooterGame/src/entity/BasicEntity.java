@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import room.Room;
+
 /** 
  *  Base class for any mobile or living object on screen.
  */
@@ -98,7 +100,13 @@ public abstract class BasicEntity implements Entity {
 
 	public float getAngle() { return this.angle; }
 
-	public void setAngle(float angle) { this.angle = angle; }
+	public void setAngle(float angle) { 
+		if(angle >= 360) {
+			angle -= 360;
+		} else if (angle < 0) {
+			angle += 360;
+		}
+		this.angle = angle; }
 
 	public Vector3f getAcceleration() { return acceleration; }
 
@@ -111,6 +119,10 @@ public abstract class BasicEntity implements Entity {
 		processMovementTick(target);
 	}
 
+	public void move(Entity target, List<Room> entityList) {
+		processMovementTick(target, entityList);
+	}
+	
 	//Call move with self as target - Forces wander mode
 	public void move() { move(this); }
 	
@@ -121,7 +133,7 @@ public abstract class BasicEntity implements Entity {
 		return processCollisionTick(target);
 		
 	}
-	
+		
 	/**
 	 * processCollisionTick(Entity) - Processes entity specific collision detection
 	 * @param target - Target Entity AI should react to. Send self reference for no target
@@ -143,6 +155,11 @@ public abstract class BasicEntity implements Entity {
 	public void setMaxHealth(float maxHealth) { this.maxHealth = maxHealth; }
 	
 	public abstract List<Entity> attack(Entity target) throws IOException;
+
+	public void processMovementTick(Entity target, List<Room> entityList) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 }

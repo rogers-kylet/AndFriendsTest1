@@ -10,6 +10,8 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
+import room.Room;
+
 
 public class BasicProjectile extends BasicEntity {
 
@@ -162,6 +164,12 @@ public class BasicProjectile extends BasicEntity {
 
 	@Override
 	public void setTexture(Texture texture) { this.texture = texture; }
+
+	@Override
+	public void processMovementTick(Entity target, List<Room> entityList) {
+		// TODO Auto-generated method stub
+		
+	}
 
 	
 }

@@ -7,6 +7,8 @@ import entity.Entity;
 import entityAttack.EntityAttack;
 import entityMovement.EntityMovement;
 
+import room.Room;
+
 public class BasicAi implements Ai {
 
 	EntityMovement entityMovement;
@@ -28,6 +30,12 @@ public class BasicAi implements Ai {
 	public void move(Entity target, Entity relatedEntity){
 		this.entityMovement.move(target, relatedEntity);
 	}
+	
+	@Override
+	public void move(Entity target, Entity relatedEntity, List<Room> entityList) {
+		this.entityMovement.move(target, relatedEntity, entityList);
+	}
+	
 	
 	@Override
 	public List<Entity> attack(Entity target, Entity relatedEntity) throws IOException {

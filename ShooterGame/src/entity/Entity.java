@@ -6,6 +6,8 @@ import java.util.List;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.opengl.Texture;
 
+import room.Room;
+
 /** 
  *  Base interface for any mobile or living object on screen.
  */
@@ -211,5 +213,9 @@ public interface Entity {
 	List<Entity> attack(Entity target) throws IOException;
 
 	void setTexture(Texture texture);
+
+	public void processMovementTick(Entity target, List<Room> entityList);
+
+
 
 }

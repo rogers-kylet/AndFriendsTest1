@@ -1,5 +1,9 @@
 package entityMovement;
 
+import java.util.List;
+
+import room.Room;
+
 import entity.Entity;
 
 public interface EntityMovement {
@@ -17,9 +21,12 @@ public interface EntityMovement {
 	 * @param relativeEntity The entity to be moved towards
 	 */
 	public abstract void move(Entity entity, Entity relativeEntity);
+	
 
 	boolean isMoving();
 
 	void setMoving(boolean isMoving);
+
+	abstract void move(Entity entity, Entity relativeEntity, List<Room> entityList);
 
 }

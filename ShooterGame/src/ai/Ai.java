@@ -3,6 +3,8 @@ package ai;
 import java.io.IOException;
 import java.util.List;
 
+import room.Room;
+
 import entity.Entity;
 import entityAttack.EntityAttack;
 import entityMovement.EntityMovement;
@@ -18,10 +20,13 @@ public interface Ai {
 	void setEnemyAttack(EntityAttack enemyAttack);
 
 	void move(Entity target, Entity relatedEntity);
-
+	
 	List<Entity> attack(Entity target, Entity relatedEntity) throws IOException;
 	
 	List<Entity> processTick(Entity target, Entity relatedEntity,
 			List<Entity> enemyBulletLIst);
+
+	void move(Entity target, Entity relatedEntity, List<Room> entityList);
+
 
 }

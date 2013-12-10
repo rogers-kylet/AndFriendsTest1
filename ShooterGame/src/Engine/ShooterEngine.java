@@ -365,9 +365,10 @@ public class ShooterEngine {
 		updateFPS(); // update FPS Counter
 	}
 
-	private void processPlayerMove(int movementDelta) {
-		player.setAngle(movementDelta);
-		float oldX = player.getX(), oldY = player.getY();
+	private void processPlayerMove(float newAngle2) {
+		player.setAngle(newAngle2);
+		float oldX = player.getX(), oldY = player.getY(), newAngle = -1;
+		boolean xChange = false, yChange = false;
 		
 		player.move();
 		for(Room room: this.level.getRoomList()) {
@@ -386,84 +387,78 @@ public class ShooterEngine {
 			}
 			for(Entity wall: room.getWallList()) {
 				if(wall.collisionDetection(player)) {
-					//player.setX(oldX);
-					//player.setY(oldY);
-					// TODO extract this and make it more general to work for enemies and other things that shouldn't stop
-					//TODO need to change getX < getX to check that the distance etween them is below a certain threshold to determine if it's a top, down, left or right cllision
-					//TODO actually... maybe this logic should just determine the direction of the collision, and only set x or y if the collision happened, that way it will stll handle multiple walls
-					/*if(player.getX() < wall.getX()) {
-						if(player.getAngle() == 45) {
-							newMovementDelta = 90;
-						} else if(player.getAngle() == 315) {
-							newMovementDelta = 270;
-						} 
-					} else if(player.getY() < wall.getY()) {
-						if(player.getAngle() == 45){
-							newMovementDelta = 0;
-						} else if(player.getAngle() == 135) {
-							newMovementDelta = 180;
-						}                                 
-					} else if(player.getX() > wall.getX()) {
-						if(player.getAngle() == 135){
-							newMovementDelta = 90;
-						} else if(player.getAngle() == 225) {
-							newMovementDelta = 270;
-						}
-					} else if(player.getY() > wall.getY()) {
-						if(player.getAngle() == 225) {
-							newMovementDelta = 180;
-						} else if(player.getAngle() == 315) {
-							newMovementDelta = 0;
-						} 
-					}*/
-					//TODO need to figure out this logic when you can think better....
 					
 					System.out.println(player.getAngle());
 					if(player.getAngle() == 0 || player.getAngle() == 90 || player.getAngle() == 180 || player.getAngle() == 270) {
 						player.setX(oldX);
 						player.setY(oldY);
+
 						System.out.println(player.getAngle());
 					} else if(player.getAngle() == 45){
 						//TODO refactor when non-squares come into play
 						// TODO change from reseting to oldX oldY to reseting both and switching the angle to preserve momentum
 						if(player.getY() + player.getHeight()/2 > wall.getY() - wall.getHeight()/2 
 								&& oldY + player.getHeight()/2 < wall.getY() - wall.getHeight()/2){
-							player.setY(oldY);
+							//player.setY(oldY);
+							yChange = true;
+							newAngle = 0;
 						}
 						if(player.getX() + player.getWidth()/2 > wall.getX() - wall.getWidth()/2 
 								&& oldX + player.getWidth()/2 < wall.getX() - wall.getWidth()/2){
-							player.setX(oldX);
+							//player.setX(oldX);
+							xChange = true;
+							newAngle = 90;
 						}
 					} else if(player.getAngle() == 135) {
 						if(player.getY() + player.getHeight()/2 > wall.getY() - wall.getHeight()/2 
 								&& oldY + player.getHeight()/2 < wall.getY() - wall.getHeight()/2){
-							player.setY(oldY);
+							//player.setY(oldY);
+							yChange = true;
+							newAngle = 180;
 						}
 						if(player.getX() - player.getWidth()/2 < wall.getX() + wall.getWidth()/2 
 								&& oldX - player.getWidth()/2 > wall.getX() + wall.getWidth()/2){
-							player.setX(oldX);
+							//player.setX(oldX);
+							xChange = true;
+							newAngle = 90;
 						}
 					} else if(player.getAngle() == 215) {
 						if(player.getY() - player.getHeight()/2 < wall.getY() + wall.getHeight()/2 
 								&& oldY - player.getHeight()/2 > wall.getY() + wall.getHeight()/2){
-							player.setY(oldY);
+							//player.setY(oldY);
+							yChange = true;
+							newAngle = 180;
 						}
 						if(player.getX() - player.getWidth()/2 < wall.getX() + wall.getWidth()/2 
 								&& oldX - player.getWidth()/2 > wall.getX() + wall.getWidth()/2){
-							player.setX(oldX);
+							//player.setX(oldX);
+							xChange = true;
+							newAngle = 270;
 						}
 					} else if (player.getAngle() == 315) {
 						if(player.getY() - player.getHeight()/2 < wall.getY() + wall.getHeight()/2 
 								&& oldY - player.getHeight()/2 > wall.getY() + wall.getHeight()/2){
-							player.setY(oldY);
+							//player.setY(oldY);
+							yChange = true;
+							newAngle = 0;
 						}
 						if(player.getX() + player.getWidth()/2 > wall.getX() - wall.getWidth()/2 
 								&& oldX + player.getWidth()/2 < wall.getX() - wall.getWidth()/2){
-							player.setX(oldX);
+							//player.setX(oldX);
+							xChange = true;
+							newAngle = 270;
 						}
 					}
 				}
 			}
+		}
+		if(xChange && yChange) {
+			player.setX(oldX);
+			player.setY(oldY);
+		} else if(newAngle != -1) {
+			player.setX(oldX);
+			player.setY(oldY);
+			processPlayerMove(newAngle);
 		}
 	}
 	
@@ -869,26 +864,74 @@ public class ShooterEngine {
 				enemyIt.remove();
 
 			} else {
+				/*
 				float oldX = enemy.getX();
 				float oldY = enemy.getY();
 				
 				enemy.move(player);
-				List<Entity> enemyBullets = enemy.attack(player);
-				if(enemyBullets != null) {
-					this.enemyBulletList.addAll(enemyBullets);
-				}
-				
+
 				for(Room room: this.level.getRoomList()) {
 					for(Entity wall: room.getWallList()) {
 						if(wall.collisionDetection(enemy)) {
 							//TODO change this from not moving to pointing in the direction of the closest edge of the wall
-							enemy.setX(oldX);
-							enemy.setY(oldY);
+							//enemy.setX(oldX);
+							//enemy.setY(oldY);
+							if(enemy.getX() != oldX || enemy.getY() != oldY){
+								if(enemy.getAngle() == 0 || enemy.getAngle() == 90 || enemy.getAngle() == 180 || enemy.getAngle() == 270) {
+									enemy.setX(oldX);
+									enemy.setY(oldY);
+								} else if(enemy.getAngle() > 0 && enemy.getAngle() < 90){
+									//TODO refactor when non-squares come into play
+									// TODO change from reseting to oldX oldY to reseting both and switching the angle to preserve momentum
+									if(enemy.getY() + enemy.getHeight()/2 > wall.getY() - wall.getHeight()/2 
+											&& oldY + enemy.getHeight()/2 < wall.getY() - wall.getHeight()/2){
+										enemy.setY(oldY);
+									}
+									if(enemy.getX() + enemy.getWidth()/2 > wall.getX() - wall.getWidth()/2 
+											&& oldX + enemy.getWidth()/2 < wall.getX() - wall.getWidth()/2){
+										enemy.setX(oldX);
+									}
+								} else if(enemy.getAngle() > 90  && enemy.getAngle() < 180) {
+									if(enemy.getY() + enemy.getHeight()/2 > wall.getY() - wall.getHeight()/2 
+											&& oldY + enemy.getHeight()/2 < wall.getY() - wall.getHeight()/2){
+										enemy.setY(oldY);
+									}
+									if(enemy.getX() - enemy.getWidth()/2 < wall.getX() + wall.getWidth()/2 
+											&& oldX - enemy.getWidth()/2 > wall.getX() + wall.getWidth()/2){
+										enemy.setX(oldX);
+									}
+								} else if(enemy.getAngle() > 180 && enemy.getAngle() < 270) {
+									if(enemy.getY() - enemy.getHeight()/2 < wall.getY() + wall.getHeight()/2 
+											&& oldY - enemy.getHeight()/2 > wall.getY() + wall.getHeight()/2){
+										enemy.setY(oldY);
+									}
+									if(enemy.getX() - enemy.getWidth()/2 < wall.getX() + wall.getWidth()/2 
+											&& oldX - enemy.getWidth()/2 > wall.getX() + wall.getWidth()/2){
+										enemy.setX(oldX);
+									}
+								} else if (enemy.getAngle() > 270 && enemy.getAngle() < 360) {
+									if(enemy.getY() - enemy.getHeight()/2 < wall.getY() + wall.getHeight()/2 
+											&& oldY - enemy.getHeight()/2 > wall.getY() + wall.getHeight()/2){
+										enemy.setY(oldY);
+									}
+									if(enemy.getX() + enemy.getWidth()/2 > wall.getX() - wall.getWidth()/2 
+											&& oldX + enemy.getWidth()/2 < wall.getX() - wall.getWidth()/2){
+										enemy.setX(oldX);
+									}
+								}
+							}
 						}
 					}
 				}
-				
+							*/	
+				List<Entity> enemyBullets = enemy.attack(player);
+				if(enemyBullets != null) {
+					this.enemyBulletList.addAll(enemyBullets);
+				}
+				enemy.processMovementTick(player, this.level.getRoomList());
+
 				renderEntity(enemy);
+
 			}
 		}
 		return true;

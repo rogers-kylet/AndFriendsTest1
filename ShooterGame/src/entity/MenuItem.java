@@ -9,6 +9,8 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
+import room.Room;
+
 public class MenuItem extends BasicEntity {
 
 	private Texture texture;
@@ -80,6 +82,11 @@ public class MenuItem extends BasicEntity {
 	public List<Entity> attack(Entity target) throws IOException { return null; }
 	@Override
 	public void setTexture(Texture texture) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void processMovementTick(Entity target, List<Room> entityList) {
 		// TODO Auto-generated method stub
 		
 	}

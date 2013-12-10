@@ -11,6 +11,8 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
+import room.Room;
+
 import weapon.BasicWeapon;
 import weapon.CircleShot;
 import weapon.DoubleShot;
@@ -60,8 +62,8 @@ public class Player extends BasicEntity {
 		this.entityType=entityClass.PLAYER;
 		this.maxHealth=10f;
 		this.baseHealth=5f;
-		this.maxSpeed=3f;
-		this.speed=3f;
+		this.maxSpeed=5f;
+		this.speed=5f;
 		this.minimumSpeed=3f;
 		this.name="Player";
 		this.rotation=0f;
@@ -248,6 +250,12 @@ public class Player extends BasicEntity {
 	public List<Entity> attack(Entity target) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void processMovementTick(Entity target, List<Room> entityList) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

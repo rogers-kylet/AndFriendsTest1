@@ -9,6 +9,8 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
+import room.Room;
+
 import entity.BasicEntity.entityClass;
 
 public class BasicPickup extends BasicEntity {
@@ -137,5 +139,11 @@ public class BasicPickup extends BasicEntity {
 
 	@Override
 	public List<Entity> attack(Entity target) throws IOException { return null; }
+
+	@Override
+	public void processMovementTick(Entity target, List<Room> entityList) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
