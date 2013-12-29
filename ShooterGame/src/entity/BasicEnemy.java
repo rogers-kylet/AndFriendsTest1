@@ -32,8 +32,8 @@ public class BasicEnemy extends BasicEntity {
 		this.angle=90;
 		this.baseHealth=5f;
 		this.health=1f;
-		this.height=40f;
-		this.width=40f;
+		this.height=50f;
+		this.width=50f;
 		this.entityType=entityClass.HOSTILE;
 		this.maxHealth=10f;
 		this.maxSpeed=3f;
@@ -101,10 +101,13 @@ public class BasicEnemy extends BasicEntity {
 			GL11.glBegin(GL11.GL_QUADS);
 				GL11.glTexCoord2f(0,0);
 				GL11.glVertex2f(this.x - this.width/2, this.y - this.height/2);
+				
 				GL11.glTexCoord2f(this.texture.getWidth(),0);
 				GL11.glVertex2f(this.x + this.width/2, this.y - this.height/2);
+				
 				GL11.glTexCoord2f(this.texture.getWidth(),this.texture.getHeight());
 				GL11.glVertex2f(this.x + this.width/2, this.y + this.height/2);
+				
 				GL11.glTexCoord2f(0,this.texture.getHeight());
 				GL11.glVertex2f(this.x - this.width/2, this.y + this.height/2);
 			GL11.glEnd();

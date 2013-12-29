@@ -33,8 +33,8 @@ public class BasicProjectile extends BasicEntity {
 		this.width=20f;
 		this.entityType=entityClass.PROJECTILE;
 		this.maxHealth=10f;
-		this.maxSpeed=5f;
-		this.speed=5f;
+		this.maxSpeed=10f;
+		this.speed=10f;
 		this.minimumSpeed=5f;
 		this.name="Unnamed Projectile "+eid;
 		this.rotation=0f;

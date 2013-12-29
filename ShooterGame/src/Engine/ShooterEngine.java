@@ -115,8 +115,9 @@ public class ShooterEngine {
 			// TODO figure out a better way to do this, save settings to file, change in game etc etc etc
 			resolutionWidth = 1280;
 			resolutionHeight = 720;
-			Display.setDisplayMode(new DisplayMode(resolutionWidth, resolutionHeight));
+			//Display.setDisplayMode(new DisplayMode(resolutionWidth, resolutionHeight));
 			//TODO need to change this creation code to set more specific things, deff add some multisampling
+			setDisplayMode(resolutionWidth, resolutionHeight, Display.isFullscreen());
 			Display.create();
 		} catch (LWJGLException e) {
 			e.printStackTrace();
@@ -185,7 +186,7 @@ public class ShooterEngine {
 			if(!pause) {
 				//rotate quad
 				// TODO remove this code, rotation should be done, being left for now becuase it makes the basic tests more fun to see movement
-				rotation += 0.15f * delta;
+				//rotation += 0.15f * delta;
 			
 				//BEGIN COMPLETED REFACTOR
 				//------------------------
@@ -209,6 +210,8 @@ public class ShooterEngine {
 				//Attempt movement if any keys were pressed
 				if(movementDelta>-1) {
 					processPlayerMove(movementDelta);
+				} else {
+					player.setAnimation("idle");
 				}
 				
 				//shotFireDelta - Direction shot should fire, if allowed.
@@ -366,6 +369,7 @@ public class ShooterEngine {
 	}
 
 	private void processPlayerMove(float newAngle2) {
+		player.setAnimation("walk");
 		player.setAngle(newAngle2);
 		float oldX = player.getX(), oldY = player.getY(), newAngle = -1;
 		boolean xChange = false, yChange = false;
@@ -388,12 +392,10 @@ public class ShooterEngine {
 			for(Entity wall: room.getWallList()) {
 				if(wall.collisionDetection(player)) {
 					
-					System.out.println(player.getAngle());
 					if(player.getAngle() == 0 || player.getAngle() == 90 || player.getAngle() == 180 || player.getAngle() == 270) {
 						player.setX(oldX);
 						player.setY(oldY);
 
-						System.out.println(player.getAngle());
 					} else if(player.getAngle() == 45){
 						//TODO refactor when non-squares come into play
 						// TODO change from reseting to oldX oldY to reseting both and switching the angle to preserve momentum
@@ -701,6 +703,7 @@ public class ShooterEngine {
 	}
 	
 	public void processPauseScreen() {
+		processBackground();
 		// Process and render rooms
 		processRoom();
 		
@@ -762,7 +765,7 @@ public class ShooterEngine {
 	
 	public void processRoom() {
 		for(Room room : this.level.getRoomList()) {
-			for(Entity background : room.getBackground()) { renderEntity(background); }
+			//for(Entity background : room.getBackground()) { renderEntity(background); }
 			for(Entity wall : room.getWallList()) {
 				
 				//Only check for collision if the wall was rendered

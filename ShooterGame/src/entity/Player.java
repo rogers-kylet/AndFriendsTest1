@@ -11,7 +11,13 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
+import animation.BasicFrameData;
+import animation.FrameData;
+import animation.PlayerAnimation;
+
 import room.Room;
+import timer.BasicTimer;
+import timer.Timer;
 
 import weapon.BasicWeapon;
 import weapon.CircleShot;
@@ -48,6 +54,10 @@ public class Player extends BasicEntity {
 	private Weapon weapon;
 	private int weaponIndex;
 	private List<Weapon> weaponList;
+	
+	private Timer frameTimer;
+	
+	private PlayerAnimation animation;
 
 	public Player(float x, float y, float z, int eid) throws IOException {
 		this.x = x;
@@ -57,8 +67,8 @@ public class Player extends BasicEntity {
 		this.angle=0f;
 		this.baseHealth=5f;
 		this.health=5f;
-		this.height=50f;
-		this.width=50f;
+		this.height=100f;
+		this.width=100f;
 		this.entityType=entityClass.PLAYER;
 		this.maxHealth=10f;
 		this.baseHealth=5f;
@@ -72,7 +82,12 @@ public class Player extends BasicEntity {
 		this.eid = eid;
 		this.hitSfx = "playerhit";
 		this.displayed = true;
-		this.texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/images/" + "Player" + ".png"));
+		this.texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/images/" + "Player-Sprite-Sheet-2" + ".png"));
+		
+		this.animation = new PlayerAnimation();
+		
+		this.frameTimer = new BasicTimer(15);
+		this.frameTimer.reset();
 		
 		//TODO need to make a weapon builder that can add the various properties of these weapons
 		Weapon weapon = new BasicWeapon();
@@ -117,18 +132,55 @@ public class Player extends BasicEntity {
 				GL11.glRotatef(this.rotation, 0f, 0f, 1f);
 				GL11.glTranslatef(-this.x, -this.y, 0);
 			
+				FrameData frameData = animation.getCurrentFrame();
+				float texX = frameData.getTexX();
+				float texY = frameData.getTexY();
+				float texWidth = frameData.getTexWidth();
+				float texHeight = frameData.getTexHeight();
+				float imgWidthScale = this.texture.getTextureWidth();
+				float imgHeightScale = this.texture.getTextureHeight();
+				
+				if((this.angle >= 0 && this.angle <= 90) || this.angle <= 360 && this.angle >= 270) {
+					
+				} else {
+					texWidth = -texWidth;
+				}
+				
+				//System.out.println(imgWidthScale + " " + this.texture.getTextureWidth() + " " + this.texture.getWidth());
+				//System.out.println( (texX - texWidth/2f));
+				//System.out.println( (texX - texWidth/2f)/imgWidthScale);
 				GL11.glBegin(GL11.GL_QUADS);
-					GL11.glTexCoord2f(0,0);
+					//GL11.glTexCoord2f(texX - texWidth/2f,texY - texHeight/2f);
+					//GL11.glTexCoord2f(0f, 0f);
+					//GL11.glTexCoord2f((texX - texWidth/2f)/imgWidthScale,texY - texHeight/2f);
+					GL11.glTexCoord2f((texX - texWidth/2f)/imgWidthScale,(texY - texHeight/2f)/imgHeightScale);
 					GL11.glVertex2f(this.x - this.width/2, this.y - this.height/2);
-					GL11.glTexCoord2f(this.texture.getWidth(),0);
+					
+					//GL11.glTexCoord2f(texX + texWidth/2f,texY - texHeight/2f);
+					//GL11.glTexCoord2f(1f, 0f);
+					//GL11.glTexCoord2f((texX + texWidth/2f)/imgWidthScale,texY - texHeight/2f);
+					GL11.glTexCoord2f((texX + texWidth/2f)/imgWidthScale,(texY - texHeight/2f)/imgHeightScale);
 					GL11.glVertex2f(this.x + this.width/2, this.y - this.height/2);
-					GL11.glTexCoord2f(this.texture.getWidth(),this.texture.getHeight());
+					
+					//GL11.glTexCoord2f(texX + texWidth/2f,texY + texHeight/2f);
+					//GL11.glTexCoord2f(1f, 1f);
+					//GL11.glTexCoord2f((texX + texWidth/2f)/imgWidthScale,texY + texHeight/2f);
+					GL11.glTexCoord2f((texX + texWidth/2f)/imgWidthScale,(texY + texHeight/2f)/imgHeightScale);
 					GL11.glVertex2f(this.x + this.width/2, this.y + this.height/2);
-					GL11.glTexCoord2f(0,this.texture.getHeight());
+					
+					//GL11.glTexCoord2f(texX - texWidth/2f,texY + texHeight/2f);
+					//GL11.glTexCoord2f(0f, 1f);
+					//GL11.glTexCoord2f((texX - texWidth/2f)/imgWidthScale,texY + texHeight/2f);
+					GL11.glTexCoord2f((texX - texWidth/2f)/imgWidthScale,(texY + texHeight/2f)/imgHeightScale);
 					GL11.glVertex2f(this.x - this.width/2, this.y + this.height/2);
 				GL11.glEnd();
 				
 			GL11.glPopMatrix();
+			if(this.frameTimer.isStopped()) {
+				this.frameTimer.reset();
+			} else {
+				this.frameTimer.countDown();
+			}
 		}
 		
 		//Check if player invincibility flash is toggled
@@ -217,6 +269,10 @@ public class Player extends BasicEntity {
 	
 	public void scrollWeaponDown(){
 		this.changeWeapon(this.weaponIndex - 1);
+	}
+	
+	public void setAnimation(String animation) {
+		this.animation.setCurrentAnimation(animation);
 	}
 	
 	public boolean isCanShoot() { return canShoot; }
