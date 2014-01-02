@@ -87,6 +87,7 @@ public class LevelGeneration {
 							tempBack.setTexture("endRoom");
 							BasicPickup endDoor = new BasicPickup(nextRoom.getX(), nextRoom.getY(), 0, 0, 40, 40);
 							endDoor.setPickupType("end");
+							nextRoom.setType("end");
 							List<Entity> pickUpList = new ArrayList<Entity>();
 							pickUpList.add(endDoor);
 							nextRoom.setPickupList(pickUpList);
@@ -103,6 +104,37 @@ public class LevelGeneration {
 		}
 		for(Room room : roomList) { room.generateWalls(); }
 		theLevel.setRoomList(roomList);
+		
+		Float minX = null, minY = null, maxX = null, maxY = null;
+		
+		//TODO add this into the other loop
+		// Get the max/min x and y values for the rooms
+		for(Room room: roomList) {
+			if(minX == null) { minX = room.getX(); }
+			if(minY == null) { minY = room.getY(); }
+			if(maxX == null) { maxX = room.getX(); }
+			if(maxY == null) { maxY = room.getY(); }
+			
+			if(room.getX() - room.getWidth()/2 < minX) {
+				minX = room.getX() - room.getWidth()/2;
+			}
+			
+			if(room.getX() + room.getWidth()/2 > maxX) {
+				maxX = room.getX() + room.getWidth()/2;
+			}
+			
+			if(room.getY() - room.getHeight()/2 < minY) {
+				minY = room.getY() - room.getHeight()/2;
+			}
+			
+			if(room.getY() + room.getHeight()/2 > maxY) {
+				maxY = room.getY() + room.getHeight()/2;
+			}
+		}
+		theLevel.setxMin(minX);
+		theLevel.setxMax(maxX);
+		theLevel.setyMin(minY);
+		theLevel.setyMax(maxY);
 		return theLevel;
 	}
 

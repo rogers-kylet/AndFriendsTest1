@@ -110,7 +110,7 @@ public class PlayerAnimation {
 			}
 			this.frameTimer.setStartValue(currentFrame.getDelay());
 			this.frameTimer.reset();
-			System.out.println("The current frame is: " + (this.currentFrame.getFrameNumber() + 1));
+			//System.out.println("The current frame is: " + (this.currentFrame.getFrameNumber() + 1));
 		}
 		return currentFrame; 
 	}

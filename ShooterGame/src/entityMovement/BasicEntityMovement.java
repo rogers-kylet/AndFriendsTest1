@@ -103,7 +103,7 @@ public class BasicEntityMovement implements EntityMovement {
 						entity.setX(oldX);
 						entity.setY(oldY);
 
-						System.out.println(entity.getAngle());
+						//System.out.println(entity.getAngle());
 					} else if(entity.getAngle() > 0 && entity.getAngle() < 90){
 						//TODO refactor when non-squares come into play
 						// TODO change from reseting to oldX oldY to reseting both and switching the angle to preserve momentum

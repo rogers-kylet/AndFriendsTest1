@@ -39,4 +39,20 @@ public interface Level {
 	String getBackgroundMusic();
 
 	void setBackgroundMusic(String backgroundMusic);
+
+	float getxMin();
+
+	void setxMin(float xMin);
+
+	float getxMax();
+
+	void setxMax(float xMax);
+
+	float getyMin();
+
+	void setyMin(float yMin);
+
+	float getyMax();
+
+	void setyMax(float yMax);
 }

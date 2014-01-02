@@ -48,6 +48,7 @@ public class Player extends BasicEntity {
 	private int flashTimer = 0;
 	private int shooterTimer = 0;
 	boolean canShoot = true;
+	boolean canJump = true;
 	
 	private Texture texture;
 	
@@ -64,6 +65,7 @@ public class Player extends BasicEntity {
 		this.y = y;
 		this.z = z;
 		this.acceleration = new Vector3f(0,0,0);
+		this.minAcceleration = new Vector3f(0, -5, 0);
 		this.angle=0f;
 		this.baseHealth=5f;
 		this.health=5f;
@@ -88,6 +90,12 @@ public class Player extends BasicEntity {
 		
 		this.frameTimer = new BasicTimer(15);
 		this.frameTimer.reset();
+		
+		this.xSpeed = 5f;
+		this.ySpeed = 0f;
+		this.gravity = -.5f;
+		this.minimumYSpeed = -10;
+		this.maxYSpeed = 20f;
 		
 		//TODO need to make a weapon builder that can add the various properties of these weapons
 		Weapon weapon = new BasicWeapon();
@@ -116,7 +124,7 @@ public class Player extends BasicEntity {
 		if(displayed){
 			
 			if(!invincible){
-			Color.white.bind();
+				Color.white.bind();
 			} else {
 				Color.red.bind();
 			}
@@ -221,8 +229,23 @@ public class Player extends BasicEntity {
 
 	@Override
 	protected void processMovementTick(Entity target) {
-		this.x += this.speed * Math.cos(Math.toRadians(angle));
-		this.y += this.speed * Math.sin(Math.toRadians(angle));		
+		if(this.acceleration.y > this.minAcceleration.y) {
+			this.acceleration.y += gravity;
+		} else {
+			this.acceleration.y = this.minAcceleration.y;
+		}
+		
+		if(target != null) {
+			this.x += this.xSpeed * Math.cos(Math.toRadians(angle));
+		}
+		//this.y += this.speed * Math.sin(Math.toRadians(angle));	
+		//TODO make this better
+		this.ySpeed += this.acceleration.y;
+
+		if(this.ySpeed < this.minimumYSpeed) {
+			this.ySpeed = this.minimumYSpeed;
+		}
+		this.y -= this.ySpeed;
 	}
 
 	// Hurts the player by the given amount of damage
@@ -314,6 +337,28 @@ public class Player extends BasicEntity {
 		
 	}
 	
+	// TODO need to make the jump uniorm, right now it's slower on the down than up
+	public synchronized void jump() {
+		if(this.canJump) {
+			this.acceleration.y = 6f;
+			this.canJump = false;
+		}
+		
+	}
+
+	public boolean isCanJump() { return canJump; }
+
+	public void setCanJump(boolean canJump) { this.canJump = canJump; }	
 	
+	public void onGround() {
+		this.canJump = true;
+		//this.acceleration.y = 0;
+		//this.ySpeed = this.minimumYSpeed;
+	}
 	
+	public void hitCeiling() {
+		if(this.acceleration.y > 0) {
+			this.acceleration.y = 0;
+		}
+	}
 }

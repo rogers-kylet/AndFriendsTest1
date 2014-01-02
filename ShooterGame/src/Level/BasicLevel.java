@@ -14,9 +14,12 @@ public class BasicLevel implements Level {
 	List<MenuItem> menuItems;
 	List<Room> roomList;
 	LevelGeneration generation;
+	float xMin, xMax, yMin, yMax;
+	
 	public BasicLevel(){
 		
 	}
+	
 	@Override
 	public String getName() { return name; }
 	
@@ -46,5 +49,31 @@ public class BasicLevel implements Level {
 	
 	@Override
 	public void setBackgroundMusic(String backgroundMusic) { this.backgroundMusic = backgroundMusic; }
+
+	@Override
+	public float getxMin() { return xMin; }
+
+	@Override
+	public void setxMin(float xMin) { this.xMin = xMin; }
+
+	@Override
+	public float getxMax() { return xMax; }
+
+	@Override
+	public void setxMax(float xMax) { this.xMax = xMax; }
+
+	@Override
+	public float getyMin() { return yMin; }
+
+	@Override
+	public void setyMin(float yMin) { this.yMin = yMin; }
+
+	@Override
+	public float getyMax() { return yMax; }
+
+	@Override
+	public void setyMax(float yMax) { this.yMax = yMax; }
+	
+	
 	
 }

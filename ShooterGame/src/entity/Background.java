@@ -5,15 +5,14 @@ import java.io.IOException;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 
-public class BasicWall extends BasicBackground {
+public class Background extends BasicBackground implements Entity {
 
-	public BasicWall(float x, float y, float z, int eid, float width,
+	public Background(float x, float y, float z, int eid, float width,
 			float height) throws IOException {
 		super(x, y, z, eid, width, height);
 	}
 
-	@Override
-	public void render() {
+	public void render(float minX, float maxX, float minY, float maxY) {
 		switch(mask) {
 		case 1:
 			Color.white.bind();
@@ -57,18 +56,29 @@ public class BasicWall extends BasicBackground {
 	
 			// Replace glBeing with vertex buffer
 		
+		float xLeftDenom = Math.abs(maxX - minX);
+		float xRightDenom = this.texture.getWidth()/2;
+		float xLeftNum = Math.abs(this.getX() - minX);
+		
+		float xRightNum = xRightDenom*xLeftNum/xLeftDenom + this.texture.getWidth()/2/2;
+		
+		float yLeftDenom = Math.abs(maxY - minY);
+		float yRightDenom = this.texture.getHeight()/2;
+		float yLeftNum = Math.abs(this.getY() - minY);
+		
+		float yRightNum = yRightDenom*yLeftNum/yLeftDenom + this.texture.getHeight()/2/2;
 		
 			GL11.glBegin(GL11.GL_QUADS);
-					GL11.glTexCoord2f(0,0);
+					GL11.glTexCoord2f(xRightNum - this.texture.getWidth()/2/2,yRightNum - this.texture.getHeight()/2/2);
 					GL11.glVertex2f(this.x - this.width/2, this.y - this.height/2);
 					
-					GL11.glTexCoord2f(this.texture.getWidth(),0);
+					GL11.glTexCoord2f(xRightNum + this.texture.getWidth()/2/2,yRightNum - this.texture.getHeight()/2/2);
 					GL11.glVertex2f(this.x + this.width/2, this.y - this.height/2);
 					
-					GL11.glTexCoord2f(this.texture.getWidth(),this.texture.getHeight());
+					GL11.glTexCoord2f(xRightNum + this.texture.getWidth()/2/2,yRightNum + this.texture.getHeight()/2/2);
 					GL11.glVertex2f(this.x + this.width/2, this.y + this.height/2);
 					
-					GL11.glTexCoord2f(0,this.texture.getHeight());
+					GL11.glTexCoord2f(xRightNum - this.texture.getWidth()/2/2,yRightNum + this.texture.getHeight()/2/2);
 					GL11.glVertex2f(this.x - this.width/2, this.y + this.height/2);
 			GL11.glEnd();
 			

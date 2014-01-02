@@ -23,6 +23,7 @@ import org.newdawn.slick.openal.AudioLoader;
 import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.util.ResourceLoader;
 
+import entity.Background;
 import entity.BasicBackground;
 import entity.BasicPickup;
 import entity.BasicWall;
@@ -108,7 +109,7 @@ public class ShooterEngine {
 	
 	PauseOverlay pauseOverlay;
 	
-	BasicBackground theBackground;
+	Background theBackground;
 	
 	public void start() throws IOException{
 		try{
@@ -142,8 +143,8 @@ public class ShooterEngine {
 		enemyTimer = 60;
 		
 		//TODO temp for checking background support
-		theBackground = new BasicWall(400,300,0, 0, resolutionWidth, resolutionHeight);
-		theBackground.setTexture("background");
+		theBackground = new Background(400,300,0, 0, resolutionWidth, resolutionHeight);
+		theBackground.setTexture("sketch background");
 		changeLevel("Menu");
 		
 		playMusic(level.getBackgroundMusic());
@@ -198,6 +199,7 @@ public class ShooterEngine {
 				//Handle movement angle calculations
 				//Angle of movement is read right to left as description above
 				
+				/*
 				//Checks if player is moving up, up-left, or up-right respectively.
 				if(Keyboard.isKeyDown(Keyboard.KEY_W)) movementDelta = (Keyboard.isKeyDown(Keyboard.KEY_D)?315:(Keyboard.isKeyDown(Keyboard.KEY_A)?215:270));
 				//Checks if player is moving left or down-left.
@@ -206,14 +208,20 @@ public class ShooterEngine {
 				else if(Keyboard.isKeyDown(Keyboard.KEY_S)) movementDelta = (Keyboard.isKeyDown(Keyboard.KEY_D)?45:90);
 				//Checks if player is moving right
 				else if(Keyboard.isKeyDown(Keyboard.KEY_D)) movementDelta = 0;
+				*/
 				
-				//Attempt movement if any keys were pressed
-				if(movementDelta>-1) {
-					processPlayerMove(movementDelta);
-				} else {
-					player.setAnimation("idle");
+				if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+					player.jump();	
 				}
 				
+				if(Keyboard.isKeyDown(Keyboard.KEY_A)) movementDelta = 180;
+				else if(Keyboard.isKeyDown(Keyboard.KEY_D)) movementDelta = 0;
+				//Attempt movement if any keys were pressed
+				if(movementDelta<=-1) {
+					player.setAnimation("idle");
+				}
+				processPlayerMove(movementDelta);
+
 				//shotFireDelta - Direction shot should fire, if allowed.
 				int shotFireDelta = -1;
 				
@@ -369,12 +377,19 @@ public class ShooterEngine {
 	}
 
 	private void processPlayerMove(float newAngle2) {
-		player.setAnimation("walk");
-		player.setAngle(newAngle2);
+		if(newAngle2 != -1) {
+			player.setAnimation("walk");
+			player.setAngle(newAngle2);
+		}
 		float oldX = player.getX(), oldY = player.getY(), newAngle = -1;
 		boolean xChange = false, yChange = false;
 		
-		player.move();
+		if(newAngle2 == -1) {
+			player.move(null);
+		} else {
+			player.move();
+		}
+		
 		for(Room room: this.level.getRoomList()) {
 			if(!room.isEntered()) {
 				//TODO maybe room should extend entity to use the onScreen method....
@@ -392,75 +407,32 @@ public class ShooterEngine {
 			for(Entity wall: room.getWallList()) {
 				if(wall.collisionDetection(player)) {
 					
-					if(player.getAngle() == 0 || player.getAngle() == 90 || player.getAngle() == 180 || player.getAngle() == 270) {
-						player.setX(oldX);
+					// TODO need to figure out why the second part of the code wasn't working and fix it so it does
+					//TODO this whole thing got screwed up at some point, so fix it
+					if(player.getY() + player.getHeight()/2 >= wall.getY() - wall.getHeight()/2 
+							&& oldY + player.getHeight()/2 <= wall.getY() - wall.getHeight()/2){
+						player.onGround();
+						player.setY(oldY);
+					}
+					
+					if(player.getY() - player.getHeight()/2 <= wall.getY() + wall.getHeight()/2 
+							&& oldY - player.getHeight()/2 >= wall.getY() + wall.getHeight()/2){
+						//player.hitCeiling();
 						player.setY(oldY);
 
-					} else if(player.getAngle() == 45){
-						//TODO refactor when non-squares come into play
-						// TODO change from reseting to oldX oldY to reseting both and switching the angle to preserve momentum
-						if(player.getY() + player.getHeight()/2 > wall.getY() - wall.getHeight()/2 
-								&& oldY + player.getHeight()/2 < wall.getY() - wall.getHeight()/2){
-							//player.setY(oldY);
-							yChange = true;
-							newAngle = 0;
-						}
-						if(player.getX() + player.getWidth()/2 > wall.getX() - wall.getWidth()/2 
-								&& oldX + player.getWidth()/2 < wall.getX() - wall.getWidth()/2){
-							//player.setX(oldX);
-							xChange = true;
-							newAngle = 90;
-						}
-					} else if(player.getAngle() == 135) {
-						if(player.getY() + player.getHeight()/2 > wall.getY() - wall.getHeight()/2 
-								&& oldY + player.getHeight()/2 < wall.getY() - wall.getHeight()/2){
-							//player.setY(oldY);
-							yChange = true;
-							newAngle = 180;
-						}
-						if(player.getX() - player.getWidth()/2 < wall.getX() + wall.getWidth()/2 
-								&& oldX - player.getWidth()/2 > wall.getX() + wall.getWidth()/2){
-							//player.setX(oldX);
-							xChange = true;
-							newAngle = 90;
-						}
-					} else if(player.getAngle() == 215) {
-						if(player.getY() - player.getHeight()/2 < wall.getY() + wall.getHeight()/2 
-								&& oldY - player.getHeight()/2 > wall.getY() + wall.getHeight()/2){
-							//player.setY(oldY);
-							yChange = true;
-							newAngle = 180;
-						}
-						if(player.getX() - player.getWidth()/2 < wall.getX() + wall.getWidth()/2 
-								&& oldX - player.getWidth()/2 > wall.getX() + wall.getWidth()/2){
-							//player.setX(oldX);
-							xChange = true;
-							newAngle = 270;
-						}
-					} else if (player.getAngle() == 315) {
-						if(player.getY() - player.getHeight()/2 < wall.getY() + wall.getHeight()/2 
-								&& oldY - player.getHeight()/2 > wall.getY() + wall.getHeight()/2){
-							//player.setY(oldY);
-							yChange = true;
-							newAngle = 0;
-						}
-						if(player.getX() + player.getWidth()/2 > wall.getX() - wall.getWidth()/2 
-								&& oldX + player.getWidth()/2 < wall.getX() - wall.getWidth()/2){
-							//player.setX(oldX);
-							xChange = true;
-							newAngle = 270;
-						}
+					}
+					
+					if(player.getX() + player.getWidth()/2 >= wall.getX() - wall.getWidth()/2 
+							&& oldX + player.getWidth()/2 <= wall.getX() - wall.getWidth()/2){
+						player.setX(oldX);
+					}
+					
+					if(player.getX() - player.getWidth()/2 <= wall.getX() + wall.getWidth()/2 
+							&& oldX - player.getWidth()/2 >= wall.getX() + wall.getWidth()/2){
+						player.setX(oldX);
 					}
 				}
 			}
-		}
-		if(xChange && yChange) {
-			player.setX(oldX);
-			player.setY(oldY);
-		} else if(newAngle != -1) {
-			player.setX(oldX);
-			player.setY(oldY);
-			processPlayerMove(newAngle);
 		}
 	}
 	
@@ -760,7 +732,7 @@ public class ShooterEngine {
 	public void processBackground() {
 		this.theBackground.setX(player.getX());
 		this.theBackground.setY(player.getY());
-		this.theBackground.render();
+		this.theBackground.render(level.getxMin(), level.getxMax(), level.getyMin(), level.getyMax());
 	}
 	
 	public void processRoom() {
@@ -959,7 +931,7 @@ public class ShooterEngine {
 		if(levelName.equals("Gameplay")){
 			
 			//TODO change this to be specific to the levels start room
-			player.setX(400); player.setY(300);
+			player.setX(400); player.setY(200);
 			
 			// Switch the level
 			this.level = LevelGeneration.generateLevel("level", 0);

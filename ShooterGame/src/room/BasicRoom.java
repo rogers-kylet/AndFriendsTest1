@@ -79,6 +79,10 @@ public class BasicRoom implements Room {
 				wallList.add(background1);
 			}
 		}
+		if(!this.type.equals("end")) {
+			BasicWall platform = new BasicWall(this.getX(),this.getY(),0,0, this.width/2, 40);
+			wallList.add(platform);
+		}
 	}
 	
 	@Override

@@ -55,6 +55,54 @@ public class BasicMenu implements Level {
 	
 	@Override
 	public void setBackgroundMusic(String backgroundMusic) { this.backgroundMusic = backgroundMusic; }
+
+	@Override
+	public float getxMin() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setxMin(float xMin) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public float getxMax() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setxMax(float xMax) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public float getyMin() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setyMin(float yMin) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public float getyMax() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setyMax(float yMax) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 
 }

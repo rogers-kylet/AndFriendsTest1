@@ -97,10 +97,14 @@ public class BasicBackground extends BasicEntity {
 			GL11.glBegin(GL11.GL_QUADS);
 					GL11.glTexCoord2f(0,0);
 					GL11.glVertex2f(this.x - this.width/2, this.y - this.height/2);
+					
 					GL11.glTexCoord2f(10,0);
+					
 					GL11.glVertex2f(this.x + this.width/2, this.y - this.height/2);
+					
 					GL11.glTexCoord2f(10,10);
 					GL11.glVertex2f(this.x + this.width/2, this.y + this.height/2);
+					
 					GL11.glTexCoord2f(0,10);
 					GL11.glVertex2f(this.x - this.width/2, this.y + this.height/2);
 			GL11.glEnd();

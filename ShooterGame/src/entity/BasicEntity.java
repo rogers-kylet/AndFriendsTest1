@@ -45,8 +45,11 @@ public abstract class BasicEntity implements Entity {
 
 	// The speed constraints and angular direction of the Entity
 	protected float minimumSpeed, speed, maxSpeed, angle;
+	protected float minimumXSpeed, xSpeed, maxXSpeed;
+	protected float minimumYSpeed, ySpeed, maxYSpeed, gravity;
 
 	protected Vector3f acceleration;
+	protected Vector3f minAcceleration;
 	
 	protected String hitSfx;
 
@@ -106,7 +109,9 @@ public abstract class BasicEntity implements Entity {
 		} else if (angle < 0) {
 			angle += 360;
 		}
-		this.angle = angle; }
+		this.angle = angle; 
+		
+	}
 
 	public Vector3f getAcceleration() { return acceleration; }
 
@@ -160,6 +165,22 @@ public abstract class BasicEntity implements Entity {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public float getxSpeed() { return xSpeed; }
+
+	public void setxSpeed(float xSpeed) { this.xSpeed = xSpeed; }
+
+	public float getySpeed() { return ySpeed; }
+
+	public void setySpeed(float ySpeed) { this.ySpeed = ySpeed; }
+
+	public float getGravity() { return gravity; }
+
+	public void setGravity(float gravity) { this.gravity = gravity; }
+
+	public boolean isInvincible() { return invincible; }
+
+	public void setInvincible(boolean invincible) { this.invincible = invincible; }
 	
 	
 }
