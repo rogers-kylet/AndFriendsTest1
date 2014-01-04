@@ -27,6 +27,10 @@ public class MenuItem extends BasicEntity {
 	@Override
 	public void render() {
 		Color.white.bind();
+		
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
 		texture.bind(); // or GL11.glBind(texture.getTextureID());
 		
 		GL11.glPushMatrix();
@@ -45,6 +49,8 @@ public class MenuItem extends BasicEntity {
 			GL11.glEnd();
 			
 		GL11.glPopMatrix();
+		
+		GL11.glDisable(GL11.GL_BLEND);
 
 	}
 
