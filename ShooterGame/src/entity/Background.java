@@ -56,29 +56,33 @@ public class Background extends BasicBackground implements Entity {
 	
 			// Replace glBeing with vertex buffer
 		
+		// The screen length relative to the screen placement
 		float xLeftDenom = Math.abs(maxX - minX);
-		float xRightDenom = this.texture.getWidth()/2;
+		// The amount of width to be displayed
+		float xRightDenom = this.texture.getWidth() * (1/3f);
+		// The position of the background relative to the left side of the screen
 		float xLeftNum = Math.abs(this.getX() - minX);
 		
-		float xRightNum = xRightDenom*xLeftNum/xLeftDenom + this.texture.getWidth()/2/2;
+		// The conversion of level coordinates to texture coordinates
+		float xRightNum = xRightDenom*xLeftNum/xLeftDenom + this.texture.getWidth() * (1/3f);
 		
 		float yLeftDenom = Math.abs(maxY - minY);
-		float yRightDenom = this.texture.getHeight()/2;
+		float yRightDenom = this.texture.getHeight() * (1/3f);
 		float yLeftNum = Math.abs(this.getY() - minY);
 		
-		float yRightNum = yRightDenom*yLeftNum/yLeftDenom + this.texture.getHeight()/2/2;
+		float yRightNum = yRightDenom*yLeftNum/yLeftDenom + this.texture.getHeight() * (1/3f);
 		
 			GL11.glBegin(GL11.GL_QUADS);
-					GL11.glTexCoord2f(xRightNum - this.texture.getWidth()/2/2,yRightNum - this.texture.getHeight()/2/2);
+					GL11.glTexCoord2f(xRightNum - this.texture.getWidth()/3,yRightNum - this.texture.getHeight()/3);
 					GL11.glVertex2f(this.x - this.width/2, this.y - this.height/2);
 					
-					GL11.glTexCoord2f(xRightNum + this.texture.getWidth()/2/2,yRightNum - this.texture.getHeight()/2/2);
+					GL11.glTexCoord2f(xRightNum + this.texture.getWidth()/3,yRightNum - this.texture.getHeight()/3);
 					GL11.glVertex2f(this.x + this.width/2, this.y - this.height/2);
 					
-					GL11.glTexCoord2f(xRightNum + this.texture.getWidth()/2/2,yRightNum + this.texture.getHeight()/2/2);
+					GL11.glTexCoord2f(xRightNum + this.texture.getWidth()/3,yRightNum + this.texture.getHeight()/3);
 					GL11.glVertex2f(this.x + this.width/2, this.y + this.height/2);
 					
-					GL11.glTexCoord2f(xRightNum - this.texture.getWidth()/2/2,yRightNum + this.texture.getHeight()/2/2);
+					GL11.glTexCoord2f(xRightNum - this.texture.getWidth()/3,yRightNum + this.texture.getHeight()/3);
 					GL11.glVertex2f(this.x - this.width/2, this.y + this.height/2);
 			GL11.glEnd();
 			

@@ -65,7 +65,7 @@ public class Player extends BasicEntity {
 		this.y = y;
 		this.z = z;
 		this.acceleration = new Vector3f(0,0,0);
-		this.minAcceleration = new Vector3f(0, -5, 0);
+		this.minAcceleration = new Vector3f(0, -6, 0);
 		this.angle=0f;
 		this.baseHealth=5f;
 		this.health=5f;
@@ -91,11 +91,11 @@ public class Player extends BasicEntity {
 		this.frameTimer = new BasicTimer(15);
 		this.frameTimer.reset();
 		
-		this.xSpeed = 5f;
+		this.xSpeed = 10f;
 		this.ySpeed = 0f;
-		this.gravity = -.5f;
-		this.minimumYSpeed = -10;
-		this.maxYSpeed = 20f;
+		this.gravity = -.75f;
+		this.minimumYSpeed = -15;
+		this.maxYSpeed = 15f;
 		
 		//TODO need to make a weapon builder that can add the various properties of these weapons
 		Weapon weapon = new BasicWeapon();
@@ -128,8 +128,14 @@ public class Player extends BasicEntity {
 			} else {
 				Color.red.bind();
 			}
-			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
-			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
+			
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+			GL11.glColor4d(1,1,1,1);
+			//GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
+			//GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
 			texture.bind(); // or GL11.glBind(texture.getTextureID());
 			//GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureID());
 			
@@ -184,6 +190,8 @@ public class Player extends BasicEntity {
 				GL11.glEnd();
 				
 			GL11.glPopMatrix();
+			
+			GL11.glDisable(GL11.GL_BLEND);
 			if(this.frameTimer.isStopped()) {
 				this.frameTimer.reset();
 			} else {
@@ -244,6 +252,9 @@ public class Player extends BasicEntity {
 
 		if(this.ySpeed < this.minimumYSpeed) {
 			this.ySpeed = this.minimumYSpeed;
+		}
+		if(this.ySpeed > this.maxYSpeed) {
+			this.ySpeed = this.maxYSpeed;
 		}
 		this.y -= this.ySpeed;
 	}
@@ -338,9 +349,10 @@ public class Player extends BasicEntity {
 	}
 	
 	// TODO need to make the jump uniorm, right now it's slower on the down than up
+	// TODO figure out why this is alternating between a high jump and a low jump
 	public synchronized void jump() {
 		if(this.canJump) {
-			this.acceleration.y = 6f;
+			this.acceleration.y = 15f;
 			this.canJump = false;
 		}
 		
@@ -357,8 +369,6 @@ public class Player extends BasicEntity {
 	}
 	
 	public void hitCeiling() {
-		if(this.acceleration.y > 0) {
-			this.acceleration.y = 0;
-		}
+		this.ySpeed = 0;
 	}
 }

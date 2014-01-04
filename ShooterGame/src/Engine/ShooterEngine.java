@@ -144,7 +144,7 @@ public class ShooterEngine {
 		
 		//TODO temp for checking background support
 		theBackground = new Background(400,300,0, 0, resolutionWidth, resolutionHeight);
-		theBackground.setTexture("sketch background");
+		theBackground.setTexture("horror level sketch");
 		changeLevel("Menu");
 		
 		playMusic(level.getBackgroundMusic());
@@ -393,6 +393,7 @@ public class ShooterEngine {
 		for(Room room: this.level.getRoomList()) {
 			if(!room.isEntered()) {
 				//TODO maybe room should extend entity to use the onScreen method....
+				// TODO possibly add fudge factor so that rooms that are directly outside the room 
 				if(
 						( room.getX() - room.getWidth() / 2 < ( player.getX() + resolutionWidth / 2 ) ) && 
 						( room.getX() + room.getWidth() / 2 > ( player.getX() - resolutionWidth / 2 ) ) && 
@@ -404,7 +405,10 @@ public class ShooterEngine {
 					this.pickupList.addAll(room.getPickupList());
 				}
 			}
+			// Loop through the walls in the room, and determine if 
 			for(Entity wall: room.getWallList()) {
+				// TODO add walls that you can conditionally move through (once you fully pass through it you can't move back
+				// TODO you know, if we need it anyway
 				if(wall.collisionDetection(player)) {
 					
 					// TODO need to figure out why the second part of the code wasn't working and fix it so it does
@@ -415,13 +419,16 @@ public class ShooterEngine {
 						player.setY(oldY);
 					}
 					
+					// TODO add support for walls that you can jump through from the buttom
 					if(player.getY() - player.getHeight()/2 <= wall.getY() + wall.getHeight()/2 
 							&& oldY - player.getHeight()/2 >= wall.getY() + wall.getHeight()/2){
-						//player.hitCeiling();
+						player.hitCeiling();
 						player.setY(oldY);
 
 					}
 					
+					// TODO do we need an angle dectection here? play around with it and see if it matters
+					// TODO add support for walls that you cna move through the left/right side of but not the other, if we need it anyway
 					if(player.getX() + player.getWidth()/2 >= wall.getX() - wall.getWidth()/2 
 							&& oldX + player.getWidth()/2 <= wall.getX() - wall.getWidth()/2){
 						player.setX(oldX);
@@ -543,12 +550,14 @@ public class ShooterEngine {
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glDisable(GL11.GL_LIGHTING);                    
  
-		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);                
+		GL11.glClearColor(0.0f, 0.0f, 0.0f, 10.0f);                
         GL11.glClearDepth(1);                                       
  
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
  
+        //GL11.glBlendFunc(GL11.GL_CONSTANT_ALPHA, GL11.GL_ONE_MINUS_CONSTANT_ALPHA); 
+        
         GL11.glViewport(0,0,resolutionWidth,resolutionHeight);
         
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
@@ -569,6 +578,7 @@ public class ShooterEngine {
 		
 		// Have the camera follow the player
 		if(gameState.isCameraFollow()){ GL11.glTranslatef(-player.getX()+(resolutionWidth / 2), -player.getY()+(resolutionHeight / 2), 0); }
+		//if(gameState.isCameraFollow()){ GL11.glTranslatef(-player.getX()+(resolutionWidth / 2), -player.getY()+(resolutionHeight / 2 + resolutionHeight/4), 0); } // Camera follow offset
 		
 		GL11.glPushMatrix();
 			// Clear the screen adn the deph buffer
@@ -732,6 +742,7 @@ public class ShooterEngine {
 	public void processBackground() {
 		this.theBackground.setX(player.getX());
 		this.theBackground.setY(player.getY());
+		//this.theBackground.setY(player.getY() - resolutionHeight/4); // Camera at the bottom of the scren
 		this.theBackground.render(level.getxMin(), level.getxMax(), level.getyMin(), level.getyMax());
 	}
 	
@@ -766,7 +777,7 @@ public class ShooterEngine {
 				
 				// Player collision with enemy
 				if(bullet.collisionDetection(player)){
-					player.hurtPlayer(1);
+					//player.hurtPlayer(1);
 					
 					// TODO replace with player.getHitSfx() once using entity player
 					sfxMap.get(player.getHitSfx()).playAsSoundEffect(1.0f, 1.0f, false);
@@ -813,7 +824,8 @@ public class ShooterEngine {
 			
 			// Player collision with enemy
 			if(enemy.collisionDetection(player)){
-				player.hurtPlayer(1);
+				
+				//player.hurtPlayer(1);
 				
 				// TODO replace with player.getHitSfx() once using entity player
 				sfxMap.get(player.getHitSfx()).playAsSoundEffect(1.0f, 1.0f, false);
