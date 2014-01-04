@@ -416,14 +416,14 @@ public class ShooterEngine {
 					if(player.getY() + player.getHeight()/2 >= wall.getY() - wall.getHeight()/2 
 							&& oldY + player.getHeight()/2 <= wall.getY() - wall.getHeight()/2){
 						player.onGround();
-						player.setY(oldY);
-					}
+						player.setY(wall.getY() - wall.getHeight()/2 - player.getHeight()/2);
+					} 
 					
 					// TODO add support for walls that you can jump through from the buttom
 					if(player.getY() - player.getHeight()/2 <= wall.getY() + wall.getHeight()/2 
 							&& oldY - player.getHeight()/2 >= wall.getY() + wall.getHeight()/2){
 						player.hitCeiling();
-						player.setY(oldY);
+						player.setY(wall.getY() + wall.getHeight()/2 + player.getHeight()/2);
 
 					}
 					
@@ -431,12 +431,12 @@ public class ShooterEngine {
 					// TODO add support for walls that you cna move through the left/right side of but not the other, if we need it anyway
 					if(player.getX() + player.getWidth()/2 >= wall.getX() - wall.getWidth()/2 
 							&& oldX + player.getWidth()/2 <= wall.getX() - wall.getWidth()/2){
-						player.setX(oldX);
+						player.setX(wall.getX() - wall.getWidth()/2 - player.getWidth()/2);
 					}
 					
 					if(player.getX() - player.getWidth()/2 <= wall.getX() + wall.getWidth()/2 
 							&& oldX - player.getWidth()/2 >= wall.getX() + wall.getWidth()/2){
-						player.setX(oldX);
+						player.setX(wall.getX() + wall.getWidth()/2 + player.getWidth()/2);
 					}
 				}
 			}
