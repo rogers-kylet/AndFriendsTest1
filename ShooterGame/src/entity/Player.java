@@ -350,7 +350,7 @@ public class Player extends BasicEntity {
 	// TODO figure out why this is alternating between a high jump and a low jump
 	public synchronized void jump() {
 		if(this.canJump) {
-			this.acceleration.y = 15f;
+			this.acceleration.y = 20f;
 			this.canJump = false;
 		}
 		

@@ -32,8 +32,8 @@ public class BasicEnemy extends BasicEntity {
 		this.angle=90;
 		this.baseHealth=5f;
 		this.health=1f;
-		this.height=50f;
-		this.width=50f;
+		this.height=75f;
+		this.width=75f;
 		this.entityType=entityClass.HOSTILE;
 		this.maxHealth=10f;
 		this.maxSpeed=3f;

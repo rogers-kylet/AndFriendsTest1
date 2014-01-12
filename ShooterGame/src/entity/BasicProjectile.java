@@ -29,8 +29,8 @@ public class BasicProjectile extends BasicEntity {
 		this.angle=0;
 		this.baseHealth=5f;
 		this.health=1f;
-		this.height=20f;
-		this.width=20f;
+		this.height=30f;
+		this.width=30f;
 		this.entityType=entityClass.PROJECTILE;
 		this.maxHealth=10f;
 		this.maxSpeed=10f;

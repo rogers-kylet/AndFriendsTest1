@@ -54,22 +54,22 @@ public class LevelGeneration {
 				if(!anchorPoint.isHooked()) {
 					Room nextRoom = new BasicRoom();
 					if(anchorPoint.getDirection().equals("left")){
-						nextRoom = buildRoom(anchorPoint.getX()-400,anchorPoint.getY());
+						nextRoom = buildRoom(anchorPoint.getX()-tempRoom.getWidth()/2,anchorPoint.getY());
 						for(AnchorPoint hookedAnchorPoint: nextRoom.getAnchorPoints()) {
 							if(hookedAnchorPoint.getDirection().equals("right")) { hookedAnchorPoint.setHooked(true); }
 						}
 					} else if(anchorPoint.getDirection().equals("right")){
-						nextRoom = buildRoom(anchorPoint.getX() + 400,anchorPoint.getY());
+						nextRoom = buildRoom(anchorPoint.getX() + tempRoom.getWidth()/2,anchorPoint.getY());
 						for(AnchorPoint hookedAnchorPoint: nextRoom.getAnchorPoints()) {
 							if(hookedAnchorPoint.getDirection().equals("left")) { hookedAnchorPoint.setHooked(true); }
 						}
 					} else if(anchorPoint.getDirection().equals("up")){
-						nextRoom = buildRoom(anchorPoint.getX(),anchorPoint.getY() - 300);
+						nextRoom = buildRoom(anchorPoint.getX(),anchorPoint.getY() - tempRoom.getHeight()/2);
 						for(AnchorPoint hookedAnchorPoint: nextRoom.getAnchorPoints()) {
 							if(hookedAnchorPoint.getDirection().equals("down")) { hookedAnchorPoint.setHooked(true); }
 						}
 					} else if(anchorPoint.getDirection().equals("down")){
-						nextRoom = buildRoom(anchorPoint.getX(),anchorPoint.getY() + 300);
+						nextRoom = buildRoom(anchorPoint.getX(),anchorPoint.getY() + tempRoom.getHeight()/2);
 						for(AnchorPoint hookedAnchorPoint: nextRoom.getAnchorPoints()) {
 							if(hookedAnchorPoint.getDirection().equals("up")) { hookedAnchorPoint.setHooked(true); }
 						}
@@ -144,8 +144,8 @@ public class LevelGeneration {
 			tempRoom.setX(x);
 			tempRoom.setY(y);
 			tempRoom.setRotation(0);
-			tempRoom.setHeight(600);
-			tempRoom.setWidth(800);
+			tempRoom.setHeight(800);
+			tempRoom.setWidth(1000);
 			tempRoom.setType("normal");
 				List<Entity> enemyList = new ArrayList<Entity>();
 				Entity enemy1 = new BasicEnemy(x + 350f,y + 250f,0f,0);
@@ -159,23 +159,23 @@ public class LevelGeneration {
 			tempRoom.setEnemyList(enemyList);
 			List<AnchorPoint> anchorPoints = new ArrayList<AnchorPoint>();
 			AnchorPoint point1 = new AnchorPoint();
-				point1.setX(x - 400f);
+				point1.setX(x - tempRoom.getWidth()/2);
 				point1.setY(y);
 				point1.setDirection("left");
 				anchorPoints.add(point1);
 			AnchorPoint point2 = new AnchorPoint();
-				point2.setX(x+400f);
+				point2.setX(x+tempRoom.getWidth()/2);
 				point2.setY(y);
 				point2.setDirection("right");
 				anchorPoints.add(point2);
 			AnchorPoint point3 = new AnchorPoint();
 				point3.setX(x);
-				point3.setY(y-300f);
+				point3.setY(y-tempRoom.getHeight()/2);
 				point3.setDirection("up");
 				anchorPoints.add(point3);
 			AnchorPoint point4 = new AnchorPoint();
 				point4.setX(x);
-				point4.setY(y+300f);
+				point4.setY(y+tempRoom.getHeight()/2);
 				point4.setDirection("down");
 				anchorPoints.add(point4);
 			tempRoom.setAnchorPoints(anchorPoints);
@@ -193,30 +193,30 @@ public class LevelGeneration {
 			tempRoom.setX(x);
 			tempRoom.setY(y);
 			tempRoom.setRotation(0);
-			tempRoom.setHeight(600);
-			tempRoom.setWidth(800);
+			tempRoom.setHeight(800);
+			tempRoom.setWidth(1000);
 			tempRoom.setType("start");
 			tempRoom.setEnemyList(new ArrayList<Entity>());
 			
 			List<AnchorPoint> anchorPoints = new ArrayList<AnchorPoint>();
 			AnchorPoint point1 = new AnchorPoint();
-				point1.setX(x - 400f);
+				point1.setX(x - tempRoom.getWidth()/2);
 				point1.setY(y);
 				point1.setDirection("left");
 				anchorPoints.add(point1);
 			AnchorPoint point2 = new AnchorPoint();
-				point2.setX(x+400f);
+				point2.setX(x+tempRoom.getWidth()/2);
 				point2.setY(y);
 				point2.setDirection("right");
 				anchorPoints.add(point2);
 			AnchorPoint point3 = new AnchorPoint();
 				point3.setX(x);
-				point3.setY(y-300f);
+				point3.setY(y-tempRoom.getHeight()/2);
 				point3.setDirection("up");
 				anchorPoints.add(point3);
 			AnchorPoint point4 = new AnchorPoint();
 				point4.setX(x);
-				point4.setY(y+300f);
+				point4.setY(y+tempRoom.getHeight()/2);
 				point4.setDirection("down");
 				anchorPoints.add(point4);
 			tempRoom.setAnchorPoints(anchorPoints);
