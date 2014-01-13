@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import entity.BasicProjectile;
+import entity.Projectile.BasicProjectile;
 import entity.Entity;
 
 public class MirrorShot extends BasicWeapon {

@@ -11,7 +11,6 @@ import timer.Timer;
 import weapon.BasicWeapon;
 import weapon.Weapon;
 
-import entity.BasicProjectile;
 import entity.Entity;
 
 public class BasicEntityAttack implements EntityAttack {

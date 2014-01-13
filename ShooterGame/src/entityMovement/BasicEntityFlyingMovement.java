@@ -6,11 +6,11 @@ import room.Room;
 
 import entity.Entity;
 
-public class BasicEntityMovement implements EntityMovement {
+public class BasicEntityFlyingMovement implements EntityMovement {
 
 	boolean isMoving;
 	
-	public BasicEntityMovement() {
+	public BasicEntityFlyingMovement() {
 		this.isMoving = false;
 	}
 	

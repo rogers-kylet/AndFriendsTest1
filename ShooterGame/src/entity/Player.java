@@ -260,7 +260,8 @@ public class Player extends BasicEntity {
 	// Hurts the player by the given amount of damage
 	public void hurtPlayer(int damage) {
 		if(!invincible){
-			this.health = health - damage;
+			//TODO uncomment to hurt player
+			//this.health = health - damage;
 			this.invincible = true;
 			resetInvincibilityTimer();
 			resetFlashTimer();

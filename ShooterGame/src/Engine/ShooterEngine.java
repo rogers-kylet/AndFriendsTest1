@@ -778,10 +778,12 @@ public class ShooterEngine {
 				
 				// Player collision with enemy
 				if(bullet.collisionDetection(player)){
-					//player.hurtPlayer(1);
+					if(!player.isInvincible()) {
+						sfxMap.get(player.getHitSfx()).playAsSoundEffect(1.0f, 1.0f, false);
+					}
 					
-					// TODO replace with player.getHitSfx() once using entity player
-					sfxMap.get(player.getHitSfx()).playAsSoundEffect(1.0f, 1.0f, false);
+					player.hurtPlayer(1);
+
 					bullet.setHealth(bullet.getHealth() -1 );
 				}
 				
@@ -826,10 +828,12 @@ public class ShooterEngine {
 			// Player collision with enemy
 			if(enemy.collisionDetection(player)){
 				
-				//player.hurtPlayer(1);
+				if(!player.isInvincible()) {
+					sfxMap.get(player.getHitSfx()).playAsSoundEffect(1.0f, 1.0f, false);
+				}
 				
-				// TODO replace with player.getHitSfx() once using entity player
-				sfxMap.get(player.getHitSfx()).playAsSoundEffect(1.0f, 1.0f, false);
+				player.hurtPlayer(1);
+
 				// TODO figure out what should happen for enemy collision, probably shoudln't kill it, but should start invincibility timer for player
 
 				//enemy.setHealth(enemy.getHealth() -1);
@@ -839,7 +843,7 @@ public class ShooterEngine {
 				float enemyX = enemy.getX();
 				float enemyY = enemy.getY();
 				Double rand = Math.random();
-				BasicPickup pickup = new BasicPickup(enemyX, enemyY, 0, 0, 20, 20);
+				BasicPickup pickup = new BasicPickup(enemyX, enemyY, 0, 0, 25, 25);
 				if(rand >= .5) {
 					pickup.setPickupType("heart");
 					pickup.setPickupValue(1);

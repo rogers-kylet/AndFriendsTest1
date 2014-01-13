@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Queue;
 
 import entity.BasicBackground;
-import entity.BasicEnemy;
+import entity.enemy.BasicFlyingEnemy;
 import entity.BasicPickup;
 import entity.Entity;
 
@@ -52,7 +52,7 @@ public class LevelGeneration {
 			// TODO need to refactor to use anchor points to place the rooms, meaning we need to generate them but without their x/y coordinates and then set them
 			for(AnchorPoint anchorPoint : anchorPoints){
 				if(!anchorPoint.isHooked()) {
-					Room nextRoom = new BasicRoom();
+					Room nextRoom = null;
 					if(anchorPoint.getDirection().equals("left")){
 						nextRoom = buildRoom(anchorPoint.getX()-tempRoom.getWidth()/2,anchorPoint.getY());
 						for(AnchorPoint hookedAnchorPoint: nextRoom.getAnchorPoints()) {
@@ -138,7 +138,7 @@ public class LevelGeneration {
 		return theLevel;
 	}
 
-	//TODO need to 
+	//TODO the given x and y only work for rooms that are the same size, need to update for various sizes
 	public static Room buildRoom(float x, float y) throws IOException {
 		Room tempRoom = new BasicRoom();
 			tempRoom.setX(x);
@@ -148,10 +148,10 @@ public class LevelGeneration {
 			tempRoom.setWidth(1000);
 			tempRoom.setType("normal");
 				List<Entity> enemyList = new ArrayList<Entity>();
-				Entity enemy1 = new BasicEnemy(x + 350f,y + 250f,0f,0);
-				Entity enemy2 = new BasicEnemy(x - 350f, y - 250f, 0f, 1);
-				Entity enemy3 = new BasicEnemy(x + 350f, y - 250f, 0f, 2);
-				Entity enemy4 = new BasicEnemy(x - 350f, y + 250f, 0f, 3);
+				Entity enemy1 = new BasicFlyingEnemy(x + 350f,y + 250f,0f,0);
+				Entity enemy2 = new BasicFlyingEnemy(x - 350f, y - 250f, 0f, 1);
+				Entity enemy3 = new BasicFlyingEnemy(x + 350f, y - 250f, 0f, 2);
+				Entity enemy4 = new BasicFlyingEnemy(x - 350f, y + 250f, 0f, 3);
 				enemyList.add(enemy1);
 				enemyList.add(enemy2);
 				enemyList.add(enemy3);
