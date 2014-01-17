@@ -97,6 +97,7 @@ public class BasicEntityFlyingMovement implements EntityMovement {
 		
 		for(Room room: entityList) {
 			for(Entity wall: room.getWallList()) {
+				//TODO refactor so that it's placing the object not at it's last location but at the border of the collision
 				if(wall.collisionDetection(entity)) {
 					
 					if(entity.getAngle() == 0 || entity.getAngle() == 90 || entity.getAngle() == 180 || entity.getAngle() == 270) {
@@ -106,54 +107,53 @@ public class BasicEntityFlyingMovement implements EntityMovement {
 						//System.out.println(entity.getAngle());
 					} else if(entity.getAngle() > 0 && entity.getAngle() < 90){
 						//TODO refactor when non-squares come into play
-						// TODO change from reseting to oldX oldY to reseting both and switching the angle to preserve momentum
-						if(entity.getY() + entity.getHeight()/2 > wall.getY() - wall.getHeight()/2 
-								&& oldY + entity.getHeight()/2 < wall.getY() - wall.getHeight()/2){
+						if(entity.getY() + entity.getHeight()/2 >= wall.getY() - wall.getHeight()/2 
+								&& oldY + entity.getHeight()/2 <= wall.getY() - wall.getHeight()/2){
 							//entity.setY(oldY);
 							yChange = true;
 							newAngle = 0;
 						}
-						if(entity.getX() + entity.getWidth()/2 > wall.getX() - wall.getWidth()/2 
-								&& oldX + entity.getWidth()/2 < wall.getX() - wall.getWidth()/2){
+						if(entity.getX() + entity.getWidth()/2 >= wall.getX() - wall.getWidth()/2 
+								&& oldX + entity.getWidth()/2 <= wall.getX() - wall.getWidth()/2){
 							//entity.setX(oldX);
 							xChange = true;
 							newAngle = 90;
 						}
 					} else if(entity.getAngle() > 90  && entity.getAngle() < 180) {
-						if(entity.getY() + entity.getHeight()/2 > wall.getY() - wall.getHeight()/2 
-								&& oldY + entity.getHeight()/2 < wall.getY() - wall.getHeight()/2){
+						if(entity.getY() + entity.getHeight()/2 >= wall.getY() - wall.getHeight()/2 
+								&& oldY + entity.getHeight()/2 <= wall.getY() - wall.getHeight()/2){
 							//entity.setY(oldY);
 							yChange = true;
 							newAngle = 180;
 						}
-						if(entity.getX() - entity.getWidth()/2 < wall.getX() + wall.getWidth()/2 
-								&& oldX - entity.getWidth()/2 > wall.getX() + wall.getWidth()/2){
+						if(entity.getX() - entity.getWidth()/2 <= wall.getX() + wall.getWidth()/2 
+								&& oldX - entity.getWidth()/2 >= wall.getX() + wall.getWidth()/2){
 							//entity.setX(oldX);
 							xChange = true;
 							newAngle = 90;
 						}
 					} else if(entity.getAngle() > 180 && entity.getAngle() < 270) {
-						if(entity.getY() - entity.getHeight()/2 < wall.getY() + wall.getHeight()/2 
-								&& oldY - entity.getHeight()/2 > wall.getY() + wall.getHeight()/2){
+						if(entity.getY() - entity.getHeight()/2 <= wall.getY() + wall.getHeight()/2 
+								&& oldY - entity.getHeight()/2 >= wall.getY() + wall.getHeight()/2){
 							//entity.setY(oldY);
 							yChange = true;
 							newAngle = 180;
 						}
-						if(entity.getX() - entity.getWidth()/2 < wall.getX() + wall.getWidth()/2 
-								&& oldX - entity.getWidth()/2 > wall.getX() + wall.getWidth()/2){
+						if(entity.getX() - entity.getWidth()/2 <= wall.getX() + wall.getWidth()/2 
+								&& oldX - entity.getWidth()/2 >= wall.getX() + wall.getWidth()/2){
 							//entity.setX(oldX);
 							xChange = true;
 							newAngle = 270;
 						}
 					} else if (entity.getAngle() > 270 && entity.getAngle() < 360) {
-						if(entity.getY() - entity.getHeight()/2 < wall.getY() + wall.getHeight()/2 
-								&& oldY - entity.getHeight()/2 > wall.getY() + wall.getHeight()/2){
+						if(entity.getY() - entity.getHeight()/2 <= wall.getY() + wall.getHeight()/2 
+								&& oldY - entity.getHeight()/2 >= wall.getY() + wall.getHeight()/2){
 							//entity.setY(oldY);
 							yChange = true;
 							newAngle = 0;
 						}
-						if(entity.getX() + entity.getWidth()/2 > wall.getX() - wall.getWidth()/2 
-								&& oldX + entity.getWidth()/2 < wall.getX() - wall.getWidth()/2){
+						if(entity.getX() + entity.getWidth()/2 >= wall.getX() - wall.getWidth()/2 
+								&& oldX + entity.getWidth()/2 <= wall.getX() - wall.getWidth()/2){
 							//entity.setX(oldX);
 							xChange = true;
 							newAngle = 270;
