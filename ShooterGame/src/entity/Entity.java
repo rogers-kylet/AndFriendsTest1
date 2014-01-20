@@ -216,6 +216,8 @@ public interface Entity {
 
 	public void processMovementTick(Entity target, List<Room> entityList);
 
+	void hurt(int damage);
+
 
 
 }

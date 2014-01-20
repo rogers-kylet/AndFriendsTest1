@@ -259,6 +259,15 @@ public class ShooterEngine {
 				//----------------------
 				//END COMPLETED REFACTOR
 				
+				if(Keyboard.isKeyDown(Keyboard.KEY_J)) {
+					if(player.isCanMeleeAttack()) {
+						List<Entity> bulletList = player.meleeAttack(player.getAngle());
+						for(Entity bullet: bulletList) { playerBulletList.add(bullet); }
+						
+						sfxMap.get( player.getMeleeWeapon().getSfxName()).playAsSoundEffect(1.0f, 1.0f, false);
+					}
+				}
+				
 				// I would hope there'sa better way to do this...but i guess it works... 
 				if(weaponSwitchTimer == 0) {
 					boolean wepSwitch = false;
@@ -759,11 +768,11 @@ public class ShooterEngine {
 					//but then the wall won't be rendered....
 					for(Iterator<Entity> bulletIt = playerBulletList.iterator(); bulletIt.hasNext();){
 						Entity bullet = bulletIt.next();
-						if(wall.collisionDetection(bullet)){ bulletIt.remove(); }
+						if(wall.collisionDetection(bullet) && bullet.getHealth() != -1){ bulletIt.remove(); }
 					}
 					for(Iterator<Entity> bulletIt = enemyBulletList.iterator(); bulletIt.hasNext();) {
 						Entity bullet = bulletIt.next();
-						if(wall.collisionDetection(bullet)) { bulletIt.remove(); }
+						if(wall.collisionDetection(bullet) && bullet.getHealth() != -1) { bulletIt.remove(); }
 					}
 				}
 			}
@@ -784,21 +793,23 @@ public class ShooterEngine {
 					
 					player.hurtPlayer(1);
 
-					bullet.setHealth(bullet.getHealth() -1 );
+					bullet.hurt(1);
 				}
 				
 				renderEntity(bullet);
 				
-				if(bullet.getHealth() < 1) { bulletIt.remove(); }
+				// Check for 0 so negative health can be invincible
+				if(bullet.getHealth() == 0) { bulletIt.remove(); }
 		}	}
 	
 	public void processPlayerBullet() {
 		for(Iterator<Entity> bulletIt = playerBulletList.iterator(); bulletIt.hasNext();){
 			Entity bullet = bulletIt.next();
-				bullet.move();
+				bullet.move(player);
 				renderEntity(bullet);
 				
-				if(bullet.getHealth() < 1) { bulletIt.remove(); }
+				// Check for 0 so negative health can be invincible
+				if(bullet.getHealth() == 0) { bulletIt.remove(); }
 		}
 	}
 
@@ -818,10 +829,10 @@ public class ShooterEngine {
 				if (enemy.collisionDetection(bullet)) {
 					// TODO replace enemyhit with enemy.getHitSfx() once new entity enemy is being used
 					sfxMap.get("enemyhit").playAsSoundEffect(1.0f, 1.0f, false);
-					enemy.setHealth(enemy.getHealth() - 1);
-					bullet.setHealth(bullet.getHealth()-1);
+					enemy.hurt(1);
+					bullet.hurt(1);
 					
-					if(bullet.getHealth() < 1) { bulletIt.remove(); }
+					if(bullet.getHealth() == 0) { bulletIt.remove(); }
 				}
 			}
 			

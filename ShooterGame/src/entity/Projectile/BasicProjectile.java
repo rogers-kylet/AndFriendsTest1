@@ -112,6 +112,13 @@ public class BasicProjectile extends BasicEntity {
 		
 		texture.bind(); // or GL11.glBind(texture.getTextureID());
 
+		float width = this.width;
+		if((this.angle >= 0 && this.angle <= 90) || this.angle <= 360 && this.angle >= 270) {
+			
+		} else {
+			width = -width;
+		}
+		
 		GL11.glPushMatrix();
 	
 			// Replace glBegin with vertex buffer
@@ -121,13 +128,13 @@ public class BasicProjectile extends BasicEntity {
 		
 			GL11.glBegin(GL11.GL_QUADS);
 				GL11.glTexCoord2f(0,0);
-				GL11.glVertex2f(this.x - this.width/2, this.y - this.height/2);
+				GL11.glVertex2f(this.x - width/2, this.y - this.height/2);
 				GL11.glTexCoord2f(this.texture.getWidth(),0);
-				GL11.glVertex2f(this.x + this.width/2, this.y - this.height/2);
+				GL11.glVertex2f(this.x + width/2, this.y - this.height/2);
 				GL11.glTexCoord2f(this.texture.getWidth(),this.texture.getHeight());
-				GL11.glVertex2f(this.x + this.width/2, this.y + this.height/2);
+				GL11.glVertex2f(this.x + width/2, this.y + this.height/2);
 				GL11.glTexCoord2f(0,this.texture.getHeight());
-				GL11.glVertex2f(this.x - this.width/2, this.y + this.height/2);
+				GL11.glVertex2f(this.x - width/2, this.y + this.height/2);
 			GL11.glEnd();
 			
 		GL11.glPopMatrix();

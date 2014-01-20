@@ -19,6 +19,7 @@ import room.Room;
 import timer.BasicTimer;
 import timer.Timer;
 
+import weapon.BasicMeleeWeapon;
 import weapon.BasicWeapon;
 import weapon.CircleShot;
 import weapon.DoubleShot;
@@ -48,15 +49,19 @@ public class Player extends BasicEntity {
 	private int flashTimer = 0;
 	private int shooterTimer = 0;
 	boolean canShoot = true;
+	boolean canMeleeAttack = true;
 	boolean canJump = true;
 	
 	private Texture texture;
 	
 	private Weapon weapon;
+	private Weapon meleeWeapon;
+	
 	private int weaponIndex;
 	private List<Weapon> weaponList;
 	
 	private Timer frameTimer;
+	private Timer meleeAttackTimer;
 	
 	private PlayerAnimation animation;
 
@@ -88,8 +93,12 @@ public class Player extends BasicEntity {
 		
 		this.animation = new PlayerAnimation();
 		
-		this.frameTimer = new BasicTimer(15);
+		this.frameTimer = new BasicTimer(25);
 		this.frameTimer.reset();
+		
+		// Needs to be the same as how long the attack lasts at min
+		this.meleeAttackTimer = new BasicTimer(35);
+		this.meleeAttackTimer.reset();
 		
 		this.xSpeed = 10f;
 		this.ySpeed = 0f;
@@ -105,6 +114,11 @@ public class Player extends BasicEntity {
 		Weapon weapon5 = new CircleShot();
 		Weapon weapon6 = new DoubleShot();
 		Weapon weapon7 = new TripleSideShot();
+		
+		//TODO stupid
+		Weapon meleeWeapon = new BasicMeleeWeapon();
+		this.meleeWeapon = meleeWeapon;
+		
 		this.weapon = weapon;
 		this.weaponList = new ArrayList<Weapon>();
 		this.weaponList.add(weapon);
@@ -218,7 +232,17 @@ public class Player extends BasicEntity {
 			}
 		}
 		
+		//TODO convert to timer 
 		if(!canShoot) { countDownShooterTimer(); }
+		
+		// Process Melee Attack Timer 
+		if(this.meleeAttackTimer.isStopped()) {
+			if(!this.canMeleeAttack) {
+				this.canMeleeAttack = true;
+			}
+		} else {
+			meleeAttackTimer.countDown();
+		}
 	}
 
 	@Override
@@ -271,6 +295,16 @@ public class Player extends BasicEntity {
 	@Override
 	public List<Entity> attack(float angle) throws IOException{
 		return this.weapon.attack(angle, this);
+	}
+	
+	//TODO this will need to be comined with shooting probably, maybe two buttons so maybe not 
+	public List<Entity> meleeAttack(float angle) throws IOException {
+		
+		this.canMeleeAttack = false;
+		this.meleeAttackTimer.reset();
+		
+		return this.meleeWeapon.attack(angle, this);
+
 	}
 	
 	// Counts down the shooter timer by one, setting can shoot to true when it hits zero
@@ -370,4 +404,23 @@ public class Player extends BasicEntity {
 	public void hitCeiling() {
 		this.ySpeed = 0;
 	}
+
+	public Weapon getMeleeWeapon() {
+		return meleeWeapon;
+	}
+
+	public void setMeleeWeapon(Weapon meleeWeapon) {
+		this.meleeWeapon = meleeWeapon;
+	}
+
+	public boolean isCanMeleeAttack() {
+		return canMeleeAttack;
+	}
+
+	public void setCanMeleeAttack(boolean canMeleeAttack) {
+		this.canMeleeAttack = canMeleeAttack;
+	}
+	
+	
+	
 }

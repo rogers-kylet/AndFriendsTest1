@@ -139,6 +139,17 @@ public abstract class BasicEntity implements Entity {
 		
 	}
 		
+	@Override
+	public void hurt(int damage) {
+		// If health is -1, that means it's trying to avoid some health processing routine, let it
+		if(this.health != -1) {
+			this.health -= damage;
+			// Set the health to 0 if it is less, that way it won't interfier with -1 based health calculations
+			if(this.health < 0) {
+				this.health = 0;
+			}
+		}
+	}
 	/**
 	 * processCollisionTick(Entity) - Processes entity specific collision detection
 	 * @param target - Target Entity AI should react to. Send self reference for no target
