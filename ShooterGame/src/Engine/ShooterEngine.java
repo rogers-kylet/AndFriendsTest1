@@ -199,7 +199,7 @@ public class ShooterEngine {
 				//Handle movement angle calculations
 				//Angle of movement is read right to left as description above
 				
-				/*
+				
 				//Checks if player is moving up, up-left, or up-right respectively.
 				if(Keyboard.isKeyDown(Keyboard.KEY_W)) movementDelta = (Keyboard.isKeyDown(Keyboard.KEY_D)?315:(Keyboard.isKeyDown(Keyboard.KEY_A)?215:270));
 				//Checks if player is moving left or down-left.
@@ -208,17 +208,20 @@ public class ShooterEngine {
 				else if(Keyboard.isKeyDown(Keyboard.KEY_S)) movementDelta = (Keyboard.isKeyDown(Keyboard.KEY_D)?45:90);
 				//Checks if player is moving right
 				else if(Keyboard.isKeyDown(Keyboard.KEY_D)) movementDelta = 0;
-				*/
+				
 				
 				if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
 					player.jump();	
 				}
 				
-				if(Keyboard.isKeyDown(Keyboard.KEY_A)) movementDelta = 180;
-				else if(Keyboard.isKeyDown(Keyboard.KEY_D)) movementDelta = 0;
+				//if(Keyboard.isKeyDown(Keyboard.KEY_A)) movementDelta = 180;
+				//else if(Keyboard.isKeyDown(Keyboard.KEY_D)) movementDelta = 0;
 				//Attempt movement if any keys were pressed
 				if(movementDelta<=-1) {
 					player.setAnimation("idle");
+					
+				} else {
+					player.setAngle(movementDelta);
 				}
 				processPlayerMove(movementDelta);
 
@@ -265,6 +268,22 @@ public class ShooterEngine {
 						for(Entity bullet: bulletList) { playerBulletList.add(bullet); }
 						
 						sfxMap.get( player.getMeleeWeapon().getSfxName()).playAsSoundEffect(1.0f, 1.0f, false);
+					}
+				}
+				
+				if(Keyboard.isKeyDown(Keyboard.KEY_K)) {
+					if(player.isCanShoot()){
+						
+						List<Entity> bulletList = player.attack(player.getAngle());
+						
+						for(Entity bullet: bulletList){ playerBulletList.add(bullet); }
+
+						//TODO get this from the players weapon
+						sfxMap.get("shot").playAsSoundEffect(1.0f, 1.0f, false);
+						
+						// Stop the player from shooting again and reset the bullet timer
+						player.setCanShoot(false);
+						player.resetShooterTimer();
 					}
 				}
 				

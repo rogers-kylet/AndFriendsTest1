@@ -36,6 +36,7 @@ public class BasicMeleeAttack extends BasicProjectile implements Entity {
 	@Override
 	protected void processMovementTick(Entity target) {
 		//TOD this conditional should probably be improved, I don't think it stays consistant when stopping moving, so maybe have a facing left/facing right flag?
+		this.angle = target.getAngle();
 		if(
 				(target.getAngle() <= 360 && 
 				target.getAngle() >=270 )
