@@ -213,6 +213,9 @@ public class ShooterEngine {
 					if(!Keyboard.isKeyDown(options.down)){
 						movementDelta = (Keyboard.isKeyDown(options.right)?315:(Keyboard.isKeyDown(options.left)?215:270));
 					}
+					if(!Keyboard.isKeyDown(options.left) && !Keyboard.isKeyDown(options.right)) {
+						player.setAnimation("idle");
+					}
 				}
 				
 				//Checks if player is moving left or down-left.
@@ -225,6 +228,9 @@ public class ShooterEngine {
 				else if(Keyboard.isKeyDown(options.down)) {
 					if(!Keyboard.isKeyDown(options.up)) {
 						movementDelta = (Keyboard.isKeyDown(options.right)?45:90);
+					}
+					if(!Keyboard.isKeyDown(options.left) && !Keyboard.isKeyDown(options.right)) {
+						player.setAnimation("idle");
 					}
 				}
 				//Checks if player is moving right

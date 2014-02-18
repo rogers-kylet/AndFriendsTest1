@@ -48,12 +48,14 @@ public class Player extends BasicEntity {
 	
 	private int flashTimer = 0;
 	private int shooterTimer = 0;
-	boolean canShoot = true;
-	boolean canMeleeAttack = true;
-	boolean canJump = true;
-	boolean inAir = false;
-	boolean canWallJump = false;
-	
+	private boolean canShoot = true;
+	private boolean canMeleeAttack = true;
+	private boolean canJump = true;
+	private boolean inAir = false;
+	private boolean canWallJump = false;
+	private boolean onWall = false;
+	private boolean hasWallJumped = false;
+
 	private Texture texture;
 	
 	private Weapon weapon;
@@ -64,9 +66,9 @@ public class Player extends BasicEntity {
 	
 	private Timer frameTimer;
 	private Timer meleeAttackTimer;
-	private Timer wallJumpTimer;
 	
 	private PlayerAnimation animation;
+
 
 	public Player(float x, float y, float z, int eid) throws IOException {
 		this.x = x;
@@ -102,9 +104,6 @@ public class Player extends BasicEntity {
 		// Needs to be the same as how long the attack lasts at min
 		this.meleeAttackTimer = new BasicTimer(35);
 		this.meleeAttackTimer.reset();
-		
-		this.wallJumpTimer = new BasicTimer(50);
-		this.wallJumpTimer.reset();
 		
 		this.xSpeed = 10f;
 		this.ySpeed = 0f;
@@ -251,11 +250,6 @@ public class Player extends BasicEntity {
 			meleeAttackTimer.countDown();
 		}
 		
-		if(this.wallJumpTimer.isStopped()) {
-			this.canWallJump = true;
-		} else {
-			this.wallJumpTimer.countDown();
-		}
 	}
 
 	@Override
@@ -280,6 +274,12 @@ public class Player extends BasicEntity {
 		}
 		
 		if(target != null) {
+			if( (angle > 0 && angle < 90 )
+				|| (angle < 360 && angle > 270 ) ) {
+				angle = 0;
+			} else if ( angle < 270 && angle > 90) {
+				angle = 180;
+			}
 			this.x += this.xSpeed * Math.cos(Math.toRadians(angle));
 		}
 		//this.y += this.speed * Math.sin(Math.toRadians(angle));	
@@ -381,7 +381,9 @@ public class Player extends BasicEntity {
 			this.acceleration.y = 20f;
 			this.canJump = false;
 			this.canWallJump = false;
-			this.wallJumpTimer.reset();
+			if(this.inAir && this.onWall) {
+				this.hasWallJumped  = true;
+			}
 		}
 	}
 
@@ -409,6 +411,7 @@ public class Player extends BasicEntity {
 	 * Actions to be performed when the player is touching a wall
 	 */
 	public void onWall() {
+		onWall = true;
 		if(this.inAir) {
 			// TODO need to have a timer for wall jumps
 			if(canWallJump) {
@@ -421,8 +424,10 @@ public class Player extends BasicEntity {
 	 * Actions to be performed when the player is not touching a wall
 	 */
 	public void notOnWall() {
+		onWall = false;
 		if(this.inAir) {
 			this.canJump = false;
+			this.canWallJump = true;
 		}
 	}
 	
@@ -471,6 +476,16 @@ public class Player extends BasicEntity {
 	public boolean isInAir() { return inAir; }
 
 	public void setInAir(boolean inAir) { this.inAir = inAir; }
+
+	public boolean isOnWall() { return onWall; }
+
+	public void setOnWall(boolean onWall) { this.onWall = onWall; }
+
+	public boolean isHasWallJumped() { return hasWallJumped; }
+
+	public void setHasWallJumped(boolean hasWallJumped) { this.hasWallJumped = hasWallJumped; }
+	
+	
 	
 	// ----------------------------------------------------------------------------------------------------------//
 	/* End Getters/Setters */
