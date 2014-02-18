@@ -342,16 +342,70 @@ public class Player extends BasicEntity {
 		this.animation.setCurrentAnimation(animation);
 	}
 	
-	public boolean isCanShoot() { return canShoot; }
-
-	public void setCanShoot(boolean canShoot) { this.canShoot = canShoot; }
-	
 	public void resetShooterTimer() { this.shooterTimer = SHOOTER_TIMER_START_VALUE; }
 
 	// Sets the invincibility timer back to it's default start value
 	public void resetInvincibilityTimer(){ this.invincibleTime = INVINCIBILITY_TIMER_START_VALUE; }
 	
 	public void resetFlashTimer(){ flashTimer = FLASH_TIMER_START_VALUE; }
+
+	@Override
+	public List<Entity> attack(Entity target) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void processMovementTick(Entity target, List<Room> entityList) {
+		// TODO Auto-generated method stub
+	}
+	
+	// TODO need to make the jump uniorm, right now it's slower on the down than up
+	public synchronized void jump() {
+		if(this.canJump) {
+			this.acceleration.y = 20f;
+			this.canJump = false;
+		}
+	}
+
+	
+	/**
+	 * Actions to be performed when the player is on the ground
+	 */
+	public void onGround() {
+		this.canJump = true;
+		this.acceleration.y = 0;
+		this.ySpeed = this.minimumYSpeed;
+	}
+	
+	/**
+	 * Actions to be performed when the player is in the air
+	 */
+	public void notOnGround() {
+		this.canJump = false;
+	}
+	
+	/**
+	 * Actions to be performed when the player hits a hard ceiling
+	 */
+	public void hitCeiling() {
+		this.ySpeed = 0;
+	}
+
+	/* Start Getters/Setters */
+	// ----------------------------------------------------------------------------------------------------------//
+	
+	public Weapon getMeleeWeapon() { return meleeWeapon; }
+
+	public void setMeleeWeapon(Weapon meleeWeapon) { this.meleeWeapon = meleeWeapon; }
+
+	public boolean isCanMeleeAttack() {	return canMeleeAttack; }
+
+	public void setCanMeleeAttack(boolean canMeleeAttack) {	this.canMeleeAttack = canMeleeAttack; }
+
+	public boolean isCanJump() { return canJump; }
+
+	public void setCanJump(boolean canJump) { this.canJump = canJump; }	
 
 	public Texture getTexture() { return texture; }
 
@@ -368,59 +422,10 @@ public class Player extends BasicEntity {
 	public int getWeaponIndex() { return weaponIndex; }
 
 	public void setWeaponIndex(int weaponIndex) { this.weaponIndex = weaponIndex; }
-
-	@Override
-	public List<Entity> attack(Entity target) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void processMovementTick(Entity target, List<Room> entityList) {
-		// TODO Auto-generated method stub
-		
-	}
 	
-	// TODO need to make the jump uniorm, right now it's slower on the down than up
-	// TODO figure out why this is alternating between a high jump and a low jump
-	public synchronized void jump() {
-		if(this.canJump) {
-			this.acceleration.y = 20f;
-			this.canJump = false;
-		}
-		
-	}
+	public boolean isCanShoot() { return canShoot; }
 
-	public boolean isCanJump() { return canJump; }
-
-	public void setCanJump(boolean canJump) { this.canJump = canJump; }	
-	
-	public void onGround() {
-		this.canJump = true;
-		//this.acceleration.y = 0;
-		//this.ySpeed = this.minimumYSpeed;
-	}
-	
-	public void hitCeiling() {
-		this.ySpeed = 0;
-	}
-
-	public Weapon getMeleeWeapon() {
-		return meleeWeapon;
-	}
-
-	public void setMeleeWeapon(Weapon meleeWeapon) {
-		this.meleeWeapon = meleeWeapon;
-	}
-
-	public boolean isCanMeleeAttack() {
-		return canMeleeAttack;
-	}
-
-	public void setCanMeleeAttack(boolean canMeleeAttack) {
-		this.canMeleeAttack = canMeleeAttack;
-	}
-	
-	
-	
+	public void setCanShoot(boolean canShoot) { this.canShoot = canShoot; }
+	// ----------------------------------------------------------------------------------------------------------//
+	/* End Getters/Setters */
 }

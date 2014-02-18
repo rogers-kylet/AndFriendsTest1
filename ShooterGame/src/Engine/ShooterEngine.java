@@ -428,7 +428,9 @@ public class ShooterEngine {
 
 	private void processPlayerMove(float newAngle2) {
 		if(newAngle2 != -1) {
-			player.setAnimation("walk");
+			if(newAngle2 != 90 && newAngle2 != 270) {
+				player.setAnimation("walk");
+			}
 			player.setAngle(newAngle2);
 		}
 		float oldX = player.getX(), oldY = player.getY(), newAngle = -1;
@@ -440,6 +442,8 @@ public class ShooterEngine {
 			player.move();
 		}
 		
+		boolean isOnGround = false;
+
 		for(Room room: this.level.getRoomList()) {
 			if(!room.isEntered()) {
 				//TODO maybe room should extend entity to use the onScreen method....
@@ -455,6 +459,7 @@ public class ShooterEngine {
 					this.pickupList.addAll(room.getPickupList());
 				}
 			}
+			
 			// Loop through the walls in the room, and determine if 
 			for(Entity wall: room.getWallList()) {
 				// TODO add walls that you can conditionally move through (once you fully pass through it you can't move back
@@ -465,7 +470,8 @@ public class ShooterEngine {
 					//TODO this whole thing got screwed up at some point, so fix it
 					if(player.getY() + player.getHeight()/2 >= wall.getY() - wall.getHeight()/2 
 							&& oldY + player.getHeight()/2 <= wall.getY() - wall.getHeight()/2){
-						player.onGround();
+						//player.onGround();
+						isOnGround = true;
 						player.setY(wall.getY() - wall.getHeight()/2 - player.getHeight()/2);
 					} 
 					
@@ -490,6 +496,12 @@ public class ShooterEngine {
 					}
 				}
 			}
+
+		}
+		if(isOnGround) {
+			player.onGround();
+		} else {
+			player.notOnGround();
 		}
 	}
 	
@@ -628,7 +640,9 @@ public class ShooterEngine {
 		GL11.glTranslatef(0f, 0f, 0f);
 		
 		// Have the camera follow the player
-		if(gameState.isCameraFollow()){ GL11.glTranslatef(-player.getX()+(resolutionWidth / 2), -player.getY()+(resolutionHeight / 2), 0); }
+		if(gameState.isCameraFollow()){ 
+			GL11.glTranslatef(-player.getX() + (resolutionWidth / 2), -player.getY() + (resolutionHeight / 2), 0); 
+		}
 		//if(gameState.isCameraFollow()){ GL11.glTranslatef(-player.getX()+(resolutionWidth / 2), -player.getY()+(resolutionHeight / 2 + resolutionHeight/4), 0); } // Camera follow offset
 		
 		GL11.glPushMatrix();
@@ -1064,5 +1078,6 @@ public class ShooterEngine {
 			return true;
 		} else{ return false; }
 	}
+	
 }
 
