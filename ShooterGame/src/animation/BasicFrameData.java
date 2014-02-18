@@ -1,5 +1,10 @@
 package animation;
 
+/**
+ * Basic Implementation of the frame data object, used for information related to the current animation frame
+ * @author Kyle Rogers
+ *
+ */
 public class BasicFrameData implements FrameData {
 
 	float texX, texY, texWidth, texHeight;

@@ -9,6 +9,12 @@ import timer.BasicTimer;
 import timer.Timer;
 
 // TODO should basic animation hold a type o animation, or all animations.. probaly all..
+/**
+ * The object used to handle the players animation. 
+ * Includes all of the information related to setting up the frames for the spritesheet.
+ * @author Kyle Rogers
+ *
+ */
 public class PlayerAnimation {
 
 	boolean isLeft;

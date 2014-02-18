@@ -1,5 +1,10 @@
 package GameState;
 
+/**
+ * The Basic Implementation of the gamestate object.
+ * @author Kyle Rogers
+ *
+ */
 public class ShooterGameState implements GameState {
 
 	private int money; 

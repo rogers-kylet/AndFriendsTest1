@@ -46,7 +46,8 @@ public abstract class BasicEntity implements Entity {
 	// The speed constraints and angular direction of the Entity
 	protected float minimumSpeed, speed, maxSpeed, angle;
 	protected float minimumXSpeed, xSpeed, maxXSpeed;
-	protected float minimumYSpeed, ySpeed, maxYSpeed, gravity;
+	protected float minimumYSpeed, ySpeed, maxYSpeed;
+	protected float gravity, standardGravity;
 
 	protected Vector3f acceleration;
 	protected Vector3f minAcceleration;
@@ -192,6 +193,10 @@ public abstract class BasicEntity implements Entity {
 	public boolean isInvincible() { return invincible; }
 
 	public void setInvincible(boolean invincible) { this.invincible = invincible; }
+
+	public float getStandardGravity() { return standardGravity; }
+
+	public void setStandardGravity(float standardGravity) { this.standardGravity = standardGravity; }
 	
 	
 }

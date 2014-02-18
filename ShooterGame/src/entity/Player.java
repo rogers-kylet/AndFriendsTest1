@@ -30,9 +30,9 @@ import weapon.TripleSideShot;
 import weapon.Weapon;
 
 /**
- * Player
- * 
- * Base class for Player object.
+ * The main player object. 
+ * Needs more customizing than most entities so it has significantly more methods than BasicEntities provides. 
+ * @author Kyle Rogers
  *
  */
 public class Player extends BasicEntity {
@@ -51,6 +51,8 @@ public class Player extends BasicEntity {
 	boolean canShoot = true;
 	boolean canMeleeAttack = true;
 	boolean canJump = true;
+	boolean inAir = false;
+	boolean canWallJump = false;
 	
 	private Texture texture;
 	
@@ -62,6 +64,7 @@ public class Player extends BasicEntity {
 	
 	private Timer frameTimer;
 	private Timer meleeAttackTimer;
+	private Timer wallJumpTimer;
 	
 	private PlayerAnimation animation;
 
@@ -100,9 +103,13 @@ public class Player extends BasicEntity {
 		this.meleeAttackTimer = new BasicTimer(35);
 		this.meleeAttackTimer.reset();
 		
+		this.wallJumpTimer = new BasicTimer(50);
+		this.wallJumpTimer.reset();
+		
 		this.xSpeed = 10f;
 		this.ySpeed = 0f;
 		this.gravity = -.75f;
+		this.standardGravity =  -.75f;
 		this.minimumYSpeed = -15;
 		this.maxYSpeed = 15f;
 		
@@ -243,6 +250,12 @@ public class Player extends BasicEntity {
 		} else {
 			meleeAttackTimer.countDown();
 		}
+		
+		if(this.wallJumpTimer.isStopped()) {
+			this.canWallJump = true;
+		} else {
+			this.wallJumpTimer.countDown();
+		}
 	}
 
 	@Override
@@ -260,6 +273,7 @@ public class Player extends BasicEntity {
 	@Override
 	protected void processMovementTick(Entity target) {
 		if(this.acceleration.y > this.minAcceleration.y) {
+			//TODO need a conditional here to be able to turn off gravity for variable jump logic/other situations where we might want graivty off
 			this.acceleration.y += gravity;
 		} else {
 			this.acceleration.y = this.minAcceleration.y;
@@ -297,7 +311,7 @@ public class Player extends BasicEntity {
 		return this.weapon.attack(angle, this);
 	}
 	
-	//TODO this will need to be comined with shooting probably, maybe two buttons so maybe not 
+	//TODO this will need to be combined with shooting probably, maybe two buttons so maybe not 
 	public List<Entity> meleeAttack(float angle) throws IOException {
 		
 		this.canMeleeAttack = false;
@@ -361,10 +375,13 @@ public class Player extends BasicEntity {
 	}
 	
 	// TODO need to make the jump uniorm, right now it's slower on the down than up
+	// TOOD need to change this somehow to account for holding, probably need two methods
 	public synchronized void jump() {
 		if(this.canJump) {
 			this.acceleration.y = 20f;
 			this.canJump = false;
+			this.canWallJump = false;
+			this.wallJumpTimer.reset();
 		}
 	}
 
@@ -374,6 +391,8 @@ public class Player extends BasicEntity {
 	 */
 	public void onGround() {
 		this.canJump = true;
+		this.inAir = false;
+		
 		this.acceleration.y = 0;
 		this.ySpeed = this.minimumYSpeed;
 	}
@@ -383,6 +402,28 @@ public class Player extends BasicEntity {
 	 */
 	public void notOnGround() {
 		this.canJump = false;
+		this.inAir = true;
+	}
+	
+	/**
+	 * Actions to be performed when the player is touching a wall
+	 */
+	public void onWall() {
+		if(this.inAir) {
+			// TODO need to have a timer for wall jumps
+			if(canWallJump) {
+				this.canJump = true;
+			}
+		}
+	}
+	
+	/**
+	 * Actions to be performed when the player is not touching a wall
+	 */
+	public void notOnWall() {
+		if(this.inAir) {
+			this.canJump = false;
+		}
 	}
 	
 	/**
@@ -426,6 +467,11 @@ public class Player extends BasicEntity {
 	public boolean isCanShoot() { return canShoot; }
 
 	public void setCanShoot(boolean canShoot) { this.canShoot = canShoot; }
+
+	public boolean isInAir() { return inAir; }
+
+	public void setInAir(boolean inAir) { this.inAir = inAir; }
+	
 	// ----------------------------------------------------------------------------------------------------------//
 	/* End Getters/Setters */
 }

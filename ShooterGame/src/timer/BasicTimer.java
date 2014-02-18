@@ -1,5 +1,11 @@
 package timer;
 
+// TODO if/when we move the game from being based on frames to based on time, timer also needs to be updated for time
+/**
+ * The basic implementation of a timer. 
+ * @author Kyle
+ *
+ */
 public class BasicTimer implements Timer {
 
 	private int startValue, currentTime;

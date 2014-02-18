@@ -1,5 +1,10 @@
 package timer;
 
+/**
+ * The object used for tracking time, typically used to set how long to wait until an action can be performed again.
+ * @author Kyle Rogers
+ *
+ */
 public interface Timer {
 
 	boolean countDown();

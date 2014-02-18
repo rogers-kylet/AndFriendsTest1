@@ -9,6 +9,11 @@ import entityMovement.EntityMovement;
 
 import room.Room;
 
+/**
+ * Basic Implementation for the Artificial Intellegence.
+ * @author Kyle Rogers
+ *
+ */
 public class BasicAi implements Ai {
 
 	EntityMovement entityMovement;
@@ -18,7 +23,6 @@ public class BasicAi implements Ai {
 	
 	public BasicAi(EntityMovement entityMovement) { 
 		this.entityMovement = entityMovement; 
-		
 	}
 	
 	public BasicAi(EntityMovement entityMovement, EntityAttack entityAttack) {
@@ -47,6 +51,8 @@ public class BasicAi implements Ai {
 		return null;
 	}
 	
+	/* Start Getters/Setters */
+	
 	@Override
 	public EntityMovement getEntityMovement() { return entityMovement; }
 
@@ -59,7 +65,7 @@ public class BasicAi implements Ai {
 	@Override
 	public void setEnemyAttack(EntityAttack enemyAttack) { this.entityAttack = enemyAttack; }
 
-
+	/* End Getters/Setters */
 	
 	
 }

@@ -38,7 +38,11 @@ import Level.Level;
 import Level.LevelGeneration;
 import Level.PauseOverlay;
 
-
+/**
+ * The starting point and main loop of the game.
+ * @author Kyle Rogers
+ *
+ */
 public class ShooterEngine {
 
 	/* position of quad */
@@ -443,7 +447,8 @@ public class ShooterEngine {
 		}
 		
 		boolean isOnGround = false;
-
+		boolean isOnWall = false;
+		
 		for(Room room: this.level.getRoomList()) {
 			if(!room.isEntered()) {
 				//TODO maybe room should extend entity to use the onScreen method....
@@ -488,11 +493,13 @@ public class ShooterEngine {
 					if(player.getX() + player.getWidth()/2 >= wall.getX() - wall.getWidth()/2 
 							&& oldX + player.getWidth()/2 <= wall.getX() - wall.getWidth()/2){
 						player.setX(wall.getX() - wall.getWidth()/2 - player.getWidth()/2);
+						isOnWall = true;
 					}
 					
 					if(player.getX() - player.getWidth()/2 <= wall.getX() + wall.getWidth()/2 
 							&& oldX - player.getWidth()/2 >= wall.getX() + wall.getWidth()/2){
 						player.setX(wall.getX() + wall.getWidth()/2 + player.getWidth()/2);
+						isOnWall = true;
 					}
 				}
 			}
@@ -502,6 +509,12 @@ public class ShooterEngine {
 			player.onGround();
 		} else {
 			player.notOnGround();
+		}
+		
+		if(isOnWall) {
+			player.onWall();
+		} else {
+			player.notOnWall();
 		}
 	}
 	

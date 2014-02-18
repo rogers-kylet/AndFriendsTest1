@@ -2,6 +2,11 @@ package Engine;
 
 import org.lwjgl.input.Keyboard;
 
+/**
+ * Stores the various configuration files that the player is able to change themselves, such as keybindings
+ * @author Kyle Rogers
+ *
+ */
 public class Options {
 
 	int up;

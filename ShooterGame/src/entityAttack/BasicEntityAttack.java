@@ -13,6 +13,11 @@ import weapon.Weapon;
 
 import entity.Entity;
 
+/**
+ * The Basic Implementation of the logic related to how entities should attack.
+ * @author Kyle Rogers
+ *
+ */
 public class BasicEntityAttack implements EntityAttack {
 
 	boolean canAttack;

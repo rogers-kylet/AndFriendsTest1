@@ -5,6 +5,11 @@ import java.util.List;
 
 import entity.Entity;
 
+/**
+ * The object used to determine and perform entities attacks. 
+ * @author Kyle Rogers
+ *
+ */
 public interface EntityAttack {
 
 	boolean isCanAttack();

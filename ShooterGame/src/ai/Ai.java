@@ -9,6 +9,11 @@ import entity.Entity;
 import entityAttack.EntityAttack;
 import entityMovement.EntityMovement;
 
+/**
+ * The interface for the plug and play artificial intellegence
+ * @author Kyle Rogers
+ *
+ */
 public interface Ai {
 
 	EntityMovement getEntityMovement();
