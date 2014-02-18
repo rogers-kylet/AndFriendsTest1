@@ -148,7 +148,7 @@ public class ShooterEngine {
 		
 		//TODO temp for checking background support
 		theBackground = new Background(400,300,0, 0, resolutionWidth, resolutionHeight);
-		theBackground.setTexture("horror level sketch");
+		theBackground.setTexture("horror level backround_CC");
 		changeLevel("Menu");
 		
 		playMusic(level.getBackgroundMusic());
