@@ -15,7 +15,6 @@ import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
-
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.openal.Audio;
@@ -30,9 +29,7 @@ import entity.BasicWall;
 import entity.Entity;
 import entity.Player;
 import entity.MenuItem;
-
 import room.Room;
-
 import GameState.GameState;
 import GameState.ShooterGameState;
 import Level.BasicMenu;
@@ -71,6 +68,9 @@ public class ShooterEngine {
 	
 	// GameState Object
 	GameState gameState;
+	
+	// The options for the game
+	Options options;
 	
 	//Player Object
 	Player player;
@@ -112,6 +112,10 @@ public class ShooterEngine {
 	Background theBackground;
 	
 	public void start() throws IOException{
+		
+		//TODO Load options from file, setting default if none saved
+		this.options = new Options();
+		
 		try{
 			// TODO figure out a better way to do this, save settings to file, change in game etc etc etc
 			resolutionWidth = 1280;
@@ -201,16 +205,34 @@ public class ShooterEngine {
 				
 				
 				//Checks if player is moving up, up-left, or up-right respectively.
-				if(Keyboard.isKeyDown(Keyboard.KEY_W)) movementDelta = (Keyboard.isKeyDown(Keyboard.KEY_D)?315:(Keyboard.isKeyDown(Keyboard.KEY_A)?215:270));
+				if(Keyboard.isKeyDown(options.up)) {
+					if(!Keyboard.isKeyDown(options.down)){
+						movementDelta = (Keyboard.isKeyDown(options.right)?315:(Keyboard.isKeyDown(options.left)?215:270));
+					}
+				}
+				
 				//Checks if player is moving left or down-left.
-				else if(Keyboard.isKeyDown(Keyboard.KEY_A)) movementDelta = (Keyboard.isKeyDown(Keyboard.KEY_S)?135:180);
+				else if(Keyboard.isKeyDown(options.left)) {
+					if(!Keyboard.isKeyDown(options.right)) {
+						movementDelta = (Keyboard.isKeyDown(options.down)?135:180);
+					}
+				}
 				//Checks if player is down or down-right.
-				else if(Keyboard.isKeyDown(Keyboard.KEY_S)) movementDelta = (Keyboard.isKeyDown(Keyboard.KEY_D)?45:90);
+				else if(Keyboard.isKeyDown(options.down)) {
+					if(!Keyboard.isKeyDown(options.up)) {
+						movementDelta = (Keyboard.isKeyDown(options.right)?45:90);
+					}
+				}
 				//Checks if player is moving right
-				else if(Keyboard.isKeyDown(Keyboard.KEY_D)) movementDelta = 0;
+				// TODO do we need an additional check for other directions? 
+				else if(Keyboard.isKeyDown(options.right)){
+					if(!Keyboard.isKeyDown(options.left)) {
+						movementDelta = 0;
+					}
+				}
 				
 				
-				if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+				if(Keyboard.isKeyDown(options.jump)) {
 					player.jump();	
 				}
 				
@@ -262,7 +284,7 @@ public class ShooterEngine {
 				//----------------------
 				//END COMPLETED REFACTOR
 				
-				if(Keyboard.isKeyDown(Keyboard.KEY_J)) {
+				if(Keyboard.isKeyDown(options.meleeAttack)) {
 					if(player.isCanMeleeAttack()) {
 						List<Entity> bulletList = player.meleeAttack(player.getAngle());
 						for(Entity bullet: bulletList) { playerBulletList.add(bullet); }
@@ -271,7 +293,7 @@ public class ShooterEngine {
 					}
 				}
 				
-				if(Keyboard.isKeyDown(Keyboard.KEY_K)) {
+				if(Keyboard.isKeyDown(options.shoot)) {
 					if(player.isCanShoot()){
 						
 						List<Entity> bulletList = player.attack(player.getAngle());
