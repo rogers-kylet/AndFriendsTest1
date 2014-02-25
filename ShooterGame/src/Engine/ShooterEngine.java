@@ -660,8 +660,8 @@ public class ShooterEngine {
         
 		 
 		// This is your target virtual resolution for the game, the size you built your game to
-		virtual_width=1920;
-		virtual_height=1080;
+		virtual_width=1280;
+		virtual_height=720;
 		 
 		float targetAspectRatio = virtual_width/virtual_height;
 		 
