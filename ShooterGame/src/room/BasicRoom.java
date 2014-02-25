@@ -48,11 +48,11 @@ public class BasicRoom implements Room {
 				BasicWall background1 = null;
 				BasicWall background2 = null;
 				if(anchorPoint.getDirection().equals("left")) {
-					background1 = new BasicWall(anchorPoint.getX(),anchorPoint.getY() - this.height/3,0,0, 40, this.height/3);
-					background2 = new BasicWall(anchorPoint.getX(), anchorPoint.getY() + this.height/3, 0, 0, 40, this.height/3);
+					//background1 = new BasicWall(anchorPoint.getX(),anchorPoint.getY() - this.height/3,0,0, 40, this.height/3);
+					//background2 = new BasicWall(anchorPoint.getX(), anchorPoint.getY() + this.height/3, 0, 0, 40, this.height/3);
 				} else if(anchorPoint.getDirection().equals("right")) {
-					background1 = new BasicWall(anchorPoint.getX(),anchorPoint.getY() - this.height/3,0,0, 40, this.height/3);
-					background2 = new BasicWall(anchorPoint.getX(), anchorPoint.getY() + this.height/3, 0, 0, 40, this.height/3);
+					//background1 = new BasicWall(anchorPoint.getX(),anchorPoint.getY() - this.height/3,0,0, 40, this.height/3);
+					//background2 = new BasicWall(anchorPoint.getX(), anchorPoint.getY() + this.height/3, 0, 0, 40, this.height/3);
 				} else if(anchorPoint.getDirection().equals("up")) {
 					background1 = new BasicWall(anchorPoint.getX() - this.width/3,anchorPoint.getY(),0,0, this.width/3, 40);
 					background2 = new BasicWall(anchorPoint.getX() + this.width/3, anchorPoint.getY(), 0, 0, this.width/3, 40);
@@ -60,10 +60,14 @@ public class BasicRoom implements Room {
 					background1 = new BasicWall(anchorPoint.getX() - this.width/3,anchorPoint.getY(),0,0, this.width/3, 40);
 					background2 = new BasicWall(anchorPoint.getX() + this.width/3, anchorPoint.getY(), 0, 0, this.width/3,40);
 				}
-				background1.setTexture("wall");
-				background2.setTexture("wall");
-				wallList.add(background1);
-				wallList.add(background2);
+				if(background1 != null) {
+					background1.setTexture("wall");
+					wallList.add(background1);
+				}
+				if ( background2 != null) {
+					background2.setTexture("wall");
+					wallList.add(background2);
+				}
 			} else {
 				BasicWall background1 = null;
 				if(anchorPoint.getDirection().equals("left")) {

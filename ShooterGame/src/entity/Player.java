@@ -273,14 +273,17 @@ public class Player extends BasicEntity {
 			this.acceleration.y = this.minAcceleration.y;
 		}
 		
+		float movementAngle;
 		if(target != null) {
 			if( (angle > 0 && angle < 90 )
 				|| (angle < 360 && angle > 270 ) ) {
-				angle = 0;
+				movementAngle = 0;
 			} else if ( angle < 270 && angle > 90) {
-				angle = 180;
+				movementAngle = 180;
+			} else {
+				movementAngle = angle;
 			}
-			this.x += this.xSpeed * Math.cos(Math.toRadians(angle));
+			this.x += this.xSpeed * Math.cos(Math.toRadians(movementAngle));
 		}
 		//this.y += this.speed * Math.sin(Math.toRadians(angle));	
 		//TODO make this better
@@ -299,7 +302,7 @@ public class Player extends BasicEntity {
 	public void hurtPlayer(int damage) {
 		if(!invincible){
 			//TODO uncomment to hurt player
-			//this.health = health - damage;
+			this.health = health - damage;
 			this.invincible = true;
 			resetInvincibilityTimer();
 			resetFlashTimer();

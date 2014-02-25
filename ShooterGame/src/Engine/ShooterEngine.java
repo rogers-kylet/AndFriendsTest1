@@ -484,6 +484,7 @@ public class ShooterEngine {
 						//player.onGround();
 						isOnGround = true;
 						player.setY(wall.getY() - wall.getHeight()/2 - player.getHeight()/2);
+						continue;
 					} 
 					
 					// TODO add support for walls that you can jump through from the buttom
@@ -491,7 +492,7 @@ public class ShooterEngine {
 							&& oldY - player.getHeight()/2 >= wall.getY() + wall.getHeight()/2){
 						player.hitCeiling();
 						player.setY(wall.getY() + wall.getHeight()/2 + player.getHeight()/2);
-
+						continue;
 					}
 					
 					// TODO do we need an angle dectection here? play around with it and see if it matters
@@ -500,12 +501,14 @@ public class ShooterEngine {
 							&& oldX + player.getWidth()/2 <= wall.getX() - wall.getWidth()/2){
 						player.setX(wall.getX() - wall.getWidth()/2 - player.getWidth()/2);
 						isOnWall = true;
+						continue;
 					}
 					
 					if(player.getX() - player.getWidth()/2 <= wall.getX() + wall.getWidth()/2 
 							&& oldX - player.getWidth()/2 >= wall.getX() + wall.getWidth()/2){
 						player.setX(wall.getX() + wall.getWidth()/2 + player.getWidth()/2);
 						isOnWall = true;
+						continue;
 					}
 				}
 			}
