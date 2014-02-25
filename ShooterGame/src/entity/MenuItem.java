@@ -66,12 +66,12 @@ public class MenuItem extends BasicEntity {
 
 	}
 	
-	public boolean mouseClick(int x, int y) {
+	public boolean mouseClick(float convertedX, float convertedY) {
 		if(
-				( x < ( this.getX() + this.width / 2 ) ) && 
-				( x > ( this.getX() - this.width / 2 ) ) && 
-				( y > ( this.getY() - this.height / 2 ) ) && 
-				( y < ( this.getY() + this.height / 2 ) ) ) {
+				( convertedX < ( this.getX() + this.width / 2 ) ) && 
+				( convertedX > ( this.getX() - this.width / 2 ) ) && 
+				( convertedY > ( this.getY() - this.height / 2 ) ) && 
+				( convertedY < ( this.getY() + this.height / 2 ) ) ) {
 			return true;
 		} else {
 			return false;

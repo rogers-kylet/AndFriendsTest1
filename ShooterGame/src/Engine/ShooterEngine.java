@@ -25,7 +25,6 @@ import org.newdawn.slick.util.ResourceLoader;
 import entity.Background;
 import entity.BasicBackground;
 import entity.BasicPickup;
-import entity.BasicWall;
 import entity.Entity;
 import entity.Player;
 import entity.MenuItem;
@@ -66,6 +65,10 @@ public class ShooterEngine {
 	// Resolution Holders 
 	int resolutionWidth;
 	int resolutionHeight;
+	
+	// Virtual Resolution Holders
+	int virtual_width;
+	int virtual_height;
 	
 	// temp for testing purposes
 	int enemyTimer;
@@ -151,7 +154,7 @@ public class ShooterEngine {
 		enemyTimer = 60;
 		
 		//TODO temp for checking background support
-		theBackground = new Background(400,300,0, 0, resolutionWidth, resolutionHeight);
+		theBackground = new Background(400,300,0, 0, virtual_width, virtual_height);
 		theBackground.setTexture("horror level backround_CC");
 		changeLevel("Menu");
 		
@@ -372,12 +375,19 @@ public class ShooterEngine {
 				}
 				
 				if(Mouse.isButtonDown(0)) {
-					int mouseX = Math.abs(Mouse.getX()), mouseY = Math.abs(resolutionHeight - Mouse.getY());
+			
+					float mouseX = Math.abs(Mouse.getX()), mouseY = Math.abs(resolutionHeight - Mouse.getY());
+					
+					float convertedX = Math.abs(mouseX/resolutionWidth*virtual_width);
+					float convertedY = Math.abs(mouseY/resolutionHeight*virtual_height);
+					System.out.println("X : " + convertedX + " y: " + convertedY);
+
+
 					
 					for(Iterator<MenuItem> menuIt = pauseOverlay.getMenuItems().iterator(); menuIt.hasNext();){
 						MenuItem menuItem = menuIt.next();
 						//TODO might just want to project pause overlay to avoid this ugly calculation, might not be worth the effort though depending on how things work out
-						if(menuItem.mouseClick(Math.round(mouseX + player.getX() - resolutionWidth / 2), Math.round(mouseY + player.getY() - resolutionHeight / 2))) {
+						if(menuItem.mouseClick(Math.round(convertedX + player.getX() - virtual_width / 2), Math.round(convertedY + player.getY() - virtual_height / 2))) {
 							if(menuItem.getButtonAction() == "StartButton") {
 								changeLevel("Gameplay");
 								pause = false;
@@ -389,7 +399,7 @@ public class ShooterEngine {
 								AL.destroy();
 								System.exit(0);
 							} else if(menuItem.getButtonAction() == "FullScreen"){
-							setDisplayMode(resolutionWidth,resolutionHeight, !Display.isFullscreen());
+								setDisplayMode(resolutionWidth,resolutionHeight, !Display.isFullscreen());
 							}
 						}
 					}
@@ -409,11 +419,16 @@ public class ShooterEngine {
 			}
 			
 			if(Mouse.isButtonDown(0)) {
-				int mouseX = Math.abs(Mouse.getX());
-				int mouseY = Math.abs(resolutionHeight - Mouse.getY());
+				float mouseX = Math.abs(Mouse.getX());
+				float mouseY = Math.abs(resolutionHeight - Mouse.getY());
+				System.out.println(" mouse: " + Mouse.getY());
+				float convertedX = Math.abs(mouseX/resolutionWidth*virtual_width);
+				float convertedY = Math.abs(mouseY/resolutionHeight*virtual_height);
+				System.out.println("X : " + convertedX + " y: " + convertedY);
+				
 				for(Iterator<MenuItem> menuIt = menuItemList.iterator(); menuIt.hasNext();){
 					MenuItem menuItem = menuIt.next();
-					if(menuItem.mouseClick(mouseX, mouseY)) {
+					if(menuItem.mouseClick(convertedX, convertedY)) {
 						if(menuItem.getButtonAction() == "StartButton") {
 							changeLevel("Gameplay");
 						} else if(menuItem.getButtonAction() == "MainMenu") {
@@ -460,10 +475,10 @@ public class ShooterEngine {
 				//TODO maybe room should extend entity to use the onScreen method....
 				// TODO possibly add fudge factor so that rooms that are directly outside the room 
 				if(
-						( room.getX() - room.getWidth() / 2 < ( player.getX() + resolutionWidth / 2 ) ) && 
-						( room.getX() + room.getWidth() / 2 > ( player.getX() - resolutionWidth / 2 ) ) && 
-						( room.getY() + room.getHeight() / 2 > ( player.getY() - resolutionHeight / 2 ) ) && 
-						( room.getY() - room.getHeight() / 2 < ( player.getY() + resolutionHeight / 2 ) ) ) {
+						( room.getX() - room.getWidth() / 2 < ( player.getX() + virtual_width / 2 ) ) && 
+						( room.getX() + room.getWidth() / 2 > ( player.getX() - virtual_width / 2 ) ) && 
+						( room.getY() + room.getHeight() / 2 > ( player.getY() - virtual_height / 2 ) ) && 
+						( room.getY() - room.getHeight() / 2 < ( player.getY() + virtual_height / 2 ) ) ) {
 					
 					for(Entity enemy : room.getEnemyList()) { this.enemyList.add(enemy); }
 					room.setEntered(true);
@@ -643,12 +658,35 @@ public class ShooterEngine {
 
         //GL11.glBlendFunc(GL11.GL_CONSTANT_ALPHA, GL11.GL_ONE_MINUS_CONSTANT_ALPHA); 
         
+		 
+		// This is your target virtual resolution for the game, the size you built your game to
+		virtual_width=1920;
+		virtual_height=1080;
+		 
+		float targetAspectRatio = virtual_width/virtual_height;
+		 
+		// figure out the largest area that fits in this resolution at the desired aspect ratio
+		int width = resolutionWidth ;
+		int height = (int)(width / targetAspectRatio + 0.5f);
+		 
+		if (height > resolutionHeight )
+		{
+		   //It doesn't fit our height, we must switch to pillarbox then
+		    height = resolutionHeight ;
+		    width = (int)(height * targetAspectRatio + 0.5f);
+		}
+		 
+		// set up the new viewport centered in the backbuffer
+		int vp_x = (resolutionWidth  / 2) - (width / 2);
+		int vp_y = (resolutionHeight / 2) - (height/ 2);
+		 
         GL11.glViewport(0,0,resolutionWidth,resolutionHeight);
         
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glPushMatrix();
 			GL11.glLoadIdentity();
-			GL11.glOrtho(0, resolutionWidth, resolutionHeight, 0, -1, 1);
+			GL11.glOrtho(0, virtual_width, virtual_height, 0, -1, 1);
+			
 			//GL11.glOrtho(0, 800, 6, 0, -1, 1);
 			GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glPushMatrix();
@@ -663,11 +701,13 @@ public class ShooterEngine {
 		
 		// Have the camera follow the player
 		if(gameState.isCameraFollow()){ 
-			GL11.glTranslatef(-player.getX() + (resolutionWidth / 2), -player.getY() + (resolutionHeight / 2), 0); 
+			GL11.glTranslatef(-player.getX() + (virtual_width / 2), -player.getY() + (virtual_height / 2), 0); 
 		}
 		//if(gameState.isCameraFollow()){ GL11.glTranslatef(-player.getX()+(resolutionWidth / 2), -player.getY()+(resolutionHeight / 2 + resolutionHeight/4), 0); } // Camera follow offset
+
 		
 		GL11.glPushMatrix();
+			
 			// Clear the screen adn the deph buffer
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 			// Initial color so pixels can be colored in individual classes, probably wont be needed once textures are being used
@@ -699,9 +739,9 @@ public class ShooterEngine {
 							GL11.glEnable(GL11.GL_BLEND);
 								GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 								// Yeah... that to string is pretty awesome isn't it? 
-								font.drawString(player.getX() - (resolutionHeight / 2) - 90, player.getY() - (resolutionHeight / 2) + 10,"Health: " + ((Integer)Math.round(player.getHealth())).toString(),Color.yellow);
-								font.drawString(player.getX() + (resolutionHeight / 2) - 10, player.getY() - (resolutionHeight / 2) + 10,"Money: " + ((Integer)gameState.getMoney()).toString(),Color.yellow);
-								font.drawString(player.getX() - (resolutionHeight / 2) + 20, player.getY() - (resolutionHeight / 2) + 10,"Weapon: " + ((Integer)player.getWeaponIndex()).toString(),Color.yellow);
+								font.drawString(player.getX() - (virtual_height / 2) - 90, player.getY() - (virtual_height / 2) + 10,"Health: " + ((Integer)Math.round(player.getHealth())).toString(),Color.yellow);
+								font.drawString(player.getX() + (virtual_height / 2) - 10, player.getY() - (virtual_height / 2) + 10,"Money: " + ((Integer)gameState.getMoney()).toString(),Color.yellow);
+								font.drawString(player.getX() - (virtual_height / 2) + 20, player.getY() - (virtual_height / 2) + 10,"Weapon: " + ((Integer)player.getWeaponIndex()).toString(),Color.yellow);
 
 							GL11.glDisable(GL11.GL_BLEND);
 
@@ -744,7 +784,6 @@ public class ShooterEngine {
 				
 				processMenuItems();
 			}
-			
 		GL11.glPopMatrix();
 	}
 
@@ -801,8 +840,8 @@ public class ShooterEngine {
 					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 					Color.transparent.bind();
 
-					font.drawString(player.getX() - (resolutionHeight / 2) - 90, player.getY() - (resolutionHeight / 2) + 10,"Health: " + ((Integer)Math.round(player.getHealth())).toString(),Color.yellow);
-					font.drawString(player.getX() + (resolutionHeight / 2) - 10, player.getY() - (resolutionHeight / 2) + 10,"Score: " + ((Integer)gameState.getMoney()).toString(),Color.yellow);
+					font.drawString(player.getX() - (virtual_height / 2) - 90, player.getY() - (virtual_height / 2) + 10,"Health: " + ((Integer)Math.round(player.getHealth())).toString(),Color.yellow);
+					font.drawString(player.getX() + (virtual_height / 2) - 10, player.getY() - (virtual_height / 2) + 10,"Score: " + ((Integer)gameState.getMoney()).toString(),Color.yellow);
 				GL11.glDisable(GL11.GL_BLEND);
 		GL11.glPopMatrix();
 		
@@ -1093,10 +1132,10 @@ public class ShooterEngine {
 	
 	public boolean onScreen(Entity entity) {
 		if(
-				( entity.getX() - entity.getWidth() / 2 < ( player.getX() + resolutionWidth / 2 ) ) && 
-				( entity.getX() + entity.getWidth() / 2 > ( player.getX() - resolutionWidth / 2 ) ) && 
-				( entity.getY() + entity.getHeight() / 2 > ( player.getY() - resolutionHeight / 2 ) ) && 
-				( entity.getY() - entity.getHeight() / 2 < ( player.getY() + resolutionHeight / 2 ) ) ) {
+				( entity.getX() - entity.getWidth() / 2 < ( player.getX() + virtual_width / 2 ) ) && 
+				( entity.getX() + entity.getWidth() / 2 > ( player.getX() - virtual_width / 2 ) ) && 
+				( entity.getY() + entity.getHeight() / 2 > ( player.getY() - virtual_height / 2 ) ) && 
+				( entity.getY() - entity.getHeight() / 2 < ( player.getY() + virtual_height / 2 ) ) ) {
 			return true;
 		} else{ return false; }
 	}
