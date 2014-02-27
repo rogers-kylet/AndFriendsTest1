@@ -69,7 +69,6 @@ public class Player extends BasicEntity {
 	
 	private PlayerAnimation animation;
 
-
 	public Player(float x, float y, float z, int eid) throws IOException {
 		this.x = x;
 		this.y = y;
@@ -110,6 +109,7 @@ public class Player extends BasicEntity {
 		this.gravity = -.75f;
 		this.standardGravity =  -.75f;
 		this.minimumYSpeed = -15;
+		this.defaultMinimumYSpeed = -15;
 		this.maxYSpeed = 15f;
 		
 		//TODO need to make a weapon builder that can add the various properties of these weapons
@@ -420,6 +420,8 @@ public class Player extends BasicEntity {
 			if(canWallJump) {
 				this.canJump = true;
 			}
+			
+			this.minimumYSpeed = this.defaultMinimumYSpeed/2;
 		}
 	}
 	
@@ -432,6 +434,7 @@ public class Player extends BasicEntity {
 			this.canJump = false;
 			this.canWallJump = true;
 		}
+		this.minimumYSpeed = this.defaultMinimumYSpeed;
 	}
 	
 	/**

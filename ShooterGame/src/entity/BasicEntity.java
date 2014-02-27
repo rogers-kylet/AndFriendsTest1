@@ -45,8 +45,8 @@ public abstract class BasicEntity implements Entity {
 
 	// The speed constraints and angular direction of the Entity
 	protected float minimumSpeed, speed, maxSpeed, angle;
-	protected float minimumXSpeed, xSpeed, maxXSpeed;
-	protected float minimumYSpeed, ySpeed, maxYSpeed;
+	protected float minimumXSpeed,defaultMinimumXSpeed,  xSpeed, maxXSpeed;
+	protected float minimumYSpeed,defaultMinimumYSpeed,  ySpeed, maxYSpeed;
 	protected float gravity, standardGravity;
 
 	protected Vector3f acceleration;
