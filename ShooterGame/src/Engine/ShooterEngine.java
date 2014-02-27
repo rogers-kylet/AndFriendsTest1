@@ -380,8 +380,6 @@ public class ShooterEngine {
 					
 					float convertedX = Math.abs(mouseX/resolutionWidth*virtual_width);
 					float convertedY = Math.abs(mouseY/resolutionHeight*virtual_height);
-					System.out.println("X : " + convertedX + " y: " + convertedY);
-
 
 					
 					for(Iterator<MenuItem> menuIt = pauseOverlay.getMenuItems().iterator(); menuIt.hasNext();){
@@ -421,10 +419,8 @@ public class ShooterEngine {
 			if(Mouse.isButtonDown(0)) {
 				float mouseX = Math.abs(Mouse.getX());
 				float mouseY = Math.abs(resolutionHeight - Mouse.getY());
-				System.out.println(" mouse: " + Mouse.getY());
 				float convertedX = Math.abs(mouseX/resolutionWidth*virtual_width);
 				float convertedY = Math.abs(mouseY/resolutionHeight*virtual_height);
-				System.out.println("X : " + convertedX + " y: " + convertedY);
 				
 				for(Iterator<MenuItem> menuIt = menuItemList.iterator(); menuIt.hasNext();){
 					MenuItem menuItem = menuIt.next();

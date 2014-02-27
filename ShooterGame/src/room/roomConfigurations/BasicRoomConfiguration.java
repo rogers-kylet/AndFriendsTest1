@@ -7,7 +7,7 @@ import entity.Entity;
 
 /**
  * The object used to hold various configurations for a room.
- * @author krogers
+ * @author Kyle Rogers
  *
  */
 public class BasicRoomConfiguration {
