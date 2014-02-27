@@ -1,7 +1,9 @@
 package room.roomConfigurations.template;
 
+import room.roomConfigurations.BasicRoomConfiguration;
+
 //TODO use these to hold item/background/enemy placement/whatever else is in a room in order to generate this type of room. 
 //All need to extend an interface so that the level generator can use them
-public class StartRoom {
+public class StartRoom extends BasicRoomConfiguration {
 
 }
