@@ -7,6 +7,12 @@ import org.newdawn.slick.Color;
 
 public class BasicWall extends BasicBackground {
 
+	boolean canCollide;
+	boolean canCollideBottom;
+	boolean canCollideTop;
+	boolean canCollideLeft;
+	boolean canCollideRight;
+	
 	public BasicWall(float x, float y, float z, int eid, float width,
 			float height) throws IOException {
 		super(x, y, z, eid, width, height);

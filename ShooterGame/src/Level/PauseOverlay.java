@@ -5,15 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import entity.BasicBackground;
+import entity.BasicEntity;
 import entity.MenuItem;
-import entity.Player;
 
 public class PauseOverlay{
 
 	List<MenuItem> menuItems;
 	List<BasicBackground> backgroundItems;
 	
-	public PauseOverlay(Player player) throws IOException {
+	public PauseOverlay(BasicEntity player) throws IOException {
 		List<MenuItem> menuItems = new ArrayList<MenuItem>();
 		List<BasicBackground> backgroundItems = new ArrayList<BasicBackground>();
 		

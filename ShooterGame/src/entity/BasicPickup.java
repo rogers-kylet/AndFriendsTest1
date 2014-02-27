@@ -17,8 +17,6 @@ public class BasicPickup extends BasicEntity {
 
 	String pickupType;
 	float pickupValue;
-	private Texture texture;
-	private int mask;
 	
 	public BasicPickup(float x, float y, float z, int eid, float width,
 			float height) throws IOException {

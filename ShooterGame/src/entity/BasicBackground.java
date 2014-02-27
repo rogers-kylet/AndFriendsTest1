@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
@@ -14,9 +13,6 @@ import room.Room;
 
 public class BasicBackground extends BasicEntity {
 
-	protected Texture texture;
-	int mask;
-	
 	public BasicBackground(float x, float y, float z, int eid, float width, float height) throws IOException {
 		this.x = x;
 		this.y = y;

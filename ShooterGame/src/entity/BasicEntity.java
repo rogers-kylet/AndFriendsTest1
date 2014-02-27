@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.List;
 
 import org.lwjgl.util.vector.Vector3f;
+import org.newdawn.slick.opengl.Texture;
 
+import ai.Ai;
 import room.Room;
 
 /** 
@@ -53,6 +55,12 @@ public abstract class BasicEntity implements Entity {
 	protected Vector3f minAcceleration;
 	
 	protected String hitSfx;
+
+	protected Texture texture;
+
+	protected int mask;
+
+	protected Ai ai;
 
 	// Begin Entity base methods
 	// -------------------------

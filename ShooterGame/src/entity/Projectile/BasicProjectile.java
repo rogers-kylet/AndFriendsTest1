@@ -20,10 +20,6 @@ public class BasicProjectile extends BasicEntity {
 
 	float maxDistance;
 	float distance;
-	int mask;
-	
-	Texture texture;
-	
 	public BasicProjectile(float x, float y, float z, int eid) throws IOException {
 		this.x = x;
 		this.y = y;

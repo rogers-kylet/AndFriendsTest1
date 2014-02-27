@@ -56,8 +56,6 @@ public class Player extends BasicEntity {
 	private boolean onWall = false;
 	private boolean hasWallJumped = false;
 
-	private Texture texture;
-	
 	private Weapon weapon;
 	private Weapon meleeWeapon;
 	

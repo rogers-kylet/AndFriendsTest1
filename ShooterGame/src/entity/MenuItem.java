@@ -13,7 +13,6 @@ import room.Room;
 
 public class MenuItem extends BasicEntity {
 
-	private Texture texture;
 	private String buttonAction;
 	
 	public MenuItem(float x, float y, String textureName) throws IOException {

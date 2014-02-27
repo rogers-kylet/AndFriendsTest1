@@ -10,22 +10,15 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
-import ai.Ai;
 import ai.BasicAi;
-
 import entity.BasicEntity;
 import entity.Entity;
 import entityAttack.BasicEntityAttack;
 import entityMovement.BasicEntityWalkingMovement;
-
 import room.Room;
 
 public class BasicWalkingEnemy extends BasicEntity {
 
-	private Texture texture;
-	int mask;
-	Ai ai;
-	
 	public BasicWalkingEnemy(float x, float y, float z, int eid) throws IOException {
 		this.x = x;
 		this.y = y;
