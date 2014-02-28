@@ -11,14 +11,13 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
+import Engine.ShooterEngine;
 import animation.BasicFrameData;
 import animation.FrameData;
 import animation.PlayerAnimation;
-
 import room.Room;
 import timer.BasicTimer;
 import timer.Timer;
-
 import weapon.BasicMeleeWeapon;
 import weapon.BasicWeapon;
 import weapon.CircleShot;
@@ -137,7 +136,7 @@ public class Player extends BasicEntity {
 	
 	@Override
 	public void render() {
-		
+
 		//Push player model to world coordinates for display
 		if(displayed){
 			

@@ -118,6 +118,15 @@ public class ShooterEngine {
 	
 	Background theBackground;
 	
+	public static ShooterEngine engine = null;
+	
+	public static ShooterEngine getEngine() {
+		if(engine == null) {
+			engine = new ShooterEngine();
+		}
+		return engine;
+	}
+	
 	public void start() throws IOException{
 		
 		//TODO Load options from file, setting default if none saved
@@ -1115,8 +1124,8 @@ public class ShooterEngine {
 	}
 	// It's a main method, you know?
 	public static void main(String[] argv) throws IOException {
-		ShooterEngine shooterEngine = new ShooterEngine();
-		shooterEngine.start();
+		ShooterEngine.getEngine().start();
+		//shooterEngine.start();
 	}
 	
 	public boolean renderEntity(Entity entity) {
@@ -1134,6 +1143,14 @@ public class ShooterEngine {
 				( entity.getY() - entity.getHeight() / 2 < ( player.getY() + virtual_height / 2 ) ) ) {
 			return true;
 		} else{ return false; }
+	}
+
+	public boolean isPause() {
+		return pause;
+	}
+
+	public void setPause(boolean pause) {
+		this.pause = pause;
 	}
 	
 }

@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import Engine.ShooterEngine;
 import timer.BasicTimer;
 import timer.Timer;
 
@@ -105,18 +106,21 @@ public class PlayerAnimation {
 		return walkFrameList;
 	}
 	public FrameData getCurrentFrame() { 
-		if(!frameTimer.isStopped()) {
-			this.frameTimer.countDown();
-		} else {
-			List<FrameData> currentFrameDataList = frameListMap.get(currentAnimation);
-			if(this.currentFrame.getFrameNumber() == currentFrameDataList.size()-1) {
-				this.currentFrame = currentFrameDataList.get(0);
+		// TODO this won't work if we need animation during pause, but for now it's fine
+		if(!ShooterEngine.getEngine().isPause()) {
+			if(!frameTimer.isStopped()) {
+				this.frameTimer.countDown();
 			} else {
-				this.currentFrame = currentFrameDataList.get(currentFrame.getFrameNumber() + 1);
+				List<FrameData> currentFrameDataList = frameListMap.get(currentAnimation);
+				if(this.currentFrame.getFrameNumber() == currentFrameDataList.size()-1) {
+					this.currentFrame = currentFrameDataList.get(0);
+				} else {
+					this.currentFrame = currentFrameDataList.get(currentFrame.getFrameNumber() + 1);
+				}
+				this.frameTimer.setStartValue(currentFrame.getDelay());
+				this.frameTimer.reset();
+				//System.out.println("The current frame is: " + (this.currentFrame.getFrameNumber() + 1));
 			}
-			this.frameTimer.setStartValue(currentFrame.getDelay());
-			this.frameTimer.reset();
-			//System.out.println("The current frame is: " + (this.currentFrame.getFrameNumber() + 1));
 		}
 		return currentFrame; 
 	}
