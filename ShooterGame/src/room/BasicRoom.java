@@ -4,9 +4,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import room.roomConfigurations.BasicRoomConfiguration;
 import entity.BasicWall;
 import entity.Entity;
 
+/**
+ * The object used to create a standard room 
+ * @author Kyle Rogers
+ *
+ */
 public class BasicRoom implements Room {
 
 	float x, y, z, rotation, width, height;
@@ -22,6 +28,23 @@ public class BasicRoom implements Room {
 	
 	Room parentRoom;
 
+	// Default Constructor
+	public BasicRoom() {
+		
+	}
+	
+	// TODO constructor that creates the room based on a given roomConfiguration
+	// Will need to figure out the work flow of moving from config to placement to parsing locations relative to the room itself. 
+	// Probably would be best if it could be created with the x/y coordinates already, but the level generator might need the width and height to properly determine x/y coordinates.
+	public BasicRoom(BasicRoomConfiguration roomConfig) {
+		
+	}
+	
+	// Theoretical constructor to take the roomConfig, the x and y location of the anchor point that will be hooked, and the direction that it should move in (up, down, left, right)
+	public BasicRoom(BasicRoomConfiguration roomConfig, float x, float y, String direction) {
+		
+	}
+	
 	@Override
 	public boolean roomCollision(Room theRoom) {
 		if(

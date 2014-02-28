@@ -42,6 +42,7 @@ public class LevelGeneration {
 		roomList.add(startRoom);
 		
 		//TODO exract the room creation to a different method, change those hardcoded values, a lot of this will be dependent on how we store the rooms
+		// We can probably just give the location of the anchor point and the direction and let the room know that it needs to add/subject length/width/2 accordingly. 
 		while(!levelGenerated) {
 
 			Room tempRoom = theQueue.poll();
