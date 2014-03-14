@@ -11,8 +11,6 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
-import Engine.ShooterEngine;
-import animation.BasicFrameData;
 import animation.FrameData;
 import animation.PlayerAnimation;
 import room.Room;
@@ -103,11 +101,11 @@ public class Player extends BasicEntity {
 		
 		this.xSpeed = 10f;
 		this.ySpeed = 0f;
-		this.gravity = -.75f;
+		this.gravity = -1f;
 		this.standardGravity =  -.75f;
 		this.minimumYSpeed = -15;
 		this.defaultMinimumYSpeed = -15;
-		this.maxYSpeed = 15f;
+		this.maxYSpeed = 18f;
 		
 		//TODO need to make a weapon builder that can add the various properties of these weapons
 		Weapon weapon = new BasicWeapon();
@@ -439,6 +437,7 @@ public class Player extends BasicEntity {
 	 */
 	public void hitCeiling() {
 		this.ySpeed = 0;
+		this.acceleration.y = 0;
 	}
 
 	/* Start Getters/Setters */

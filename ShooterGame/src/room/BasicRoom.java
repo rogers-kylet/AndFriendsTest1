@@ -34,10 +34,20 @@ public class BasicRoom implements Room {
 	}
 	
 	// TODO constructor that creates the room based on a given roomConfiguration
+	// TODO this needs to be a builder based on other templates in the room config, but for now the straight conversion works
 	// Will need to figure out the work flow of moving from config to placement to parsing locations relative to the room itself. 
 	// Probably would be best if it could be created with the x/y coordinates already, but the level generator might need the width and height to properly determine x/y coordinates.
 	public BasicRoom(BasicRoomConfiguration roomConfig) {
-		
+		this.x = roomConfig.getX();
+		this.y = roomConfig.getY();
+		this.width = roomConfig.getWidth();
+		this.height = roomConfig.getHeight();
+		this.type = roomConfig.getType();
+		this.anchorPoints = roomConfig.getAnchorPoints();
+		this.enemyList = roomConfig.getEnemyList();
+		this.background = roomConfig.getBackground();
+		this.wallList = roomConfig.getWallList();
+		this.pickupList = roomConfig.getPickupList();
 	}
 	
 	// Theoretical constructor to take the roomConfig, the x and y location of the anchor point that will be hooked, and the direction that it should move in (up, down, left, right)

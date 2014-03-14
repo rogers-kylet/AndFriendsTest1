@@ -12,9 +12,9 @@ import entity.Entity;
  */
 public class BasicRoomConfiguration {
 
-	float rotation, width, height;
+	protected float rotation, width, height, x, y;
 	
-	String type;
+	protected String type;
 	
 	List<Entity> enemyList;
 	List<AnchorPoint> anchorPoints;
@@ -48,5 +48,9 @@ public class BasicRoomConfiguration {
 	public void setWallList(List<Entity> wallList) { this.wallList = wallList; }
 	public List<Entity> getPickupList() { return pickupList; }
 	public void setPickupList(List<Entity> pickupList) { this.pickupList = pickupList; }
+	public float getX() { return x; }
+	public void setX(float x) { this.x = x; }
+	public float getY() { return y; }
+	public void setY(float y) { this.y = y; }
 	
 }
