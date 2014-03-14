@@ -14,7 +14,9 @@ import entity.Entity;
 import room.AnchorPoint;
 import room.BasicRoom;
 import room.Room;
+import room.roomConfigurations.template.EndRoom;
 import room.roomConfigurations.template.RoomOne;
+import room.roomConfigurations.template.RoomTwo;
 import room.roomConfigurations.template.StartRoom;
 
 public class LevelGeneration {
@@ -54,9 +56,17 @@ public class LevelGeneration {
 			// TODO need to refactor to use anchor points to place the rooms, meaning we need to generate them but without their x/y coordinates and then set them
 			for(AnchorPoint anchorPoint : anchorPoints){
 				if(!anchorPoint.isHooked()) {
-					
-					Room nextRoom = new BasicRoom(new RoomOne(anchorPoint.getX(),anchorPoint.getY(), anchorPoint.getDirection()));
-					
+					Room nextRoom;
+					if(roomCount >= 10 + levelNumber) {
+						nextRoom = new BasicRoom(new EndRoom(anchorPoint.getX(),anchorPoint.getY(), anchorPoint.getDirection()));
+					} else {
+						// TODO temp logic just to get two rooms in, soon will need to get a list, at least it's the same call so it'll be alright
+						if((int)(Math.random()*2) == 0){
+							nextRoom = new BasicRoom(new RoomOne(anchorPoint.getX(),anchorPoint.getY(), anchorPoint.getDirection()));
+						} else {
+							nextRoom = new BasicRoom(new RoomTwo(anchorPoint.getX(),anchorPoint.getY(), anchorPoint.getDirection()));
+						}
+					}
 					boolean roomOkay = true;
 					for(Room room: roomList) {
 						if(room.roomCollision(nextRoom)) { roomOkay = false; }
@@ -65,16 +75,6 @@ public class LevelGeneration {
 						anchorPoint.setHooked(true);
 						nextRoom.setParentRoom(tempRoom);
 						roomCount++;
-						if(roomCount >= 10+levelNumber) {
-							BasicBackground tempBack = (BasicBackground) nextRoom.getBackground().get(0);
-							tempBack.setTexture("endRoom");
-							BasicPickup endDoor = new BasicPickup(nextRoom.getX(), nextRoom.getY(), 0, 0, 40, 40);
-							endDoor.setPickupType("end");
-							nextRoom.setType("end");
-							List<Entity> pickUpList = new ArrayList<Entity>();
-							pickUpList.add(endDoor);
-							nextRoom.setPickupList(pickUpList);
-						}
 						roomList.add(nextRoom);
 						theQueue.add(nextRoom);
 						break;

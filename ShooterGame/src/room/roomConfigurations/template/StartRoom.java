@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import entity.BasicBackground;
+import entity.BasicWall;
 import entity.Entity;
 import room.AnchorPoint;
 import room.roomConfigurations.BasicRoomConfiguration;
@@ -37,11 +38,16 @@ public class StartRoom extends BasicRoomConfiguration {
 			this.y = y;
 		}
 		
-		// Create obstacles for the room
 		List<Entity> backgroundList = new ArrayList<Entity>();
 			Entity background = new BasicBackground(this.x,this.y,0,0, this.width, this.height);
 			backgroundList.add(background);
 		this.setBackground(backgroundList);
+		
+		// Create obstacles for the room
+		List<Entity> wallList = new ArrayList<Entity>();
+			BasicWall platform = new BasicWall(this.getX(),this.getY(),0,0, this.width/2, 40);
+			wallList.add(platform);
+		this.setWallList(wallList);
 		
 		// Create anchor points for the room
 		List<AnchorPoint> anchorPoints = new ArrayList<AnchorPoint>();

@@ -74,7 +74,11 @@ public class BasicRoom implements Room {
 	@Override
 	public void generateWalls() throws IOException{
 		// TODO add seperate process/render for walls
-		wallList = new ArrayList<Entity>();
+		wallList = this.getWallList();
+		if(wallList == null) {
+			wallList = new ArrayList<Entity>();
+		}
+		
 		for(AnchorPoint anchorPoint: anchorPoints) {
 			
 			if(anchorPoint.isHooked()) {
@@ -115,10 +119,6 @@ public class BasicRoom implements Room {
 				background1.setTexture("wall");
 				wallList.add(background1);
 			}
-		}
-		if(!this.type.equals("end")) {
-			BasicWall platform = new BasicWall(this.getX(),this.getY(),0,0, this.width/2, 40);
-			wallList.add(platform);
 		}
 	}
 	

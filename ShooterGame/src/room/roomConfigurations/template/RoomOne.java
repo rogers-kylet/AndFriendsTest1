@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import entity.BasicBackground;
+import entity.BasicWall;
 import entity.Entity;
 import entity.enemy.BasicFlyingEnemy;
 import room.AnchorPoint;
@@ -57,6 +58,12 @@ public class RoomOne extends BasicRoomConfiguration {
 			Entity background = new BasicBackground(this.x,this.y,0,0, this.width, this.height);
 			backgroundList.add(background);
 		this.setBackground(backgroundList);
+		
+		List<Entity> wallList = new ArrayList<Entity>();
+			BasicWall platform = new BasicWall(this.getX(),this.getY(),0,0, this.width/2, 40);
+			wallList.add(platform);
+		this.setWallList(wallList);
+		
 		
 		// Create anchor points for the room
 		List<AnchorPoint> anchorPoints = new ArrayList<AnchorPoint>();
