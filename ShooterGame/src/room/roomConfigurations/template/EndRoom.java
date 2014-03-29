@@ -56,8 +56,8 @@ public class EndRoom extends BasicRoomConfiguration {
 	
 		// Create obstacles for the room
 		List<Entity> backgroundList = new ArrayList<Entity>();
-			Entity background = new BasicBackground(this.x,this.y,0,0, this.width, this.height);
-			backgroundList.add(background);
+			//Entity background = new BasicBackground(this.x,this.y,0,0, this.width, this.height);
+			//backgroundList.add(background);
 		this.setBackground(backgroundList);
 		
 		// Create anchor points for the room

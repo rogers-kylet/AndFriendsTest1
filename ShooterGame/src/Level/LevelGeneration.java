@@ -83,7 +83,7 @@ public class LevelGeneration {
 			}
 			
 			// Temp number to allow for basic level scaling
-			if(roomCount >= 10+levelNumber) { levelGenerated = true; }
+			if(roomCount >= 10+levelNumber + 1) { levelGenerated = true; }
 		}
 		for(Room room : roomList) { room.generateWalls(); }
 		theLevel.setRoomList(roomList);
